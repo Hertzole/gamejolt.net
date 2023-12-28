@@ -60,12 +60,12 @@ namespace Hertzole.GameJolt
 
 		public string Serialize<T>(T value)
 		{
-			return JsonConvert.SerializeObject(value, settings);
+			return JsonConvert.SerializeObject(new GameJoltResponse<T>(value), typeof(GameJoltResponse<T>), settings);
 		}
 
 		public T Deserialize<T>(string value)
 		{
-			return JsonConvert.DeserializeObject<T>(value, settings);
+			return JsonConvert.DeserializeObject<GameJoltResponse<T>>(value, settings).response;
 		}
 	}
 }

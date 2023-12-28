@@ -13,12 +13,14 @@ namespace Hertzole.GameJolt
 
 		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
+			reader.Read();
+            
 			switch (reader.TokenType)
 			{
 				case JsonToken.Integer:
-					int numberValue = (int) reader.Value!;
+					long numberValue = (long) reader.Value!;
 
-					if (GetValueFromInt(numberValue, out T numberResult))
+					if (GetValueFromInt(Convert.ToInt32(numberValue), out T numberResult))
 					{
 						return numberResult;
 					}
@@ -44,7 +46,7 @@ namespace Hertzole.GameJolt
 
 					throw new JsonSerializationException($"Could not parse string ({value}) to enum.");
 				default:
-					throw new JsonSerializationException("Expected number or string.");
+					throw new JsonSerializationException($"Expected number or string, got {reader.TokenType}.");
 			}
 		}
 		

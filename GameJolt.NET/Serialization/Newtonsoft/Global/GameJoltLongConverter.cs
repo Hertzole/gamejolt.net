@@ -25,15 +25,16 @@ namespace Hertzole.GameJolt
 
 		public override long ReadJson(JsonReader reader, Type objectType, long existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
+			reader.Read();
+			
 			switch (reader.TokenType)
 			{
 				case JsonToken.Integer:
-					return (long) reader.Value!;
 				case JsonToken.Float:
-					return (int) reader.ReadAsDouble()!.Value;
+					return (long) reader.Value!;
 			}
 
-			string? stringValue = reader.ReadAsString();
+			string? stringValue = reader.Value as string;
 
 			if (string.IsNullOrEmpty(stringValue))
 			{

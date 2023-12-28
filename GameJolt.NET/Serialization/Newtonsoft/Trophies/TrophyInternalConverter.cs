@@ -35,6 +35,8 @@ namespace Hertzole.GameJolt
 			string imageUrl = string.Empty;
 			bool achieved = false;
 
+			reader.Read();
+
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.
@@ -42,39 +44,35 @@ namespace Hertzole.GameJolt
 
 				if (propertyName.Equals("id", StringComparison.OrdinalIgnoreCase))
 				{
-					reader.Read();
 					id = GameJoltIntConverter.Instance.ReadJson(reader, typeof(int), 0, false, serializer);
 				}
 				else if (propertyName.Equals("title", StringComparison.OrdinalIgnoreCase))
 				{
-					reader.Read();
-					title = (string) reader.Value!;
+					title = reader.ReadAsString() ?? string.Empty;
 				}
 				else if (propertyName.Equals("description", StringComparison.OrdinalIgnoreCase))
 				{
-					reader.Read();
-					description = (string) reader.Value!;
+					description = reader.ReadAsString() ?? string.Empty;
 				}
 				else if (propertyName.Equals("difficulty", StringComparison.OrdinalIgnoreCase))
 				{
-					reader.Read();
 					difficulty = GameJoltTrophyDifficultyConverter.Instance.ReadJson(reader, typeof(TrophyDifficulty), TrophyDifficulty.Bronze, false, serializer);
 				}
 				else if (propertyName.Equals("image_url", StringComparison.OrdinalIgnoreCase))
-				{
-					reader.Read();
-					imageUrl = (string) reader.Value!;
+				{ 
+					imageUrl = reader.ReadAsString() ?? string.Empty;
 				}
 				else if (propertyName.Equals("achieved", StringComparison.OrdinalIgnoreCase))
 				{
-					reader.Read();
 					achieved = BooleanOrDateConverter.Instance.ReadJson(reader, typeof(bool), false, false, serializer);
 				}
 				else
 				{
-					// Read the next property name.
-					reader.Read();
+					reader.Skip();
 				}
+				
+				// Read the next property name.
+				reader.Read();
 			}
 
 			return new TrophyInternal(id, title, description, difficulty, imageUrl, achieved);

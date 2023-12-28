@@ -35,6 +35,8 @@ namespace Hertzole.GameJolt
 			serializer.Serialize(writer, value.userWebsite);
 			writer.WritePropertyName("developer_description");
 			serializer.Serialize(writer, value.userDescription);
+			
+			writer.WriteEndObject();
 		}
 
 		public override User ReadJson(JsonReader reader, Type objectType, User existingValue, bool hasExistingValue, JsonSerializer serializer)

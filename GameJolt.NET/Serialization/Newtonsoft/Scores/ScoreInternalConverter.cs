@@ -40,9 +40,9 @@ namespace Hertzole.GameJolt
 			}
 
 			writer.WritePropertyName("stored_timestamp");
-			GameJoltLongConverter.Instance.WriteJson(writer, value.stored, serializer);
+			GameJoltLongConverter.Instance.WriteJson(writer, value.storedTimestamp, serializer);
 			writer.WritePropertyName("stored");
-			writer.WriteValue(value.storedTimestamp);
+			writer.WriteValue(value.stored);
 
 			writer.WriteEndObject();
 		}

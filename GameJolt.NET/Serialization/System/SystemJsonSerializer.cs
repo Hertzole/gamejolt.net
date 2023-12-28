@@ -37,10 +37,10 @@ namespace Hertzole.GameJolt
 			JsonSerializerOptions o = new JsonSerializerOptions
 			{
 				PropertyNameCaseInsensitive = true,
-				IncludeFields = true,
+				IncludeFields = true
 			};
-#if NET7_0_OR_GREATER
-			o.TypeInfoResolver = JsonContext.Default;
+#if NET8_0_OR_GREATER
+			o.TypeInfoResolverChain.Insert(0, JsonContext.Default);
 #else
 			o.AddContext<JsonContext>();
 #endif

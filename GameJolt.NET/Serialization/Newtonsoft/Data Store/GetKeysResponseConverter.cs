@@ -15,7 +15,7 @@ namespace Hertzole.GameJolt
 		protected override GetKeysResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
 			DataKey[] keys = Array.Empty<DataKey>();
-
+            
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.
@@ -23,6 +23,8 @@ namespace Hertzole.GameJolt
 
 				if (propertyName.Equals("keys", StringComparison.OrdinalIgnoreCase))
 				{
+					reader.Read();
+					
 					keys = serializer.Deserialize<DataKey[]>(reader);
 					break;
 				}

@@ -20,7 +20,6 @@ namespace Hertzole.GameJolt
 			GameJoltIntConverter.Instance.WriteJson(writer, value.day, serializer);
 			writer.WritePropertyName("hour");
 			GameJoltIntConverter.Instance.WriteJson(writer, value.hour, serializer);
-			writer.WriteValue(value.hour);
 			writer.WritePropertyName("minute");
 			GameJoltIntConverter.Instance.WriteJson(writer, value.minute, serializer);
 			writer.WritePropertyName("second");
@@ -49,7 +48,7 @@ namespace Hertzole.GameJolt
 				}
 				else if (propertyName.Equals("timezone", StringComparison.OrdinalIgnoreCase))
 				{
-					timezone = reader.ReadAsString()!;
+					timezone = reader.ReadAsString() ?? string.Empty;
 				}
 				else if (propertyName.Equals("year", StringComparison.OrdinalIgnoreCase))
 				{
@@ -75,6 +74,10 @@ namespace Hertzole.GameJolt
 				{
 					second = GameJoltIntConverter.Instance.ReadJson(reader, typeof(int), 0, false, serializer)!;
 				}
+				else
+				{
+					reader.Skip();
+				}
 
 				// Read the next property name.
 				reader.Read();
@@ -86,8 +89,7 @@ namespace Hertzole.GameJolt
 		protected override FetchTimeResponse CreateResponse(bool success, string? message, FetchTimeResponse existingData)
 		{
 			return new FetchTimeResponse(existingData.timestamp, existingData.timezone, existingData.year, existingData.month, existingData.day,
-				existingData.hour, existingData.minute,
-				existingData.second, existingData.Success, existingData.Message);
+				existingData.hour, existingData.minute, existingData.second, success, message);
 		}
 	}
 }

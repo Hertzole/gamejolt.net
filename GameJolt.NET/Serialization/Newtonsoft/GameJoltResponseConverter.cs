@@ -17,7 +17,7 @@ namespace Hertzole.GameJolt
 
 			writer.WriteStartObject();
 			writer.WritePropertyName("response");
-			serializer.Serialize(writer, value);
+			serializer.Serialize(writer, value.response, typeof(T));
 			writer.WriteEndObject();
 		}
 

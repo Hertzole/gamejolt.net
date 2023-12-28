@@ -15,6 +15,11 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct FetchTimeResponse : IResponse
 	{
+		[JsonName("success")]
+		[JsonConverter(typeof(GameJoltBooleanConverter))]
+		public bool Success { get; }
+		[JsonName("message")]
+		public string? Message { get; }
 		[JsonName("timestamp")]
 		[JsonConverter(typeof(GameJoltLongConverter))]
 		public readonly long timestamp;
@@ -38,11 +43,6 @@ namespace Hertzole.GameJolt
 		[JsonName("second")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int second;
-		[JsonName("success")]
-		[JsonConverter(typeof(GameJoltBooleanConverter))]
-		public bool Success { get; }
-		[JsonName("message")]
-		public string? Message { get; }
 
 		[JsonConstructor]
 		public FetchTimeResponse(long timestamp,

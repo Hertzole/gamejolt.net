@@ -14,7 +14,7 @@ namespace Hertzole.GameJolt
 
 		public sealed override bool CanWrite
 		{
-			get { return false; }
+			get { return true; }
 		}
 
 		public sealed override void WriteJson(JsonWriter writer, T value, JsonSerializer serializer)
@@ -45,6 +45,8 @@ namespace Hertzole.GameJolt
 			string? message = string.Empty;
 			T existingData = default;
 
+			reader.Read();
+            
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.

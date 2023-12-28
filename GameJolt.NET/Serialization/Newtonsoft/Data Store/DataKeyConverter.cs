@@ -19,25 +19,25 @@ namespace Hertzole.GameJolt
 
 		public override DataKey ReadJson(JsonReader reader, Type objectType, DataKey existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			Debug.Assert(reader.TokenType == JsonToken.StartObject, "reader.TokenType == JsonToken.StartObject");
+			string key = string.Empty;
 
-			// First, read the start object token.
 			reader.Read();
-
-			// Then read the property name.
-			reader.Read();
-
-			string? key = reader.ReadAsString();
 			
-			if(string.IsNullOrEmpty(key))
+			while (reader.TokenType != JsonToken.EndObject)
 			{
-				throw new JsonSerializationException("Key cannot be null or empty.");
+				// Read the property name.
+				string propertyName = (string) reader.Value!;
+
+				if (propertyName.Equals("key", StringComparison.OrdinalIgnoreCase))
+				{
+					key = reader.ReadAsString() ?? string.Empty;
+				}
+
+				// Read the next property name.
+				reader.Read();
 			}
 
-			// Read the end object token.
-			reader.Read();
-
-			return new DataKey(key!);
+			return new DataKey(key);
 		}
 	}
 }

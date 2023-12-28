@@ -9,7 +9,7 @@ namespace Hertzole.GameJolt
 		protected override void WriteResponseJson(JsonWriter writer, UsersFetchResponse value, JsonSerializer serializer)
 		{
 			writer.WritePropertyName("users");
-			serializer.Serialize(writer, value.Users);
+			serializer.Serialize(writer, value.Users, typeof(User[]));
 		}
 
 		protected override UsersFetchResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
