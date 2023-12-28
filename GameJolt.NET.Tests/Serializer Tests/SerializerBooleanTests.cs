@@ -2,9 +2,9 @@
 using NUnit.Framework;
 
 #if NET6_0_OR_GREATER
-using System.Text.Json;
+using JsonException = System.Text.Json.JsonException;
 #else
-using Newtonsoft.Json;
+using JsonException = Newtonsoft.Json.JsonSerializationException;
 #endif
 
 namespace GameJolt.NET.Tests
