@@ -4,6 +4,8 @@ namespace Hertzole.GameJolt
 {
 	internal sealed class GameJoltUserTypeConverter : GameJoltEnumConverter<UserType>
 	{
+		public static readonly GameJoltUserTypeConverter Instance = new GameJoltUserTypeConverter();
+		
 		protected override bool GetValueFromString(string value, out UserType result)
 		{
 			if (value.Equals("user", StringComparison.OrdinalIgnoreCase))

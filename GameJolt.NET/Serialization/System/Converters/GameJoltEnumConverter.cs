@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET6_0_OR_GREATER
+using System;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -7,7 +8,7 @@ namespace Hertzole.GameJolt
 {
 	internal abstract class GameJoltEnumConverter<T> : JsonConverter<T> where T : struct, Enum
 	{
-		public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public sealed override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			switch (reader.TokenType)
 			{
@@ -44,7 +45,7 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+		public sealed override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
 		{
 			writer.WriteStringValue(value.ToString());
 		}
@@ -54,3 +55,4 @@ namespace Hertzole.GameJolt
 		protected abstract bool GetValueFromInt(int value, out T result);
 	}
 }
+#endif

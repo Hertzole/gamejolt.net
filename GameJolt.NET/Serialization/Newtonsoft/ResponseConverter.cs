@@ -1,44 +1,87 @@
-﻿#if UNITY_2021_1_OR_NEWER || !NET6_0_OR_GREATER
+﻿#if !NET6_0_OR_GREATER
+#nullable enable
 using System;
 using Newtonsoft.Json;
 
 namespace Hertzole.GameJolt
 {
-	internal abstract class ResponseConverter<T> : JsonConverter<T>
+	internal abstract class ResponseConverter<T> : JsonConverter<T> where T : struct, IResponse
 	{
-		public override bool CanWrite
+		public sealed override bool CanRead
+		{
+			get { return true; }
+		}
+
+		public sealed override bool CanWrite
 		{
 			get { return false; }
 		}
 
-		public override void WriteJson(JsonWriter writer, T value, JsonSerializer serializer)
+		public sealed override void WriteJson(JsonWriter writer, T value, JsonSerializer serializer)
 		{
-			throw new NotSupportedException("This converter is only used for reading.");
+			// Serialize { "success": true, "message": "Success!" }
+
+			writer.WriteStartObject();
+
+			writer.WritePropertyName("success");
+			writer.WriteValue(value.Success);
+
+			if (!string.IsNullOrEmpty(value.Message))
+			{
+				writer.WritePropertyName("message");
+				writer.WriteValue(value.Message);
+			}
+
+			WriteResponseJson(writer, value, serializer);
+
+			writer.WriteEndObject();
 		}
 
-		public override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
+		protected virtual void WriteResponseJson(JsonWriter writer, T value, JsonSerializer serializer) { }
+
+		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
-			// Deserialize { "response": { "success": true, "message": "Success!" } }
+			bool success = false;
+			string? message = string.Empty;
+			T existingData = default;
 
-			// First, read the start object token.
-			reader.Read();
-			// Then read the property name.
-			reader.Read();
-			// Then read the start object token.
-			reader.Read();
+			while (reader.TokenType != JsonToken.EndObject)
+			{
+				// Read the property name.
+				string propertyName = (string) reader.Value!;
 
-			T response = ReadResponse(reader, serializer);
+				if (propertyName.Equals("success", StringComparison.OrdinalIgnoreCase))
+				{
+					success = GameJoltBooleanConverter.Instance.ReadJson(reader, typeof(bool), false, false, serializer);
+				}
+				else if (propertyName.Equals("message", StringComparison.OrdinalIgnoreCase))
+				{
+					message = reader.ReadAsString();
+				}
+				else
+				{
+					existingData = ReadResponseJson(reader, serializer);
 
-			// We're now at the end of the response object.
-			// Read the end object token.
-			reader.Read();
-			// Read the end object token.
-			reader.Read();
+					// If the token type is end object, we're done.
+					if (reader.TokenType == JsonToken.EndObject)
+					{
+						break;
+					}
+				}
 
-			return response;
+				// Read the next property name.
+				reader.Read();
+			}
+
+			return CreateResponse(success, message, existingData);
 		}
 
-		protected abstract T ReadResponse(JsonReader reader, JsonSerializer serializer);
+		protected virtual T ReadResponseJson(JsonReader reader, JsonSerializer serializer)
+		{
+			return default;
+		}
+
+		protected abstract T CreateResponse(bool success, string? message, T existingData);
 	}
 }
 #endif

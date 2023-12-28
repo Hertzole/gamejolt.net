@@ -1,19 +1,30 @@
-﻿#if UNITY_2021_1_OR_NEWER || !NET6_0_OR_GREATER
+﻿#if !NET6_0_OR_GREATER
 using System;
 using Newtonsoft.Json;
 
 namespace Hertzole.GameJolt
 {
-	internal sealed class GameJoltLeaderboardConverter : JsonConverter<GameJoltLeaderboard>
+	internal sealed class TableInternalConverter : JsonConverter<TableInternal>
 	{
-		public override void WriteJson(JsonWriter writer, GameJoltLeaderboard value, JsonSerializer serializer)
+		public override void WriteJson(JsonWriter writer, TableInternal value, JsonSerializer serializer)
 		{
-			throw new NotSupportedException();
+			writer.WriteStartObject();
+
+			writer.WritePropertyName("id");
+			GameJoltIntConverter.Instance.WriteJson(writer, value.id, serializer);
+			writer.WritePropertyName("name");
+			writer.WriteValue(value.name);
+			writer.WritePropertyName("description");
+			writer.WriteValue(value.description);
+			writer.WritePropertyName("primary");
+			GameJoltBooleanConverter.Instance.WriteJson(writer, value.isPrimary, serializer);
+
+			writer.WriteEndObject();
 		}
 
-		public override GameJoltLeaderboard ReadJson(JsonReader reader,
+		public override TableInternal ReadJson(JsonReader reader,
 			Type objectType,
-			GameJoltLeaderboard existingValue,
+			TableInternal existingValue,
 			bool hasExistingValue,
 			JsonSerializer serializer)
 		{
@@ -32,7 +43,7 @@ namespace Hertzole.GameJolt
 
 				if (propertyName.Equals("id", StringComparison.OrdinalIgnoreCase))
 				{
-					id = reader.ReadAsInt32() ?? 0;
+					id = GameJoltIntConverter.Instance.ReadJson(reader, typeof(int), 0, false, serializer);
 				}
 				else if (propertyName.Equals("name", StringComparison.OrdinalIgnoreCase))
 				{
@@ -44,7 +55,7 @@ namespace Hertzole.GameJolt
 				}
 				else if (propertyName.Equals("primary", StringComparison.OrdinalIgnoreCase))
 				{
-					isPrimary = reader.ReadAsBooleanWithGameJolt();
+					isPrimary = GameJoltBooleanConverter.Instance.ReadJson(reader, typeof(bool), false, false, serializer);
 				}
 				else
 				{
@@ -55,7 +66,7 @@ namespace Hertzole.GameJolt
 				reader.Read();
 			}
 
-			return new GameJoltLeaderboard(id, name, description, isPrimary);
+			return new TableInternal(id, name, description, isPrimary);
 		}
 	}
 }

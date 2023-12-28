@@ -4,6 +4,8 @@ namespace Hertzole.GameJolt
 {
 	internal sealed class GameJoltStatusConverter : GameJoltEnumConverter<UserStatus>
 	{
+		public static readonly GameJoltStatusConverter Instance = new GameJoltStatusConverter();
+		
 		protected override bool GetValueFromString(string value, out UserStatus result)
 		{
 			if (value.Equals("active", StringComparison.OrdinalIgnoreCase))

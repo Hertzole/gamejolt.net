@@ -4,15 +4,18 @@
         <LangVersion>9</LangVersion>
         <Nullable>annotations</Nullable>
         <RootNamespace>GameJolt</RootNamespace>
-<!--        <TargetFrameworks>net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>-->
-        <TargetFramework>net6.0</TargetFramework>
         <Title>GameJolt.NET</Title>
         <Authors>Hertzole</Authors>
         <Company>Hertzole</Company>
         <AssemblyVersion>1.0.0</AssemblyVersion>
+        <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' != 'net6.0'">
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="System.Buffers" Version="4.5.1" />
     </ItemGroup>
 </Project>

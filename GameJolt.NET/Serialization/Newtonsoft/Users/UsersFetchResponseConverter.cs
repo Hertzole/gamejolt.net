@@ -1,4 +1,4 @@
-﻿#if UNITY_2021_1_OR_NEWER || !NET6_0_OR_GREATER
+﻿#if !NET6_0_OR_GREATER
 using System;
 using Newtonsoft.Json;
 
@@ -6,44 +6,38 @@ namespace Hertzole.GameJolt
 {
 	internal sealed class UsersFetchResponseConverter : ResponseConverter<UsersFetchResponse>
 	{
-		protected override UsersFetchResponse ReadResponse(JsonReader reader, JsonSerializer serializer)
+		protected override void WriteResponseJson(JsonWriter writer, UsersFetchResponse value, JsonSerializer serializer)
 		{
-			bool success = false;
-			string message = string.Empty;
-			GameJoltUser[] users = Array.Empty<GameJoltUser>();
+			writer.WritePropertyName("users");
+			serializer.Serialize(writer, value.Users);
+		}
+
+		protected override UsersFetchResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
+		{
+			User[] users = Array.Empty<User>();
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
-				switch (propertyName)
+				if (propertyName.Equals("users", StringComparison.OrdinalIgnoreCase))
 				{
-					case "success":
-						bool? b = reader.ReadAsBoolean();
-						if (b == null)
-						{
-							throw new JsonSerializationException("Expected boolean.");
-						}
-
-						success = b.Value;
-						break;
-					case "message":
-						message = reader.ReadAsString();
-						break;
-					case "users":
-						reader.Read();
-						users = serializer.Deserialize<GameJoltUser[]>(reader)! ?? Array.Empty<GameJoltUser>();
-						break;
-					default:
-						throw new JsonSerializationException($"Unknown property: {propertyName}");
+					reader.Read();
+					users = serializer.Deserialize<User[]>(reader)! ?? Array.Empty<User>();
+					break;
 				}
 
 				// Read the next property name.
 				reader.Read();
 			}
 
-			return new UsersFetchResponse(success, message, users);
+			return new UsersFetchResponse(true, string.Empty, users);
+		}
+
+		protected override UsersFetchResponse CreateResponse(bool success, string? message, UsersFetchResponse existingData)
+		{
+			return new UsersFetchResponse(success, message, existingData.Users);
 		}
 	}
 }

@@ -1,9 +1,9 @@
-﻿#if UNITY_2021_1_OR_NEWER || !NET6_0_OR_GREATER
+﻿#if !NET6_0_OR_GREATER
 namespace Hertzole.GameJolt
 {
-	internal sealed class AuthResponseConverter : SimpleResponseConverter<AuthResponse>
+	internal sealed class AuthResponseConverter : ResponseConverter<AuthResponse>
 	{
-		protected override AuthResponse CreateResponse(bool success, string message)
+		protected override AuthResponse CreateResponse(bool success, string? message, AuthResponse existingData)
 		{
 			return new AuthResponse(success, message);
 		}

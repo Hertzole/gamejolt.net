@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#nullable enable
+
+namespace Hertzole.GameJolt
 {
 	internal interface IResponse
 	{

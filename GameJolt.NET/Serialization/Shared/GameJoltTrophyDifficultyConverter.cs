@@ -4,6 +4,8 @@ namespace Hertzole.GameJolt
 {
 	internal sealed class GameJoltTrophyDifficultyConverter : GameJoltEnumConverter<TrophyDifficulty>
 	{
+		public static readonly GameJoltTrophyDifficultyConverter Instance = new GameJoltTrophyDifficultyConverter();
+        
 		protected override bool GetValueFromString(string value, out TrophyDifficulty result)
 		{
 			if (value.Equals("bronze", StringComparison.OrdinalIgnoreCase))

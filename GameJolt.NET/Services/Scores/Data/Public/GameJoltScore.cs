@@ -20,10 +20,10 @@ namespace Hertzole.GameJolt
 			{
 				if (!string.IsNullOrEmpty(Username))
 				{
-					return Username;
+					return Username!;
 				}
 
-				return !string.IsNullOrEmpty(GuestName) ? GuestName : string.Empty;
+				return !string.IsNullOrEmpty(GuestName) ? GuestName! : string.Empty;
 			}
 		}
 
