@@ -110,7 +110,6 @@ namespace Hertzole.GameJolt
 
 			users!.Shutdown();
 			sessions?.Shutdown();
-			GameJoltImages.Shutdown();
 
 			webClient.Dispose();
 
