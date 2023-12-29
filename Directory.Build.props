@@ -1,0 +1,5 @@
+<Project>
+    <PropertyGroup>
+        <UnityProjectPath>$(SolutionDir)\Unity</UnityProjectPath>
+    </PropertyGroup>
+</Project>

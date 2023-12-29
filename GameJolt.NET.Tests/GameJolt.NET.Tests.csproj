@@ -7,6 +7,10 @@
         <IsPackable>false</IsPackable>
 
         <LangVersion>9</LangVersion>
+
+        <Configurations>Debug;Release;Unity</Configurations>
+
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>

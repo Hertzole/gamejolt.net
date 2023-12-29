@@ -17,7 +17,7 @@ namespace Hertzole.GameJolt
 		internal string? myUsername;
 		internal string? myToken;
 
-#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_1_OR_NEWER || NET5_0_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 		private static readonly string[] credentialsSplit = { "\n", Environment.NewLine };
 #else
 		private static readonly string[][] credentialsSplit =

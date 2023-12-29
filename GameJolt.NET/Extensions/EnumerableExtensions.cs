@@ -6,7 +6,7 @@ namespace Hertzole.GameJolt
 	{
 		public static string ToCommaSeparatedString<T>(this IEnumerable<T> array)
 		{
-#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_1_OR_NEWER || NET5_0_OR_GREATER
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 			return string.Join(',', array);
 #else
 			return string.Join(",", array);

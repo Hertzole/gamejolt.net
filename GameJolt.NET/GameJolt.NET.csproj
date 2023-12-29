@@ -9,9 +9,15 @@
         <Company>Hertzole</Company>
         <AssemblyVersion>1.0.0</AssemblyVersion>
         <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
+        <Configurations>Debug;Release;Unity</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
-    <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0')) == false">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Unity' ">
+      <DefineConstants>TRACE,UNITY_2021_1_OR_NEWER</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0')) == false Or '$(Configuration)' == 'Unity'">
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
@@ -22,4 +28,17 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
       <Reference Include="System.Net.Http" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Unity'">
+      <PackageReference Include="Unity3D" Version="2.1.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="$(UnityEditorPath)" Private="false" />
+    </ItemGroup>
+    
+    <!-- Build events -->
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Message Text="'$(UnityVersionAsNumber)'"/>
+    </Target>
 </Project>
