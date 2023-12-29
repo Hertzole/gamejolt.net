@@ -1,4 +1,6 @@
 ﻿#if !NET6_0_OR_GREATER
+#nullable enable
+
 using System;
 using Newtonsoft.Json;
 
@@ -23,7 +25,7 @@ namespace Hertzole.GameJolt
 
 				if (propertyName.Equals("data", StringComparison.OrdinalIgnoreCase))
 				{
-					data = StringOrNumberConverter.Instance.ReadJson(reader, typeof(string), string.Empty, false, serializer);
+					data = StringOrNumberConverter.Instance.ReadJson(reader, typeof(string), string.Empty, false, serializer) ?? string.Empty;
 					break;
 				}
 

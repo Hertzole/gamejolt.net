@@ -1,6 +1,7 @@
 ﻿#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_3_OR_NEWER || NET5_0_OR_GREATER
 #define NULLABLE_ATTRIBUTES
 #endif
+#nullable enable
 
 using System;
 #if NULLABLE_ATTRIBUTES
@@ -24,7 +25,7 @@ namespace Hertzole.GameJolt
 				return false;
 			}
 
-			if (response.Message.StartsWith("No item with that key could be found.", StringComparison.OrdinalIgnoreCase) ||
+			if (response.Message!.StartsWith("No item with that key could be found.", StringComparison.OrdinalIgnoreCase) ||
 			    response.Message.StartsWith("There is no item with the key passed in:", StringComparison.OrdinalIgnoreCase))
 			{
 				exception = new GameJoltInvalidDataStoreKeyException(response.Message);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,31 +40,34 @@ namespace Hertzole.GameJolt
 		{
 			return GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken);
 		}
-		
+
 		public async Task<GameJoltResult<GameJoltTrophy>> GetTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
 			int[]? trophyIds = intPool.Rent(1);
 			trophyIds[0] = trophyId;
 			GameJoltResult<GameJoltTrophy[]> result = await GetTrophiesInternalAsync(trophyIds, 1, null, cancellationToken).ConfigureAwait(false);
-			
+
 			intPool.Return(trophyIds);
-			
-			if(result.HasError)
+
+			if (result.HasError)
 			{
 				return GameJoltResult<GameJoltTrophy>.Error(result.Exception!);
 			}
-			
+
 			Debug.Assert(result.Value.Length == 1, "Result length was not 1.");
-			
+
 			return GameJoltResult<GameJoltTrophy>.Success(result.Value[0]);
 		}
-		
+
 		public Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
 			return GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken);
 		}
 
-		private async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesInternalAsync(IEnumerable<int>? trophyIds, int idLength, bool? getAchieved, CancellationToken cancellationToken)
+		private async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
+			int idLength,
+			bool? getAchieved,
+			CancellationToken cancellationToken)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult<GameJoltTrophy[]> result))
 			{
@@ -81,11 +86,11 @@ namespace Hertzole.GameJolt
 					builder.Append("&achieved=");
 					builder.Append(getAchieved.Value ? "true" : "false");
 				}
-				
-				if(trophyIds != null)
+
+				if (trophyIds != null)
 				{
 					bool addComma = false;
-					
+
 					builder.Append("&trophy_id=");
 					int i = 0;
 
@@ -109,7 +114,7 @@ namespace Hertzole.GameJolt
 						}
 					}
 				}
-				
+
 				string json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
 				FetchTrophiesResponse response = serializer.Deserialize<FetchTrophiesResponse>(json);
 
@@ -157,7 +162,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult.Success();
 			}
 		}
-		
+
 		public async Task<GameJoltResult> RemoveUnlockedTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))

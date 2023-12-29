@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -142,13 +144,13 @@ namespace Hertzole.GameJolt
 
 			Debug.Assert(response.success, "Response was successful but success was false.");
 
-			var tables = new GameJoltTable[response.tables.Length];
-			
+			GameJoltTable[] tables = new GameJoltTable[response.tables.Length];
+
 			for (int i = 0; i < response.tables.Length; i++)
 			{
 				tables[i] = response.tables[i].ToPublicTable();
 			}
-			
+
 			return GameJoltResult<GameJoltTable[]>.Success(tables);
 		}
 
@@ -205,9 +207,9 @@ namespace Hertzole.GameJolt
 				}
 
 				Debug.Assert(response.success, "Response was successful but success was false.");
-				
+
 				GameJoltScore[] scores = new GameJoltScore[response.scores.Length];
-				
+
 				for (int i = 0; i < response.scores.Length; i++)
 				{
 					scores[i] = response.scores[i].ToPublicScore();

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <LangVersion>9</LangVersion>
-        <Nullable>annotations</Nullable>
+        <Nullable>disable</Nullable>
         <RootNamespace>GameJolt</RootNamespace>
         <Title>GameJolt.NET</Title>
         <Authors>Hertzole</Authors>

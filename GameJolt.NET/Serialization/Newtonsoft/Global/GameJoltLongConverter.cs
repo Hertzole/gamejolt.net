@@ -1,4 +1,6 @@
 ﻿#if !NET6_0_OR_GREATER
+#nullable enable
+
 using System;
 using Newtonsoft.Json;
 

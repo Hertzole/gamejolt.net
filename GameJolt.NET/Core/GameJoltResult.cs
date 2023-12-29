@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace Hertzole.GameJolt
 {
@@ -6,7 +8,7 @@ namespace Hertzole.GameJolt
 	{
 		public bool HasError { get; }
 		public Exception? Exception { get; }
-		public T Value { get; }
+		public T? Value { get; }
 
 		private GameJoltResult(Exception exception)
 		{

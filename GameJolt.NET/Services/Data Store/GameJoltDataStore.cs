@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
@@ -36,7 +38,7 @@ namespace Hertzole.GameJolt
 		{
 			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken).ConfigureAwait(false);
 		}
-		
+
 		public async Task<GameJoltResult> SetAsync(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
 			return await SetAsync(key, Convert.ToBase64String(data), cancellationToken).ConfigureAwait(false);
@@ -51,7 +53,7 @@ namespace Hertzole.GameJolt
 
 			return await SetInternalAsync(key, data, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
-		
+
 		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, int data, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
@@ -59,7 +61,8 @@ namespace Hertzole.GameJolt
 				return result;
 			}
 
-			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken, cancellationToken)
+				.ConfigureAwait(false);
 		}
 
 		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, byte[] data, CancellationToken cancellationToken = default)
@@ -182,8 +185,11 @@ namespace Hertzole.GameJolt
 
 			return GameJoltResult<int>.Success(result.Value.intValue);
 		}
-		
-		public async Task<GameJoltResult<string>> UpdateAsyncAsCurrentUser(string key, string data, StringOperation operation, CancellationToken cancellationToken = default)
+
+		public async Task<GameJoltResult<string>> UpdateAsyncAsCurrentUser(string key,
+			string data,
+			StringOperation operation,
+			CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -200,8 +206,11 @@ namespace Hertzole.GameJolt
 
 			return GameJoltResult<string>.Success(result2.Value.stringValue);
 		}
-		
-		public async Task<GameJoltResult<int>> UpdateAsyncAsCurrentUser(string key, int data, NumericOperation operation, CancellationToken cancellationToken = default)
+
+		public async Task<GameJoltResult<int>> UpdateAsyncAsCurrentUser(string key,
+			int data,
+			NumericOperation operation,
+			CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -209,7 +218,8 @@ namespace Hertzole.GameJolt
 			}
 
 			GameJoltResult<(string stringValue, int intValue)> result2 =
-				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(), users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(), users.myUsername, users.myToken, cancellationToken)
+					.ConfigureAwait(false);
 
 			if (result2.HasError)
 			{
@@ -259,11 +269,11 @@ namespace Hertzole.GameJolt
 
 				Debug.Assert(response.Success, "Result was successful, but the success flag was false.");
 
-				if(!int.TryParse(response.data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
+				if (!int.TryParse(response.data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
 				{
 					intValue = 0;
 				}
-				
+
 				return GameJoltResult<(string, int)>.Success((response.data, intValue));
 			}
 		}
@@ -289,7 +299,7 @@ namespace Hertzole.GameJolt
 
 			return GameJoltResult<int>.Success(intValue);
 		}
-		
+
 		public async Task<GameJoltResult<byte[]>> GetValueAsBytesAsync(string key, CancellationToken cancellationToken = default)
 		{
 			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
@@ -308,24 +318,24 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<byte[]>.Error(e);
 			}
 		}
-		
+
 		public async Task<GameJoltResult<string>> GetValueAsStringAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return GameJoltResult<string>.Error(result.Exception!);
 			}
-			
+
 			return await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
-		
+
 		public async Task<GameJoltResult<int>> GetValueAsIntAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return GameJoltResult<int>.Error(result.Exception!);
 			}
-			
+
 			GameJoltResult<string> result2 = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 
 			if (result2.HasError)
@@ -340,14 +350,14 @@ namespace Hertzole.GameJolt
 
 			return GameJoltResult<int>.Success(intValue);
 		}
-		
+
 		public async Task<GameJoltResult<byte[]>> GetValueAsBytesAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return GameJoltResult<byte[]>.Error(result.Exception!);
 			}
-			
+
 			GameJoltResult<string> result2 = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 
 			if (result2.HasError)
@@ -364,7 +374,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<byte[]>.Error(e);
 			}
 		}
-		
+
 		private async Task<GameJoltResult<string>> GetValueInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
@@ -398,22 +408,22 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<string>.Success(result.data);
 			}
 		}
-		
+
 		public async Task<GameJoltResult<string[]>> GetKeysAsync(string? pattern = null, CancellationToken cancellationToken = default)
 		{
 			return await GetKeysInternalAsync(pattern, null, null, cancellationToken).ConfigureAwait(false);
 		}
-		
+
 		public async Task<GameJoltResult<string[]>> GetKeysAsCurrentUserAsync(string? pattern = null, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return GameJoltResult<string[]>.Error(result.Exception!);
 			}
-			
+
 			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
-		
+
 		private async Task<GameJoltResult<string[]>> GetKeysInternalAsync(string? pattern, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
@@ -425,7 +435,7 @@ namespace Hertzole.GameJolt
 					sb.Append("?pattern=");
 					sb.Append(pattern);
 				}
-				
+
 				if (!string.IsNullOrEmpty(username))
 				{
 					sb.Append(!string.IsNullOrWhiteSpace(pattern) ? '&' : '?');
@@ -450,12 +460,12 @@ namespace Hertzole.GameJolt
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
 
 				string[] keys = result.keys.Length > 0 ? new string[result.keys.Length] : Array.Empty<string>();
-				
+
 				for (int i = 0; i < result.keys.Length; i++)
 				{
 					keys[i] = result.keys[i].key;
 				}
-				
+
 				return GameJoltResult<string[]>.Success(keys);
 			}
 		}

@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#nullable enable
+
+namespace Hertzole.GameJolt
 {
 	public static class GameJoltAPI
 	{
@@ -29,7 +31,7 @@
 				return users!;
 			}
 		}
-		
+
 		public static GameJoltSessions Sessions
 		{
 			get
@@ -39,7 +41,7 @@
 				return sessions ??= new GameJoltSessions(webClient, serializer, users!);
 			}
 		}
-		
+
 		public static GameJoltScores Scores
 		{
 			get
@@ -55,41 +57,41 @@
 			get
 			{
 				ThrowIfNotInitialized();
-				
+
 				return trophies ??= new GameJoltTrophies(webClient, serializer, users!);
 			}
 		}
-		
+
 		public static GameJoltDataStore DataStore
 		{
 			get
 			{
 				ThrowIfNotInitialized();
-				
+
 				return dataStore ??= new GameJoltDataStore(webClient, serializer, users!);
 			}
 		}
-		
+
 		public static GameJoltFriends Friends
 		{
 			get
 			{
 				ThrowIfNotInitialized();
-				
+
 				return friends ??= new GameJoltFriends(webClient, serializer, users!);
 			}
 		}
-		
+
 		public static GameJoltTime Time
 		{
 			get
 			{
 				ThrowIfNotInitialized();
-				
+
 				return time ??= new GameJoltTime(webClient, serializer);
 			}
 		}
-		
+
 		public static bool IsInitialized { get; private set; }
 
 		public static void Initialize(int gameId, string privateKey)
@@ -122,7 +124,7 @@
 
 			IsInitialized = false;
 		}
-		
+
 		private static void ThrowIfNotInitialized()
 		{
 			if (!IsInitialized)

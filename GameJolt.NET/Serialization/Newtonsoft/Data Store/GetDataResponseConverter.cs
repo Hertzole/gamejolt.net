@@ -1,4 +1,6 @@
 ﻿#if !NET6_0_OR_GREATER
+#nullable enable
+
 using System;
 using Newtonsoft.Json;
 
@@ -14,7 +16,7 @@ namespace Hertzole.GameJolt
 
 		protected override GetDataResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			string? data = null;
+			string data = string.Empty;
 			
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -23,12 +25,7 @@ namespace Hertzole.GameJolt
 
 				if (propertyName.Equals("data", StringComparison.OrdinalIgnoreCase))
 				{
-					data = reader.ReadAsString();
-					if (string.IsNullOrEmpty(data))
-					{
-						data = string.Empty;
-					}
-
+					data = reader.ReadAsString() ?? string.Empty;
 					break;
 				}
 				
