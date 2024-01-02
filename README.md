@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/Hertzole/gamejolt.net/assets/5569364/0c653d6b-ee7d-4727-b18c-5b99c274680a" alt="GameJolt.NET Logo">
+<img src="https://github.com/Hertzole/gamejolt.net/assets/5569364/c2574e9a-2ab8-4e35-8c00-994f6cf07fd7" alt="GameJolt.NET Logo">
 <h4>A modern C# wrapper around the GameJolt Game API for .NET and Unity</h4>
 <a href='https://unity.com/releases/editor/whats-new/2022.3.15'><img src='https://img.shields.io/badge/Unity_Version-2022.3.15f1-black?style=for-the-badge&logo=unity' alt="Unity version 2022.3.15f1"></a>
 <br>
