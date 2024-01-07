@@ -1,5 +1,10 @@
 ﻿#nullable enable
 
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#else
+using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#endif
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -7,11 +12,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
-#else
-using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
-#endif
 
 namespace Hertzole.GameJolt
 {
@@ -36,12 +36,12 @@ namespace Hertzole.GameJolt
 		internal const string ADD_ENDPOINT = ENDPOINT + "add-achieved/";
 		internal const string REMOVE_ENDPOINT = ENDPOINT + "remove-achieved/";
 
-		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
+		public async GameJoltTrophyArrayTask GetTrophiesAsync(CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
+		public async GameJoltTrophyArrayTask GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken).ConfigureAwait(false);
 		}
