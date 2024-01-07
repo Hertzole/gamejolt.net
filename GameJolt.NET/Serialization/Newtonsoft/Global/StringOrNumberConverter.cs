@@ -45,12 +45,12 @@ namespace Hertzole.GameJolt
 				return string.Empty;
 			}
 
-			if (int.TryParse(stringValue, out int intValue))
+			if (int.TryParse(stringValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
 			{
 				return intValue.ToString(CultureInfo.InvariantCulture);
 			}
 
-			if (double.TryParse(stringValue, out double doubleValue))
+			if (double.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))
 			{
 				return doubleValue.ToString(CultureInfo.InvariantCulture);
 			}

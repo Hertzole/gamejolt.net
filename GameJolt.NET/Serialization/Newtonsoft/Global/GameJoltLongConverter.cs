@@ -2,6 +2,7 @@
 #nullable enable
 
 using System;
+using System.Globalization;
 using Newtonsoft.Json;
 
 namespace Hertzole.GameJolt
@@ -28,7 +29,7 @@ namespace Hertzole.GameJolt
 		public override long ReadJson(JsonReader reader, Type objectType, long existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			reader.Read();
-			
+
 			switch (reader.TokenType)
 			{
 				case JsonToken.Integer:
@@ -43,12 +44,12 @@ namespace Hertzole.GameJolt
 				throw new JsonSerializationException("Value cannot be null or empty.");
 			}
 
-			if (long.TryParse(stringValue, out long intValue))
+			if (long.TryParse(stringValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long intValue))
 			{
 				return intValue;
 			}
 
-			if (double.TryParse(stringValue, out double doubleValue))
+			if (double.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))
 			{
 				return (int) doubleValue;
 			}

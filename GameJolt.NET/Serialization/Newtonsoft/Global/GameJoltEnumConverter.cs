@@ -2,6 +2,7 @@
 #nullable enable
 
 using System;
+using System.Globalization;
 using Newtonsoft.Json;
 
 namespace Hertzole.GameJolt
@@ -16,7 +17,7 @@ namespace Hertzole.GameJolt
 		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			reader.Read();
-            
+
 			switch (reader.TokenType)
 			{
 				case JsonToken.Integer:
@@ -41,7 +42,7 @@ namespace Hertzole.GameJolt
 						return result;
 					}
 
-					if (int.TryParse(value, out int intValue) && GetValueFromInt(intValue, out T intResult))
+					if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue) && GetValueFromInt(intValue, out T intResult))
 					{
 						return intResult;
 					}
@@ -51,9 +52,9 @@ namespace Hertzole.GameJolt
 					throw new JsonSerializationException($"Expected number or string, got {reader.TokenType}.");
 			}
 		}
-		
+
 		protected abstract bool GetValueFromString(string value, out T result);
-		
+
 		protected abstract bool GetValueFromInt(int value, out T result);
 	}
 }
