@@ -317,9 +317,14 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<byte[]>.Error(result.Exception!);
 			}
 
+			if (string.IsNullOrEmpty(result.Value))
+			{
+				return GameJoltResult<byte[]>.Success(Array.Empty<byte>());
+			}
+
 			try
 			{
-				return GameJoltResult<byte[]>.Success(Convert.FromBase64String(result.Value));
+				return GameJoltResult<byte[]>.Success(Convert.FromBase64String(result.Value!));
 			}
 			catch (FormatException e)
 			{
@@ -372,10 +377,15 @@ namespace Hertzole.GameJolt
 			{
 				return GameJoltResult<byte[]>.Error(result2.Exception!);
 			}
+			
+			if (string.IsNullOrEmpty(result2.Value))
+			{
+				return GameJoltResult<byte[]>.Success(Array.Empty<byte>());
+			}
 
 			try
 			{
-				return GameJoltResult<byte[]>.Success(Convert.FromBase64String(result2.Value));
+				return GameJoltResult<byte[]>.Success(Convert.FromBase64String(result2.Value!));
 			}
 			catch (FormatException e)
 			{
