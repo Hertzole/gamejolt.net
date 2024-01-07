@@ -109,7 +109,6 @@ namespace Hertzole.GameJolt
 			ThrowIfNotInitialized();
 
 			users!.Shutdown();
-			sessions?.Shutdown();
 
 			webClient.Dispose();
 

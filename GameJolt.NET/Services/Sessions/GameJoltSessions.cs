@@ -172,7 +172,5 @@ namespace Hertzole.GameJolt
 		{
 			return status == SessionStatus.Active ? "active" : "idle";
 		}
-
-		internal void Shutdown() { }
 	}
 }
