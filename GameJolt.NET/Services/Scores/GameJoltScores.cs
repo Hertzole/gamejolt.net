@@ -5,6 +5,13 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
+using GameJoltScoreArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
+#else
+using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
+using GameJoltScoreArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -26,7 +33,7 @@ namespace Hertzole.GameJolt
 		internal const string GET_RANK_ENDPOINT = ENDPOINT + "get-rank/";
 		internal const string GET_TABLES_ENDPOINT = ENDPOINT + "tables/";
 
-		public Task<GameJoltResult> SubmitScoreAsync(int tableId,
+		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			int sort,
 			string score,
 			string extraData = "",
@@ -34,23 +41,24 @@ namespace Hertzole.GameJolt
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
-				return Task.FromResult(result);
+				return result;
 			}
 
-			return SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort, score, extraData, cancellationToken);
+			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort, score, extraData, cancellationToken)
+				.ConfigureAwait(false);
 		}
 
-		public Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
+		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			int sort,
 			string score,
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
-			return SubmitScoreInternalAsync(tableId, null, null, guestName, sort, score, extraData, cancellationToken);
+			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort, score, extraData, cancellationToken).ConfigureAwait(false);
 		}
 
-		private async Task<GameJoltResult> SubmitScoreInternalAsync(int? tableId,
+		private async GameJoltResultTask SubmitScoreInternalAsync(int? tableId,
 			string? username,
 			string? token,
 			string? guestName,
@@ -94,7 +102,7 @@ namespace Hertzole.GameJolt
 					builder.Append(tableId.Value);
 				}
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken);
+				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
 				SubmitScoreResponse response = serializer.Deserialize<SubmitScoreResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -118,7 +126,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&table_id=");
 				builder.Append(tableId);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken);
+				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
 				GetScoreRankResponse response = serializer.Deserialize<GetScoreRankResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -134,7 +142,7 @@ namespace Hertzole.GameJolt
 
 		public async Task<GameJoltResult<GameJoltTable[]>> GetTablesAsync(CancellationToken cancellationToken = default)
 		{
-			string? json = await webClient.GetStringAsync(GET_TABLES_ENDPOINT, cancellationToken);
+			string? json = await webClient.GetStringAsync(GET_TABLES_ENDPOINT, cancellationToken).ConfigureAwait(false);
 			GetTablesResponse response = serializer.Deserialize<GetTablesResponse>(json);
 
 			if (response.TryGetException(out Exception? exception))
@@ -159,7 +167,7 @@ namespace Hertzole.GameJolt
 			return new GetScoresQuery(this);
 		}
 
-		internal async Task<GameJoltResult<GameJoltScore[]>> GetScoresAsync(GetScoresQuery query, CancellationToken cancellationToken)
+		internal async GameJoltScoreArrayTask GetScoresAsync(GetScoresQuery query, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
@@ -198,7 +206,7 @@ namespace Hertzole.GameJolt
 					builder.Append(query.worseThan.Value);
 				}
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken);
+				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
 				GetScoresResponse response = serializer.Deserialize<GetScoresResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))

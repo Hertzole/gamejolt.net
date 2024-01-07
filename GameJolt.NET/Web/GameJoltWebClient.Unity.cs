@@ -2,12 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using StringTask = System.Threading.Tasks.ValueTask<string>;
+#else
+using StringTask = System.Threading.Tasks.Task<string>;
+#endif
 
 namespace Hertzole.GameJolt
 {
 	internal partial class GameJoltWebClient
 	{
-		private partial async Task<string> SendGetRequestAsync(string url, CancellationToken cancellationToken)
+		private partial async StringTask SendGetRequestAsync(string url, CancellationToken cancellationToken)
 		{
 			TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
 
@@ -38,7 +43,7 @@ namespace Hertzole.GameJolt
 				}
 			});
 
-			return await tcs.Task;
+			return await tcs.Task.ConfigureAwait(false);
 		}
 	}
 }

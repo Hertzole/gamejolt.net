@@ -18,10 +18,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ADD_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new SubmitScoreResponse(true, null)));
+					return FromResult(serializer.Serialize(new SubmitScoreResponse(true, null)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
@@ -41,10 +41,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ADD_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new SubmitScoreResponse(true, null)));
+					return FromResult(serializer.Serialize(new SubmitScoreResponse(true, null)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", 0, "0", "Extra Data");
@@ -72,10 +72,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.GET_RANK_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new GetScoreRankResponse(true, null, 0)));
+					return FromResult(serializer.Serialize(new GetScoreRankResponse(true, null, 0)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<int> result = await GameJoltAPI.Scores.GetRankAsync(0, 0);
@@ -96,13 +96,13 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.GET_TABLES_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new GetTablesResponse(true, null, new TableInternal[1]
+					return FromResult(serializer.Serialize(new GetTablesResponse(true, null, new TableInternal[1]
 					{
 						table
 					})));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTable[]> result = await GameJoltAPI.Scores.GetTablesAsync();
@@ -128,13 +128,13 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new GetScoresResponse(true, null, new ScoreInternal[1]
+					return FromResult(serializer.Serialize(new GetScoresResponse(true, null, new ScoreInternal[1]
 					{
 						score
 					})));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltScore[]> result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForUser("test", "test")

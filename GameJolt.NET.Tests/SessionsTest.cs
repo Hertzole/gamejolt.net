@@ -20,10 +20,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
@@ -46,10 +46,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
@@ -77,10 +77,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
@@ -103,10 +103,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/close") || arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			await GameJoltAPI.Sessions.OpenAsync();
@@ -130,10 +130,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/close"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
@@ -156,10 +156,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/close") || arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
@@ -185,10 +185,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/ping") || arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			await GameJoltAPI.Sessions.OpenAsync();
@@ -212,10 +212,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/ping"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(SessionStatus.Active);
@@ -226,7 +226,6 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[NonParallelizable]
 		public async Task Ping_NotOpen_Fail()
 		{
 			await AuthenticateAsync();
@@ -239,10 +238,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/ping") || arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(SessionStatus.Active);
@@ -266,10 +265,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/check") || arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			await GameJoltAPI.Sessions.OpenAsync();
@@ -296,10 +295,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/check") || arg.Contains("sessions/open"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<bool> result = await GameJoltAPI.Sessions.CheckAsync();
@@ -321,10 +320,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("sessions/check"))
 				{
-					return Task.FromResult(json);
+					return FromResult(json);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<bool> result = await GameJoltAPI.Sessions.CheckAsync();

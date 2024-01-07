@@ -4,6 +4,11 @@ using Bogus;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using StringTask = System.Threading.Tasks.ValueTask<string>;
+#else
+using StringTask = System.Threading.Tasks.Task<string>;
+#endif
 
 namespace GameJolt.NET.Tests
 {
@@ -49,15 +54,15 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser())));
+					return FromResult(serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser())));
 				}
 
 				if (arg.Contains("users/auth"))
 				{
-					return Task.FromResult(serializer.Serialize(new AuthResponse(true, null)));
+					return FromResult(serializer.Serialize(new AuthResponse(true, null)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
@@ -129,6 +134,15 @@ namespace GameJolt.NET.Tests
 		internal static byte[] CreateDummyBytes()
 		{
 			return randomizer.Bytes(1024);
+		}
+
+		protected static StringTask FromResult(string result)
+		{
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+			return ValueTask.FromResult(result);
+#else
+			return Task.FromResult(result);
+#endif
 		}
 	}
 }

@@ -6,6 +6,17 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
+using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
+using GameJoltStringTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string>>;
+using GameJoltStringArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string[]>>;
+#else
+using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
+using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
+using GameJoltStringTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string>>;
+using GameJoltStringArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string[]>>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -70,7 +81,7 @@ namespace Hertzole.GameJolt
 			return await SetAsyncAsCurrentUser(key, Convert.ToBase64String(data), cancellationToken).ConfigureAwait(false);
 		}
 
-		private async Task<GameJoltResult> SetInternalAsync(string key, string data, string? username, string? token, CancellationToken cancellationToken)
+		private async GameJoltResultTask SetInternalAsync(string key, string data, string? username, string? token, CancellationToken cancellationToken)
 		{
 			if (string.IsNullOrWhiteSpace(data))
 			{
@@ -126,7 +137,7 @@ namespace Hertzole.GameJolt
 			return await RemoveInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
 
-		private async Task<GameJoltResult> RemoveInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
+		private async GameJoltResultTask RemoveInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -176,7 +187,8 @@ namespace Hertzole.GameJolt
 		public async Task<GameJoltResult<int>> UpdateAsync(string key, int data, NumericOperation operation, CancellationToken cancellationToken = default)
 		{
 			GameJoltResult<(string stringValue, int intValue)> result =
-				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(), null, null, cancellationToken).ConfigureAwait(false);
+				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken)
+					.ConfigureAwait(false);
 
 			if (result.HasError)
 			{
@@ -218,7 +230,8 @@ namespace Hertzole.GameJolt
 			}
 
 			GameJoltResult<(string stringValue, int intValue)> result2 =
-				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(), users.myUsername, users.myToken, cancellationToken)
+				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken,
+						cancellationToken)
 					.ConfigureAwait(false);
 
 			if (result2.HasError)
@@ -229,12 +242,7 @@ namespace Hertzole.GameJolt
 			return GameJoltResult<int>.Success(result2.Value.intValue);
 		}
 
-		private async Task<GameJoltResult<(string stringValue, int intValue)>> UpdateInternalAsync(string key,
-			string operation,
-			string value,
-			string? username,
-			string? token,
-			CancellationToken cancellationToken)
+		private async StringIntTask UpdateInternalAsync(string key, string operation, string value, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -375,7 +383,7 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		private async Task<GameJoltResult<string>> GetValueInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
+		private async GameJoltStringTask GetValueInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -424,7 +432,7 @@ namespace Hertzole.GameJolt
 			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
 
-		private async Task<GameJoltResult<string[]>> GetKeysInternalAsync(string? pattern, string? username, string? token, CancellationToken cancellationToken)
+		private async GameJoltStringArrayTask GetKeysInternalAsync(string? pattern, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{

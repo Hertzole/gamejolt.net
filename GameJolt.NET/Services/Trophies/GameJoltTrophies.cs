@@ -7,6 +7,11 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#else
+using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -31,19 +36,19 @@ namespace Hertzole.GameJolt
 		internal const string ADD_ENDPOINT = ENDPOINT + "add-achieved/";
 		internal const string REMOVE_ENDPOINT = ENDPOINT + "remove-achieved/";
 
-		public Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
 		{
-			return GetTrophiesInternalAsync(null, 0, null, cancellationToken);
+			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		public Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
 		{
-			return GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken);
+			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken).ConfigureAwait(false);
 		}
 
 		public async Task<GameJoltResult<GameJoltTrophy>> GetTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
-			int[]? trophyIds = intPool.Rent(1);
+			int[] trophyIds = intPool.Rent(1);
 			trophyIds[0] = trophyId;
 			GameJoltResult<GameJoltTrophy[]> result = await GetTrophiesInternalAsync(trophyIds, 1, null, cancellationToken).ConfigureAwait(false);
 
@@ -59,12 +64,12 @@ namespace Hertzole.GameJolt
 			return GameJoltResult<GameJoltTrophy>.Success(result.Value[0]);
 		}
 
-		public Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
-			return GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken);
+			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		private async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
+		private async GameJoltTrophyArrayTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
 			int idLength,
 			bool? getAchieved,
 			CancellationToken cancellationToken)

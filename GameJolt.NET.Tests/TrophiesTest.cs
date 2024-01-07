@@ -20,10 +20,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
@@ -48,10 +48,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new FetchTrophiesResponse(false, "Not authenticated.", null)));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(false, "Not authenticated.", null)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
@@ -75,10 +75,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(true);
@@ -107,10 +107,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(false);
@@ -140,10 +140,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy1, trophy2 })));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy1, trophy2 })));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(new[] { trophy1.id, trophy2.id });
@@ -179,10 +179,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return Task.FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltTrophy> result = await GameJoltAPI.Trophies.GetTrophyAsync(0);
@@ -208,10 +208,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(true, null)));
+					return FromResult(serializer.Serialize(new TrophyResponse(true, null)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0);
@@ -229,10 +229,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(false, "Not authenticated.")));
+					return FromResult(serializer.Serialize(new TrophyResponse(false, "Not authenticated.")));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0);
@@ -253,10 +253,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltInvalidTrophyException.MESSAGE)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0);
@@ -277,10 +277,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(true, null)));
+					return FromResult(serializer.Serialize(new TrophyResponse(true, null)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
@@ -298,10 +298,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(false, "Not authenticated.")));
+					return FromResult(serializer.Serialize(new TrophyResponse(false, "Not authenticated.")));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
@@ -322,10 +322,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltInvalidTrophyException.MESSAGE)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
@@ -346,10 +346,10 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return Task.FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltLockedTrophyException.MESSAGE)));
+					return FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltLockedTrophyException.MESSAGE)));
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);

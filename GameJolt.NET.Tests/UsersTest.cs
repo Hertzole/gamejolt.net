@@ -20,15 +20,15 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
 				if (arg.Contains("users/auth"))
 				{
-					return Task.FromResult(authJson);
+					return FromResult(authJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
@@ -41,7 +41,7 @@ namespace GameJolt.NET.Tests
 		public async Task Authenticate_InvalidToken_Failure()
 		{
 			string authJson = serializer.Serialize(new AuthResponse(false, GameJoltAuthenticationException.MESSAGE));
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(Task.FromResult(authJson));
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
 
@@ -63,15 +63,15 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
 				if (arg.Contains("users/auth"))
 				{
-					return Task.FromResult(authJson);
+					return FromResult(authJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			bool invoked = false;
@@ -88,7 +88,7 @@ namespace GameJolt.NET.Tests
 		public async Task Authenticate_DoesNotInvokeAuthenticateEvent_Failure()
 		{
 			string authJson = serializer.Serialize(new AuthResponse(false, GameJoltAuthenticationException.MESSAGE));
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(Task.FromResult(authJson));
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			bool invoked = false;
 			GameJoltAPI.Users.OnUserAuthenticated += user => { invoked = true; };
@@ -115,15 +115,15 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
 				if (arg.Contains("users/auth"))
 				{
-					return Task.FromResult(authJson);
+					return FromResult(authJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(url);
@@ -138,7 +138,7 @@ namespace GameJolt.NET.Tests
 		public async Task Authenticate_Url_Failure(string url)
 		{
 			string authJson = serializer.Serialize(new AuthResponse(false, GameJoltAuthenticationException.MESSAGE));
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(Task.FromResult(authJson));
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(url);
 
@@ -159,15 +159,15 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
 				if (arg.Contains("users/auth"))
 				{
-					return Task.FromResult(authJson);
+					return FromResult(authJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			const string credentials = @"0.2.1
@@ -192,10 +192,10 @@ test
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync("Username");
@@ -216,10 +216,10 @@ test
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(0);
@@ -240,10 +240,10 @@ test
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync("Username");
@@ -264,10 +264,10 @@ test
 
 				if (arg.Contains("users/?"))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(0);
@@ -288,10 +288,10 @@ test
 
 				if (arg.Contains("username="))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" });
@@ -313,10 +313,10 @@ test
 
 				if (arg.Contains("user_id="))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 });
@@ -338,10 +338,10 @@ test
 
 				if (arg.Contains("username="))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" });
@@ -362,10 +362,10 @@ test
 
 				if (arg.Contains("user_id="))
 				{
-					return Task.FromResult(userJson);
+					return FromResult(userJson);
 				}
 
-				return Task.FromResult("");
+				return FromResult("");
 			});
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 });

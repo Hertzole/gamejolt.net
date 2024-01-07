@@ -15,7 +15,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", "value");
@@ -31,7 +31,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", 1);
@@ -47,7 +47,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", CreateDummyBytes());
@@ -65,7 +65,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", "value");
@@ -83,7 +83,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", 1);
@@ -101,7 +101,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", CreateDummyBytes());
@@ -147,7 +147,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsync("key");
@@ -165,7 +165,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new StoreDataResponse(true, null));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("key");
@@ -206,7 +206,7 @@ namespace GameJolt.NET.Tests
 
 				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsync("key", "1", operation);
@@ -266,7 +266,7 @@ namespace GameJolt.NET.Tests
 
 				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsync("key", 1, operation);
@@ -321,7 +321,7 @@ namespace GameJolt.NET.Tests
 
 				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", "1", operation);
@@ -383,7 +383,7 @@ namespace GameJolt.NET.Tests
 
 				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", 1, operation);
@@ -449,7 +449,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new GetDataResponse(true, null, "value"));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.GetValueAsStringAsync("key");
@@ -466,7 +466,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new GetDataResponse(true, null, "1"));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsync("key");
@@ -485,7 +485,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key");
@@ -504,7 +504,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new GetDataResponse(true, null, "value"));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.GetValueAsStringAsCurrentUserAsync("key");
@@ -523,7 +523,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new GetDataResponse(true, null, "1"));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsCurrentUserAsync("key");
@@ -544,7 +544,7 @@ namespace GameJolt.NET.Tests
 			{
 				string json = serializer.Serialize(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
@@ -608,7 +608,7 @@ namespace GameJolt.NET.Tests
 					new DataKey("key2")
 				}));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsync(pattern);
@@ -646,7 +646,7 @@ namespace GameJolt.NET.Tests
 					new DataKey("key2")
 				}));
 
-				return Task.FromResult(json);
+				return FromResult(json);
 			});
 
 			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync(pattern);

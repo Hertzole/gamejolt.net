@@ -2,7 +2,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using StringTask = System.Threading.Tasks.ValueTask<string>;
+#else
+using StringTask = System.Threading.Tasks.Task<string>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -10,7 +14,7 @@ namespace Hertzole.GameJolt
 	{
 		private const string BASE_URL = "https://api.gamejolt.com/api/game/v1_2/";
 
-		public async Task<string> GetStringAsync(string url, CancellationToken cancellationToken)
+		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
@@ -43,11 +47,11 @@ namespace Hertzole.GameJolt
 					}
 				}
 
-				return await SendGetRequestAsync(builder.ToString(), cancellationToken);
+				return await SendGetRequestAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
 			}
 		}
 
-		private partial Task<string> SendGetRequestAsync(string url, CancellationToken cancellationToken);
+		private partial StringTask SendGetRequestAsync(string url, CancellationToken cancellationToken);
 
 		public void Dispose()
 		{

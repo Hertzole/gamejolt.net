@@ -3,7 +3,11 @@
 
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using StringTask = System.Threading.Tasks.ValueTask<string>;
+#else
+using StringTask = System.Threading.Tasks.Task<string>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -11,14 +15,14 @@ namespace Hertzole.GameJolt
 	{
 		private readonly HttpClient client = new HttpClient();
 
-		private partial async Task<string> SendGetRequestAsync(string url, CancellationToken cancellationToken)
+		private partial async StringTask SendGetRequestAsync(string url, CancellationToken cancellationToken)
 		{
-			string? response = await client.GetStringAsync(url, cancellationToken);
+			string? response = await client.GetStringAsync(url, cancellationToken).ConfigureAwait(false);
 			if (string.IsNullOrEmpty(response))
 			{
 				throw new GameJoltException("Response was empty.");
 			}
-			
+
 			return response!;
 		}
 	}
