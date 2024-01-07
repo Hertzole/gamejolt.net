@@ -1,8 +1,6 @@
-﻿
-#nullable enable
+﻿#nullable enable
 
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,24 +41,8 @@ namespace Hertzole.GameJolt
 
 		private static TimeZoneInfo GetTimeZone()
 		{
-			try
-			{
-				return TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
-			}
-			catch (TimeZoneNotFoundException e)
-			{
-				ReadOnlyCollection<TimeZoneInfo>? allZones = TimeZoneInfo.GetSystemTimeZones();
-				
-				foreach (TimeZoneInfo zone in allZones)
-				{
-					if (zone.Id.Contains("Eastern Standard Time"))
-					{
-						return zone;
-					}
-				}
-				
-				throw new TimeZoneNotFoundException("Could not find the New York time zone.", e);
-			}
+			// Because getting the timezone is finicky at best, let's just create it.
+			return TimeZoneInfo.CreateCustomTimeZone("America/New_York", TimeSpan.FromHours(-5), "Eastern Standard Time", "Eastern Standard Time");
 		}
 	}
 }
