@@ -47,7 +47,7 @@ namespace Hertzole.GameJolt
 			}
 
 			// Get the index of the token.
-			int tokenIndex = queryUrl.IndexOf(name);
+			int tokenIndex = queryUrl.IndexOf(name, StringComparison.OrdinalIgnoreCase);
 			if (tokenIndex == -1) // Token not found.
 			{
 				token = default;
