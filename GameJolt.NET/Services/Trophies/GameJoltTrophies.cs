@@ -45,6 +45,11 @@ namespace Hertzole.GameJolt
 		{
 			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken).ConfigureAwait(false);
 		}
+		
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
+		{
+			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken).ConfigureAwait(false);
+		}
 
 		public async Task<GameJoltResult<GameJoltTrophy>> GetTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
@@ -62,11 +67,6 @@ namespace Hertzole.GameJolt
 			Debug.Assert(result.Value!.Length == 1, "Result length was not 1.");
 
 			return GameJoltResult<GameJoltTrophy>.Success(result.Value[0]);
-		}
-
-		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
-		{
-			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken).ConfigureAwait(false);
 		}
 
 		private async GameJoltTrophyArrayTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,

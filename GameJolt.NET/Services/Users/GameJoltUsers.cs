@@ -83,13 +83,11 @@ namespace Hertzole.GameJolt
 
 		public async Task<GameJoltResult> AuthenticateFromUrlAsync(Uri url, CancellationToken cancellationToken = default)
 		{
-			if (url.Host.EndsWith("gamejolt.com", StringComparison.OrdinalIgnoreCase) || url.Host.EndsWith("gamejolt.net", StringComparison.OrdinalIgnoreCase))
+			if ((url.Host.EndsWith("gamejolt.com", StringComparison.OrdinalIgnoreCase) || url.Host.EndsWith("gamejolt.net", StringComparison.OrdinalIgnoreCase))
+			    && QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
+			    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
 			{
-				if (QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
-				    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
-				{
-					return await AuthenticateAsync(username!, token!, cancellationToken).ConfigureAwait(false);
-				}
+				return await AuthenticateAsync(username!, token!, cancellationToken).ConfigureAwait(false);
 			}
 
 			return GameJoltResult.Error(new ArgumentException("Invalid URL.", nameof(url)));
@@ -144,6 +142,26 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
 			}
 		}
+		
+		public async Task<GameJoltResult<GameJoltUser>> FetchUserAsync(int userId, CancellationToken cancellationToken = default)
+		{
+			using (StringBuilderPool.Rent(out StringBuilder builder))
+			{
+				builder.Append(ENDPOINT);
+				builder.Append("?user_id=");
+				builder.Append(userId);
+
+				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
+
+				if (response.TryGetException(out Exception? exception))
+				{
+					return GameJoltResult<GameJoltUser>.Error(exception!);
+				}
+
+				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
+			}
+		}
 
 		public async Task<GameJoltResult<GameJoltUser[]>> FetchUsersAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
 		{
@@ -173,26 +191,6 @@ namespace Hertzole.GameJolt
 				}
 
 				return GameJoltResult<GameJoltUser[]>.Success(users);
-			}
-		}
-
-		public async Task<GameJoltResult<GameJoltUser>> FetchUserAsync(int userId, CancellationToken cancellationToken = default)
-		{
-			using (StringBuilderPool.Rent(out StringBuilder builder))
-			{
-				builder.Append(ENDPOINT);
-				builder.Append("?user_id=");
-				builder.Append(userId);
-
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
-				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
-
-				if (response.TryGetException(out Exception? exception))
-				{
-					return GameJoltResult<GameJoltUser>.Error(exception!);
-				}
-
-				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
 			}
 		}
 
