@@ -27,7 +27,7 @@ namespace Hertzole.GameJolt
 
 		public async Task<GameJoltResult<DateTime>> GetTimeAsync(CancellationToken cancellationToken = default)
 		{
-			string json = await webClient.GetStringAsync(ENDPOINT, cancellationToken);
+			string json = await webClient.GetStringAsync(ENDPOINT, cancellationToken).ConfigureAwait(false);
 			FetchTimeResponse response = settings.Deserialize<FetchTimeResponse>(json);
 
 			if (response.TryGetException(out Exception? exception))

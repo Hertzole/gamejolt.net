@@ -72,7 +72,7 @@ namespace Hertzole.GameJolt
 
 		public async Task<GameJoltResult<GameJoltScore[]>> GetAsync(CancellationToken cancellationToken = default)
 		{
-			return await scores.GetScoresAsync(this, cancellationToken);
+			return await scores.GetScoresAsync(this, cancellationToken).ConfigureAwait(false);
 		}
 	}
 }

@@ -1,5 +1,4 @@
-﻿
-#nullable enable
+﻿#nullable enable
 
 using System;
 using System.Diagnostics;
@@ -30,7 +29,7 @@ namespace Hertzole.GameJolt
 			{
 				return result;
 			}
-			
+
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
 				sb.Append(ENDPOINT);
@@ -38,8 +37,8 @@ namespace Hertzole.GameJolt
 				sb.Append(users.myUsername);
 				sb.Append("&user_token=");
 				sb.Append(users.myToken);
-				
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken);
+
+				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
 				FetchFriendsResponse response = serializer.Deserialize<FetchFriendsResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
