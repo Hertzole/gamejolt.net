@@ -58,7 +58,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -93,7 +93,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -131,7 +131,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -159,7 +159,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<bool>.Error(exception);
+					return GameJoltResult<bool>.Error(exception!);
 				}
 
 				// No assert here since the response 'Success' field is tied to the session status.

@@ -107,7 +107,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -131,7 +131,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<int>.Error(exception);
+					return GameJoltResult<int>.Error(exception!);
 				}
 
 				Debug.Assert(response.success, "Response was successful but success was false.");
@@ -147,7 +147,7 @@ namespace Hertzole.GameJolt
 
 			if (response.TryGetException(out Exception? exception))
 			{
-				return GameJoltResult<GameJoltTable[]>.Error(exception);
+				return GameJoltResult<GameJoltTable[]>.Error(exception!);
 			}
 
 			Debug.Assert(response.success, "Response was successful but success was false.");
@@ -211,7 +211,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltScore[]>.Error(exception);
+					return GameJoltResult<GameJoltScore[]>.Error(exception!);
 				}
 
 				Debug.Assert(response.success, "Response was successful but success was false.");

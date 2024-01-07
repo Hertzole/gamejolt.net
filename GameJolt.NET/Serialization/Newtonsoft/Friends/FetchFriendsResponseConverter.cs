@@ -26,7 +26,7 @@ namespace Hertzole.GameJolt
 				if (propertyName.Equals("friends", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					friends = serializer.Deserialize<FriendId[]>(reader);
+					friends = serializer.Deserialize<FriendId[]>(reader) ?? Array.Empty<FriendId>();
 					break;
 				}
 

@@ -113,7 +113,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
@@ -162,7 +162,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
@@ -272,7 +272,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<(string, int)>.Error(exception);
+					return GameJoltResult<(string, int)>.Error(exception!);
 				}
 
 				Debug.Assert(response.Success, "Result was successful, but the success flag was false.");
@@ -408,7 +408,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<string>.Error(exception);
+					return GameJoltResult<string>.Error(exception!);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
@@ -462,7 +462,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<string[]>.Error(exception);
+					return GameJoltResult<string[]>.Error(exception!);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");

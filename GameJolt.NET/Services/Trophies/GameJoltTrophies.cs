@@ -59,7 +59,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<GameJoltTrophy>.Error(result.Exception!);
 			}
 
-			Debug.Assert(result.Value.Length == 1, "Result length was not 1.");
+			Debug.Assert(result.Value!.Length == 1, "Result length was not 1.");
 
 			return GameJoltResult<GameJoltTrophy>.Success(result.Value[0]);
 		}
@@ -125,7 +125,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltTrophy[]>.Error(exception);
+					return GameJoltResult<GameJoltTrophy[]>.Error(exception!);
 				}
 
 				GameJoltTrophy[] trophies = response.trophies.Length > 0 ? new GameJoltTrophy[response.trophies.Length] : Array.Empty<GameJoltTrophy>();
@@ -161,7 +161,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				return GameJoltResult.Success();
@@ -190,7 +190,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				return GameJoltResult.Success();

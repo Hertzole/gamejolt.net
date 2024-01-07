@@ -43,7 +43,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<int[]>.Error(exception);
+					return GameJoltResult<int[]>.Error(exception!);
 				}
 
 				Debug.Assert(response.Success, "Response was successful, but Success was false.");

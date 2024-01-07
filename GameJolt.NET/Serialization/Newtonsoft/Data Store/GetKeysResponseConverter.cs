@@ -27,7 +27,7 @@ namespace Hertzole.GameJolt
 				{
 					reader.Read();
 					
-					keys = serializer.Deserialize<DataKey[]>(reader);
+					keys = serializer.Deserialize<DataKey[]>(reader) ?? Array.Empty<DataKey>();
 					break;
 				}
 

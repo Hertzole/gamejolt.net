@@ -59,7 +59,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception);
+					return GameJoltResult.Error(exception!);
 				}
 
 				GameJoltResult<GameJoltUser> fetchResponse = await FetchUserAsync(myUsername, cancellationToken).ConfigureAwait(false);
@@ -138,7 +138,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltUser>.Error(exception);
+					return GameJoltResult<GameJoltUser>.Error(exception!);
 				}
 
 				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
@@ -163,7 +163,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(exception);
+					return GameJoltResult<GameJoltUser[]>.Error(exception!);
 				}
 
 				GameJoltUser[] users = new GameJoltUser[response.Users.Length];
@@ -189,7 +189,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltUser>.Error(exception);
+					return GameJoltResult<GameJoltUser>.Error(exception!);
 				}
 
 				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
@@ -214,7 +214,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(exception);
+					return GameJoltResult<GameJoltUser[]>.Error(exception!);
 				}
 
 				GameJoltUser[] users = new GameJoltUser[response.Users.Length];

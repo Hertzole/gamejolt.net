@@ -30,7 +30,7 @@ namespace Hertzole.GameJolt
 
 			if (response.TryGetException(out Exception? exception))
 			{
-				return GameJoltResult<DateTime>.Error(exception);
+				return GameJoltResult<DateTime>.Error(exception!);
 			}
 
 			Debug.Assert(response.Success, "Response was successful, but success was false.");
