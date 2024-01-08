@@ -12,7 +12,7 @@ namespace GameJolt.NET.Tests
 		{
 			string authJson = serializer.Serialize(new AuthResponse(true, null));
 			string userJson =
-				serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser()));
+				serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -55,7 +55,7 @@ namespace GameJolt.NET.Tests
 		{
 			string authJson = serializer.Serialize(new AuthResponse(true, null));
 			string userJson =
-				serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser()));
+				serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -107,7 +107,7 @@ namespace GameJolt.NET.Tests
 		public async Task Authenticate_Url_Success(string url)
 		{
 			string authJson = serializer.Serialize(new AuthResponse(true, null));
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser()));
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -151,7 +151,7 @@ namespace GameJolt.NET.Tests
 		public async Task Authenticate_CredentialsFile_Success()
 		{
 			string authJson = serializer.Serialize(new AuthResponse(true, null));
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser()));
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -184,7 +184,7 @@ test
 		[Test]
 		public async Task Fetch_ValidUsername_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser()));
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -208,7 +208,7 @@ test
 		[Test]
 		public async Task Fetch_ValidId_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, CreateDummyUser()));
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -280,7 +280,7 @@ test
 		[Test]
 		public async Task Fetch_Usernames_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { CreateDummyUser(), CreateDummyUser() }));
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { DummyData.User(), DummyData.User() }));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -305,7 +305,7 @@ test
 		[Test]
 		public async Task Fetch_Ids_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { CreateDummyUser(), CreateDummyUser() }));
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { DummyData.User(), DummyData.User() }));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{

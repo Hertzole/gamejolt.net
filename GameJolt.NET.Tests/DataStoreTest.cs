@@ -50,7 +50,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", CreateDummyBytes());
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", DummyData.Bytes());
 
 			Assert.IsFalse(result.HasError);
 			Assert.IsNull(result.Exception);
@@ -104,7 +104,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", CreateDummyBytes());
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
 
 			Assert.IsFalse(result.HasError);
 			Assert.IsNull(result.Exception);
@@ -133,7 +133,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task SetUser_NotAuthenticated_Bytes_Fail()
 		{
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", CreateDummyBytes());
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
 
 			Assert.IsTrue(result.HasError);
 			Assert.IsNotNull(result.Exception);
@@ -479,7 +479,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetValueGlobal_Bytes_Success()
 		{
-			byte[] bytes = CreateDummyBytes();
+			byte[] bytes = DummyData.Bytes();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -538,7 +538,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			byte[] bytes = CreateDummyBytes();
+			byte[] bytes = DummyData.Bytes();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{

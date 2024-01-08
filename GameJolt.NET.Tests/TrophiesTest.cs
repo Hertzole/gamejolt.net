@@ -12,7 +12,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			TrophyInternal trophy = CreateDummyTrophy();
+			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -67,7 +67,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			TrophyInternal trophy = CreateDummyTrophy();
+			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -99,7 +99,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			TrophyInternal trophy = CreateDummyTrophy();
+			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -131,8 +131,8 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			TrophyInternal trophy1 = CreateDummyTrophy();
-			TrophyInternal trophy2 = CreateDummyTrophy();
+			TrophyInternal trophy1 = DummyData.Trophy();
+			TrophyInternal trophy2 = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -171,7 +171,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			TrophyInternal trophy = CreateDummyTrophy();
+			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{

@@ -88,7 +88,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTables_Success()
 		{
-			TableInternal table = CreateDummyTable();
+			TableInternal table = DummyData.Table();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -120,7 +120,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Query_Success()
 		{
-			ScoreInternal score = CreateDummyScore();
+			ScoreInternal score = DummyData.Score();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -170,7 +170,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void ScoreDisplayName_Username()
 		{
-			string? name = faker.Internet.UserName();
+			string? name = DummyData.faker.Internet.UserName();
 
 			GameJoltScore score = new GameJoltScore(0, "", "", name, 0, "", default);
 
@@ -180,7 +180,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void ScoreDisplayName_GuestName()
 		{
-			string? name = faker.Internet.UserName();
+			string? name = DummyData.faker.Internet.UserName();
 
 			GameJoltScore score = new GameJoltScore(0, "", "", "", null, name, default);
 

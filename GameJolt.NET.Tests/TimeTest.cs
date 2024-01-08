@@ -11,7 +11,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Fetch_Success()
 		{
-			DateTime time = faker.Date.Recent().ToUniversalTime();
+			DateTime time = DummyData.faker.Date.Recent().ToUniversalTime();
 
 			GameJoltAPI.webClient.GetStringAsync("", default)
 			           .ReturnsForAnyArgs(_ => FromResult(serializer.Serialize(new FetchTimeResponse(true, null, time))));
