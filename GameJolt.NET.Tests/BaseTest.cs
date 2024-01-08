@@ -138,8 +138,10 @@ namespace GameJolt.NET.Tests
 
 		protected static StringTask FromResult(string result)
 		{
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+#if NET5_0_OR_GREATER
 			return ValueTask.FromResult(result);
+#elif NETSTANDARD2_1_OR_GREATER || UNITY_2021_3_OR_NEWER
+			return new StringTask(result);
 #else
 			return Task.FromResult(result);
 #endif
