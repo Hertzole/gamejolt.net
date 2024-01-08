@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -48,7 +49,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(false, "Not authenticated.", null)));
+					return FromResult(serializer.Serialize(new FetchTrophiesResponse(false, "Not authenticated.", Array.Empty<TrophyInternal>())));
 				}
 
 				return FromResult("");

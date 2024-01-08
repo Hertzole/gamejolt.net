@@ -23,13 +23,11 @@ namespace Hertzole.GameJolt
 		[JsonSerializable(typeof(GameJoltResponse<TrophyResponse>))]
 		[JsonSerializable(typeof(GameJoltResponse<AuthResponse>))]
 		[JsonSerializable(typeof(GameJoltResponse<UsersFetchResponse>))]
-#if DEBUG // These are only used in tests.
 		[JsonSerializable(typeof(GameJoltResponse<FriendId>))]
 		[JsonSerializable(typeof(GameJoltResponse<ScoreInternal>))]
 		[JsonSerializable(typeof(GameJoltResponse<TableInternal>))]
 		[JsonSerializable(typeof(GameJoltResponse<TrophyInternal>))]
 		[JsonSerializable(typeof(GameJoltResponse<User>))]
-#endif
 		public sealed partial class JsonContext : JsonSerializerContext { }
 
 		private static JsonSerializerOptions CreateOptions()

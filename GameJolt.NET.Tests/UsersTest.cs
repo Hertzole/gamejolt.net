@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -236,7 +237,7 @@ test
 		[Test]
 		public async Task Fetch_InvalidUsername_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, null));
+			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -260,7 +261,7 @@ test
 		[Test]
 		public async Task Fetch_InvalidId_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, null));
+			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -344,7 +345,7 @@ test
 		[Test]
 		public async Task Fetch_Usernames_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, null));
+			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -368,7 +369,7 @@ test
 		[Test]
 		public async Task Fetch_Ids_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, null));
+			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{

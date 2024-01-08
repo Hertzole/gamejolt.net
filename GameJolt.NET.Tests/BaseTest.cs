@@ -42,7 +42,7 @@ namespace GameJolt.NET.Tests
 			return Task.CompletedTask;
 		}
 
-		public static async Task AuthenticateAsync()
+		protected static async Task AuthenticateAsync()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{

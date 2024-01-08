@@ -615,7 +615,8 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
-			Assert.That(result.Value.Length, Is.EqualTo(2));
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value!.Length, Is.EqualTo(2));
 			Assert.That(result.Value[0], Is.EqualTo("key1"));
 			Assert.That(result.Value[1], Is.EqualTo("key2"));
 		}
@@ -653,7 +654,8 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
-			Assert.That(result.Value.Length, Is.EqualTo(2));
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value!.Length, Is.EqualTo(2));
 			Assert.That(result.Value[0], Is.EqualTo("key1"));
 			Assert.That(result.Value[1], Is.EqualTo("key2"));
 		}
