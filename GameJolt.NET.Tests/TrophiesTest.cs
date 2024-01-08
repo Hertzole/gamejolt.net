@@ -28,9 +28,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNotNull(result.Value);
-			Assert.IsTrue(result.Value.Length > 0);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value.Length > 0, Is.True);
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
@@ -56,9 +56,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNull(result.Value);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Value, Is.Null);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltAuthorizedException);
 		}
 
@@ -83,9 +83,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(true);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNotNull(result.Value);
-			Assert.IsTrue(result.Value.Length > 0);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value.Length > 0, Is.True);
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
@@ -115,9 +115,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(false);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNotNull(result.Value);
-			Assert.IsTrue(result.Value.Length > 0);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value.Length > 0, Is.True);
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
@@ -148,9 +148,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(new[] { trophy1.id, trophy2.id });
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNotNull(result.Value);
-			Assert.IsTrue(result.Value.Length > 0);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value.Length > 0, Is.True);
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy1.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy1.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy1.description));
@@ -187,8 +187,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy> result = await GameJoltAPI.Trophies.GetTrophyAsync(0);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNotNull(result.Value);
+			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value.Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value.Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value.Description, Is.EqualTo(trophy.description));
@@ -216,8 +215,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -237,8 +236,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltAuthorizedException);
 		}
 
@@ -261,8 +260,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltInvalidTrophyException);
 		}
 
@@ -285,8 +284,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -306,8 +305,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltAuthorizedException);
 		}
 
@@ -330,8 +329,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltInvalidTrophyException);
 		}
 
@@ -354,8 +353,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltLockedTrophyException);
 		}
 	}

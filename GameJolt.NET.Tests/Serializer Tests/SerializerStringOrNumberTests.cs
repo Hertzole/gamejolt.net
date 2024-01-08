@@ -6,7 +6,6 @@ using NUnit.Framework;
 #if NET6_0_OR_GREATER
 using JsonException = System.Text.Json.JsonException;
 #else
-using JsonException = Newtonsoft.Json.JsonSerializationException;
 #endif
 
 namespace GameJolt.NET.Tests

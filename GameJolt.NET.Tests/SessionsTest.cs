@@ -28,9 +28,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 		}
 
 		[Test]
@@ -54,16 +54,16 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 
 			GameJoltResult result2 = await GameJoltAPI.Sessions.OpenAsync();
 
-			Assert.IsTrue(result2.HasError);
-			Assert.IsTrue(result2.Exception is GameJoltSessionException);
+			Assert.That(result2.HasError, Is.True);
+			Assert.That(result2.Exception is GameJoltSessionException, Is.True);
 			Assert.That(result2.Exception!.Message, Is.EqualTo(GameJoltSessions.SESSION_ALREADY_OPEN));
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 		}
 
 		[Test]
@@ -85,9 +85,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsTrue(result.Exception is GameJoltAuthorizedException);
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -110,13 +110,13 @@ namespace GameJolt.NET.Tests
 			});
 
 			await GameJoltAPI.Sessions.OpenAsync();
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -138,9 +138,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsTrue(result.Exception is GameJoltAuthorizedException);
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -164,10 +164,10 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsTrue(result.Exception is GameJoltSessionException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception is GameJoltSessionException, Is.True);
 			Assert.That(result.Exception!.Message, Is.EqualTo(GameJoltSessions.CANT_CLOSE_SESSION));
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -192,13 +192,13 @@ namespace GameJolt.NET.Tests
 			});
 
 			await GameJoltAPI.Sessions.OpenAsync();
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(status);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 		}
 
 		[Test]
@@ -220,9 +220,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(SessionStatus.Active);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsTrue(result.Exception is GameJoltAuthorizedException);
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -246,10 +246,10 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(SessionStatus.Active);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsTrue(result.Exception is GameJoltSessionException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception is GameJoltSessionException, Is.True);
 			Assert.That(result.Exception!.Message, Is.EqualTo(GameJoltSessions.CANT_PING_SESSION));
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -272,14 +272,14 @@ namespace GameJolt.NET.Tests
 			});
 
 			await GameJoltAPI.Sessions.OpenAsync();
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 
 			GameJoltResult<bool> result = await GameJoltAPI.Sessions.CheckAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsTrue(result.Value);
-			Assert.IsTrue(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.True);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 		}
 
 		[Test]
@@ -303,10 +303,10 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<bool> result = await GameJoltAPI.Sessions.CheckAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsFalse(result.Value);
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.False);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 
 		[Test]
@@ -328,9 +328,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<bool> result = await GameJoltAPI.Sessions.CheckAsync();
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsTrue(result.Exception is GameJoltAuthorizedException);
-			Assert.IsFalse(GameJoltAPI.Sessions.IsSessionOpen);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
+			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
 	}
 }

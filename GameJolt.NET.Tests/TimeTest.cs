@@ -18,8 +18,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<DateTime> result = await GameJoltAPI.Time.GetTimeAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			// Create a new DateTime, or else it will fail because of the milliseconds.
 			Assert.That(result.Value, Is.EqualTo(new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, DateTimeKind.Utc)));
 		}

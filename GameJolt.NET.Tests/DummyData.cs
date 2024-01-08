@@ -8,7 +8,7 @@ namespace GameJolt.NET.Tests
 	{
 		internal static readonly Randomizer randomizer = new Randomizer();
 		internal static readonly Faker faker = new Faker();
-		
+
 		internal static User User()
 		{
 			int id = randomizer.Int(1, (int) (int.MaxValue * 0.5f));

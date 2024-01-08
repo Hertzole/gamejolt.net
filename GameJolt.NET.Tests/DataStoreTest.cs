@@ -20,8 +20,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", "value");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -36,8 +36,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", 1);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -52,8 +52,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", DummyData.Bytes());
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -70,8 +70,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", "value");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -88,8 +88,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", 1);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -106,8 +106,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -115,8 +115,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", "value");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -125,8 +125,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", 1);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -135,8 +135,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -152,8 +152,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -170,8 +170,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -179,8 +179,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("key");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -211,8 +211,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsync("key", "1", operation);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 
 			switch (operation)
 			{
@@ -271,8 +271,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsync("key", 1, operation);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 
 			switch (operation)
 			{
@@ -326,8 +326,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", "1", operation);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 
 			switch (operation)
 			{
@@ -388,8 +388,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", 1, operation);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 
 			switch (operation)
 			{
@@ -421,8 +421,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", "1", operation);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -437,8 +437,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", 1, operation);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -454,8 +454,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.GetValueAsStringAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo("value"));
 		}
 
@@ -471,8 +471,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(1));
 		}
 
@@ -490,8 +490,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(bytes));
 		}
 
@@ -509,8 +509,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.GetValueAsStringAsCurrentUserAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo("value"));
 		}
 
@@ -528,8 +528,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsCurrentUserAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(1));
 		}
 
@@ -549,8 +549,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(bytes));
 		}
 
@@ -559,8 +559,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.GetValueAsStringAsCurrentUserAsync("key");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -569,8 +569,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsCurrentUserAsync("key");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -579,8 +579,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 
@@ -591,8 +591,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				var arg = info.Arg<string>();
-				
+				string? arg = info.Arg<string>();
+
 				if (string.IsNullOrEmpty(pattern))
 				{
 					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT));
@@ -601,10 +601,10 @@ namespace GameJolt.NET.Tests
 				{
 					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}"));
 				}
-				
+
 				string json = serializer.Serialize(new GetKeysResponse(true, null, new[]
 				{
-					new DataKey("key1"), 
+					new DataKey("key1"),
 					new DataKey("key2")
 				}));
 
@@ -613,13 +613,13 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsync(pattern);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value.Length, Is.EqualTo(2));
 			Assert.That(result.Value[0], Is.EqualTo("key1"));
 			Assert.That(result.Value[1], Is.EqualTo("key2"));
 		}
-		
+
 		[Test]
 		[TestCase("")]
 		[TestCase("*")]
@@ -629,8 +629,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				var arg = info.Arg<string>();
-				
+				string? arg = info.Arg<string>();
+
 				if (string.IsNullOrEmpty(pattern))
 				{
 					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT + "?username="));
@@ -639,10 +639,10 @@ namespace GameJolt.NET.Tests
 				{
 					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}&username="));
 				}
-				
+
 				string json = serializer.Serialize(new GetKeysResponse(true, null, new[]
 				{
-					new DataKey("key1"), 
+					new DataKey("key1"),
 					new DataKey("key2")
 				}));
 
@@ -651,8 +651,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync(pattern);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value.Length, Is.EqualTo(2));
 			Assert.That(result.Value[0], Is.EqualTo("key1"));
 			Assert.That(result.Value[1], Is.EqualTo("key2"));
@@ -663,8 +663,8 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync("");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
 	}

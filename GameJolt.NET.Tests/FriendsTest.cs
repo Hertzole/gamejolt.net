@@ -23,8 +23,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int[]> result = await GameJoltAPI.Friends.FetchAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value, Has.Length.EqualTo(2));
 			Assert.That(result.Value[0], Is.EqualTo(0));
@@ -45,8 +45,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int[]> result = await GameJoltAPI.Friends.FetchAsync();
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 			Assert.That(result.Value, Is.Null);
 		}

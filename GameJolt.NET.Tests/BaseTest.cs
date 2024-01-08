@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Bogus;
+﻿using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using StringTask = System.Threading.Tasks.ValueTask<string>;
+
 #else
 using StringTask = System.Threading.Tasks.Task<string>;
 #endif
@@ -16,8 +15,6 @@ namespace GameJolt.NET.Tests
 	public abstract class BaseTest
 	{
 		internal static readonly IGameJoltSerializer serializer = GameJoltAPI.serializer;
-
-		
 
 		[SetUp]
 		public async Task Setup()

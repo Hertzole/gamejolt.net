@@ -1,10 +1,10 @@
-﻿using Hertzole.GameJolt;
-using NUnit.Framework;
-#if NET6_0_OR_GREATER
+﻿#if NET6_0_OR_GREATER
 using JsonException = System.Text.Json.JsonException;
 #else
 using JsonException = Newtonsoft.Json.JsonSerializationException;
 #endif
+using Hertzole.GameJolt;
+using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
@@ -108,7 +108,7 @@ namespace GameJolt.NET.Tests
 		{
 			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<User>("{\"response\":{\"status\":11}}"));
 		}
-		
+
 		[Test]
 		public void UserStatus_EmptyString_ThrowsException()
 		{
@@ -144,11 +144,12 @@ namespace GameJolt.NET.Tests
 		{
 			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":4}]}}"));
 		}
-		
+
 		[Test]
 		public void TrophyDifficulty_EmptyString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":\"\"}]}}"));
+			Assert.Throws<JsonException>(() =>
+				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":\"\"}]}}"));
 		}
 
 		[Test]

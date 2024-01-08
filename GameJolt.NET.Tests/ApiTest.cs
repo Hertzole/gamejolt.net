@@ -10,7 +10,7 @@ namespace GameJolt.NET.Tests
 		{
 			Assert.Throws<GameJoltInitializationException>(GameJoltAPI.Shutdown);
 		}
-		
+
 		[Test]
 		public void AccessUsers_NotInitialized_ThrowsException()
 		{
@@ -28,19 +28,19 @@ namespace GameJolt.NET.Tests
 		{
 			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Scores; });
 		}
-		
+
 		[Test]
 		public void AccessTrophies_NotInitialized_ThrowsException()
 		{
 			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Trophies; });
 		}
-		
+
 		[Test]
 		public void AccessDataStore_NotInitialized_ThrowsException()
 		{
 			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.DataStore; });
 		}
-		
+
 		[Test]
 		public void AccessFriends_NotInitialized_ThrowsException()
 		{

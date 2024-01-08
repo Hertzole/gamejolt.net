@@ -33,8 +33,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -45,9 +45,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltAuthenticationException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthenticationException>());
 		}
 
 		[Test]
@@ -79,9 +79,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsTrue(invoked);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(invoked, Is.True);
 		}
 
 		[Test]
@@ -95,10 +95,10 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltAuthenticationException);
-			Assert.IsFalse(invoked);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthenticationException>());
+			Assert.That(invoked, Is.False);
 		}
 
 		[Test]
@@ -128,8 +128,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(url);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -142,9 +142,9 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(url);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltAuthenticationException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthenticationException>());
 		}
 
 		[Test]
@@ -177,14 +177,16 @@ test
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(credentials);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
 		public async Task Fetch_ValidUsername_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
+			User user = DummyData.User();
+
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, user));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -200,15 +202,17 @@ test
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync("Username");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsNotNull(result.Value);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.EqualTo(user.ToPublicUser()));
 		}
 
 		[Test]
 		public async Task Fetch_ValidId_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
+			User user = DummyData.User();
+
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, user));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -224,9 +228,9 @@ test
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(0);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsNotNull(result.Value);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.EqualTo(user.ToPublicUser()));
 		}
 
 		[Test]
@@ -248,9 +252,9 @@ test
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync("Username");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltInvalidUserException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
 		}
 
 		[Test]
@@ -272,15 +276,18 @@ test
 
 			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(0);
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltInvalidUserException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
 		}
 
 		[Test]
 		public async Task Fetch_Usernames_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { DummyData.User(), DummyData.User() }));
+			User user1 = DummyData.User();
+			User user2 = DummyData.User();
+
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { user1, user2 }));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -296,16 +303,21 @@ test
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" });
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsNotNull(result.Value);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value, Has.Length.EqualTo(2));
+			Assert.That(result.Value![0], Is.EqualTo(user1.ToPublicUser()));
+			Assert.That(result.Value![1], Is.EqualTo(user2.ToPublicUser()));
 		}
 
 		[Test]
 		public async Task Fetch_Ids_Success()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { DummyData.User(), DummyData.User() }));
+			User user1 = DummyData.User();
+			User user2 = DummyData.User();
+
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { user1, user2 }));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -321,10 +333,12 @@ test
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 });
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
-			Assert.IsNotNull(result.Value);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value, Has.Length.EqualTo(2));
+			Assert.That(result.Value![0], Is.EqualTo(user1.ToPublicUser()));
+			Assert.That(result.Value![1], Is.EqualTo(user2.ToPublicUser()));
 		}
 
 		[Test]
@@ -346,9 +360,9 @@ test
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" });
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltInvalidUserException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
 		}
 
 		[Test]
@@ -370,9 +384,9 @@ test
 
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 });
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltInvalidUserException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
 		}
 	}
 }

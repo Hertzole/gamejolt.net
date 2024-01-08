@@ -26,8 +26,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -49,8 +49,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", 0, "0", "Extra Data");
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -58,9 +58,9 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
 
-			Assert.IsTrue(result.HasError);
-			Assert.IsNotNull(result.Exception);
-			Assert.IsTrue(result.Exception is GameJoltAuthorizedException);
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
 		}
 
 		[Test]
@@ -80,8 +80,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<int> result = await GameJoltAPI.Scores.GetRankAsync(0, 0);
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(0));
 		}
 
@@ -107,8 +107,8 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTable[]> result = await GameJoltAPI.Scores.GetTablesAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value.Length, Is.EqualTo(1));
 			Assert.That(result.Value[0].Id, Is.EqualTo(table.id));
@@ -140,8 +140,8 @@ namespace GameJolt.NET.Tests
 			GameJoltResult<GameJoltScore[]> result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForUser("test", "test")
 			                                                          .BetterThan(0).WorseThan(0).GetAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value.Length, Is.EqualTo(1));
 			Assert.That(result.Value[0].Score, Is.EqualTo(score.score));
@@ -154,8 +154,8 @@ namespace GameJolt.NET.Tests
 
 			result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("test").BetterThan(0).WorseThan(0).GetAsync();
 
-			Assert.IsFalse(result.HasError);
-			Assert.IsNull(result.Exception);
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value.Length, Is.EqualTo(1));
 			Assert.That(result.Value[0].Score, Is.EqualTo(score.score));
@@ -176,7 +176,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(score.DisplayName, Is.EqualTo(name));
 		}
-		
+
 		[Test]
 		public void ScoreDisplayName_GuestName()
 		{
@@ -186,7 +186,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(score.DisplayName, Is.EqualTo(name));
 		}
-		
+
 		[Test]
 		public void ScoreDisplayName_Empty()
 		{
