@@ -21,14 +21,12 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
-		private readonly GameJoltUrlBuilder urlBuilder;
 
-		internal GameJoltScores(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users, GameJoltUrlBuilder urlBuilder)
+		internal GameJoltScores(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
-			this.urlBuilder = urlBuilder;
 		}
 
 		internal const string ENDPOINT = "scores/";
@@ -105,7 +103,7 @@ namespace Hertzole.GameJolt
 					builder.Append(tableId.Value);
 				}
 
-				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
 				SubmitScoreResponse response = serializer.Deserialize<SubmitScoreResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -129,7 +127,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&table_id=");
 				builder.Append(tableId);
 
-				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
 				GetScoreRankResponse response = serializer.Deserialize<GetScoreRankResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -209,7 +207,7 @@ namespace Hertzole.GameJolt
 					builder.Append(query.worseThan.Value);
 				}
 
-				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
 				GetScoresResponse response = serializer.Deserialize<GetScoresResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))

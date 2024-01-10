@@ -28,7 +28,14 @@ namespace Hertzole.GameJolt
 			worseThan = null;
 		}
 
-		private GetScoresQuery(GameJoltScores scores, int? tableId, int limit, string? username, string? userToken, string? guest, int? betterThan, int? worseThan)
+		private GetScoresQuery(GameJoltScores scores,
+			int? tableId,
+			int limit,
+			string? username,
+			string? userToken,
+			string? guest,
+			int? betterThan,
+			int? worseThan)
 		{
 			this.scores = scores;
 			this.tableId = tableId;
@@ -39,7 +46,7 @@ namespace Hertzole.GameJolt
 			this.betterThan = betterThan;
 			this.worseThan = worseThan;
 		}
-		
+
 		public GetScoresQuery ForTable(int tableId)
 		{
 			return new GetScoresQuery(scores, tableId, limit, username, userToken, guest, betterThan, worseThan);

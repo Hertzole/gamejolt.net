@@ -20,16 +20,14 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
-		private readonly GameJoltUrlBuilder urlBuilder;
 
 		private readonly ArrayPool<int> intPool;
 
-		internal GameJoltTrophies(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users, GameJoltUrlBuilder urlBuilder)
+		internal GameJoltTrophies(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
-			this.urlBuilder = urlBuilder;
 
 			intPool = ArrayPool<int>.Create();
 		}
@@ -122,7 +120,7 @@ namespace Hertzole.GameJolt
 					}
 				}
 
-				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
 				FetchTrophiesResponse response = serializer.Deserialize<FetchTrophiesResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -158,7 +156,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&trophy_id=");
 				builder.Append(trophyId);
 
-				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
 				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -187,7 +185,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&trophy_id=");
 				builder.Append(trophyId);
 
-				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
 				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))

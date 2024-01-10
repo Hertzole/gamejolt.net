@@ -19,7 +19,17 @@ namespace Hertzole.GameJolt
 		public DateTime LastLoggedIn { get; }
 		public bool OnlineNow { get; }
 
-		internal GameJoltUser(int id, UserType type, string username, string avatarUrl, UserStatus status, string displayName, string? userWebsite, string userDescription, DateTime signedUp, DateTime lastLoggedIn, bool onlineNow)
+		internal GameJoltUser(int id,
+			UserType type,
+			string username,
+			string avatarUrl,
+			UserStatus status,
+			string displayName,
+			string? userWebsite,
+			string userDescription,
+			DateTime signedUp,
+			DateTime lastLoggedIn,
+			bool onlineNow)
 		{
 			Id = id;
 			Type = type;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Hertzole.GameJolt
+﻿namespace Hertzole.GameJolt
 {
 	public readonly struct GameJoltTrophy
 	{

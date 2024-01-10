@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt
 	{
 		[JsonName("trophies")]
 		public readonly TrophyInternal[] trophies;
-		
+
 		[JsonName("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public bool Success { get; }

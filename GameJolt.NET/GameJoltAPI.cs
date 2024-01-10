@@ -12,8 +12,6 @@ namespace Hertzole.GameJolt
 		private static GameJoltFriends? friends;
 		private static GameJoltTime? time;
 
-		internal static readonly GameJoltUrlBuilder urlBuilder = new GameJoltUrlBuilder();
-
 		internal static readonly IGameJoltSerializer serializer =
 #if NET6_0_OR_GREATER
 			new SystemJsonSerializer();
@@ -46,7 +44,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return sessions ??= new GameJoltSessions(webClient, serializer, users!, urlBuilder);
+				return sessions ??= new GameJoltSessions(webClient, serializer, users!);
 			}
 		}
 
@@ -56,7 +54,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return scores ??= new GameJoltScores(webClient, serializer, users!, urlBuilder);
+				return scores ??= new GameJoltScores(webClient, serializer, users!);
 			}
 		}
 
@@ -66,7 +64,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return trophies ??= new GameJoltTrophies(webClient, serializer, users!, urlBuilder);
+				return trophies ??= new GameJoltTrophies(webClient, serializer, users!);
 			}
 		}
 
@@ -76,7 +74,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return dataStore ??= new GameJoltDataStore(webClient, serializer, users!, urlBuilder);
+				return dataStore ??= new GameJoltDataStore(webClient, serializer, users!);
 			}
 		}
 
@@ -86,7 +84,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return friends ??= new GameJoltFriends(webClient, serializer, users!, urlBuilder);
+				return friends ??= new GameJoltFriends(webClient, serializer, users!);
 			}
 		}
 
@@ -107,7 +105,7 @@ namespace Hertzole.GameJolt
 			GameId = gameId;
 			PrivateKey = privateKey;
 
-			users = new GameJoltUsers(webClient, serializer, urlBuilder);
+			users = new GameJoltUsers(webClient, serializer);
 
 			IsInitialized = true;
 		}
