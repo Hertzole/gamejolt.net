@@ -13,6 +13,7 @@ namespace Hertzole.GameJolt
 	{
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
+		private readonly GameJoltUrlBuilder urlBuilder;
 
 		internal string? myUsername;
 		internal string? myToken;
@@ -30,14 +31,16 @@ namespace Hertzole.GameJolt
 		public bool IsAuthenticated { get; private set; }
 
 		public GameJoltUser? CurrentUser { get; private set; }
-		private const string ENDPOINT = "users/";
+		internal const string ENDPOINT = "users/";
+		internal const string AUTH_ENDPOINT = ENDPOINT + "auth/";
 
 		public event Action<GameJoltUser>? OnUserAuthenticated;
 
-		internal GameJoltUsers(IGameJoltWebClient webClient, IGameJoltSerializer serializer)
+		internal GameJoltUsers(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUrlBuilder urlBuilder)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
+			this.urlBuilder = urlBuilder;
 		}
 
 		public async Task<GameJoltResult> AuthenticateAsync(string username, string token, CancellationToken cancellationToken = default)
@@ -47,13 +50,13 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(ENDPOINT);
-				builder.Append("auth/?username=");
+				builder.Append(AUTH_ENDPOINT);
+				builder.Append("?username=");
 				builder.Append(username);
 				builder.Append("&user_token=");
 				builder.Append(token);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 
 				AuthResponse response = serializer.Deserialize<AuthResponse>(json);
 
@@ -131,7 +134,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?username=");
 				builder.Append(username);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -142,7 +145,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
 			}
 		}
-		
+
 		public async Task<GameJoltResult<GameJoltUser>> FetchUserAsync(int userId, CancellationToken cancellationToken = default)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
@@ -151,7 +154,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?user_id=");
 				builder.Append(userId);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -176,7 +179,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?username=");
 				builder.Append(usernames.ToCommaSeparatedString());
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -207,7 +210,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?user_id=");
 				builder.Append(userIds.ToCommaSeparatedString());
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))

@@ -332,5 +332,55 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
 		}
+
+		[Test]
+		public async Task Open_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.Sessions.OpenAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltSessions.OPEN_ENDPOINT + $"?username={Username}&user_token={Token}"));
+				});
+		}
+		
+		[Test]
+		public async Task Close_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.Sessions.CloseAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltSessions.CLOSE_ENDPOINT + $"?username={Username}&user_token={Token}"));
+				});
+		}
+		
+		[Test]
+		[TestCase(SessionStatus.Active)]
+		[TestCase(SessionStatus.Idle)]
+		public async Task Ping_ValidUrl(SessionStatus status)
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.Sessions.PingAsync(status),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltSessions.PING_ENDPOINT + $"?username={Username}&user_token={Token}&status={GameJoltSessions.GetStatusString(status)}"));
+				});
+		}
+		
+		[Test]
+		public async Task Check_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.Sessions.CheckAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltSessions.CHECK_ENDPOINT + $"?username={Username}&user_token={Token}"));
+				});
+		}
 	}
 }

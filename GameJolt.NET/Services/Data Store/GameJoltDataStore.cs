@@ -11,6 +11,7 @@ using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.Ga
 using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
 using GameJoltStringTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string>>;
 using GameJoltStringArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string[]>>;
+
 #else
 using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
@@ -25,19 +26,21 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
+		private readonly GameJoltUrlBuilder urlBuilder;
 
-		internal GameJoltDataStore(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
+		internal GameJoltDataStore(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users, GameJoltUrlBuilder urlBuilder)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
+			this.urlBuilder = urlBuilder;
 		}
 
-		private const string ENDPOINT = "data-store/";
-		private const string SET_ENDPOINT = ENDPOINT + "set/";
-		private const string REMOVE_ENDPOINT = ENDPOINT + "remove/";
-		private const string UPDATE_ENDPOINT = ENDPOINT + "update/";
-		private const string FETCH_ENDPOINT = ENDPOINT;
+		internal const string ENDPOINT = "data-store/";
+		internal const string SET_ENDPOINT = ENDPOINT + "set/";
+		internal const string REMOVE_ENDPOINT = ENDPOINT + "remove/";
+		internal const string UPDATE_ENDPOINT = ENDPOINT + "update/";
+		internal const string FETCH_ENDPOINT = ENDPOINT;
 		internal const string FETCH_KEYS_ENDPOINT = ENDPOINT + "get-keys/";
 
 		public async Task<GameJoltResult> SetAsync(string key, string data, CancellationToken cancellationToken = default)
@@ -108,7 +111,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(sb.ToString()), cancellationToken).ConfigureAwait(false);
 				StoreDataResponse result = serializer.Deserialize<StoreDataResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -157,7 +160,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(sb.ToString()), cancellationToken).ConfigureAwait(false);
 				StoreDataResponse result = serializer.Deserialize<StoreDataResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -242,7 +245,12 @@ namespace Hertzole.GameJolt
 			return GameJoltResult<int>.Success(result2.Value.intValue);
 		}
 
-		private async StringIntTask UpdateInternalAsync(string key, string operation, string value, string? username, string? token, CancellationToken cancellationToken)
+		private async StringIntTask UpdateInternalAsync(string key,
+			string operation,
+			string value,
+			string? username,
+			string? token,
+			CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -267,7 +275,7 @@ namespace Hertzole.GameJolt
 				sb.Append("&value=");
 				sb.Append(value);
 
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(sb.ToString()), cancellationToken).ConfigureAwait(false);
 				UpdateDataResponse response = serializer.Deserialize<UpdateDataResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -377,7 +385,7 @@ namespace Hertzole.GameJolt
 			{
 				return GameJoltResult<byte[]>.Error(result2.Exception!);
 			}
-			
+
 			if (string.IsNullOrEmpty(result2.Value))
 			{
 				return GameJoltResult<byte[]>.Success(Array.Empty<byte>());
@@ -413,7 +421,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(sb.ToString()), cancellationToken).ConfigureAwait(false);
 				GetDataResponse result = serializer.Deserialize<GetDataResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -467,7 +475,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(sb.ToString()), cancellationToken).ConfigureAwait(false);
 				GetKeysResponse result = serializer.Deserialize<GetKeysResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -488,7 +496,7 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		private static string GetStringOperation(StringOperation operation)
+		internal static string GetStringOperation(StringOperation operation)
 		{
 			switch (operation)
 			{
@@ -501,7 +509,7 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		private static string GetNumberOperation(NumericOperation operation)
+		internal static string GetNumberOperation(NumericOperation operation)
 		{
 			switch (operation)
 			{

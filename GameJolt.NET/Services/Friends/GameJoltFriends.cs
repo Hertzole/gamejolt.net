@@ -13,15 +13,17 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
+		private readonly GameJoltUrlBuilder urlBuilder;
 
-		internal GameJoltFriends(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
+		internal GameJoltFriends(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users, GameJoltUrlBuilder urlBuilder)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
+			this.urlBuilder = urlBuilder;
 		}
 
-		private const string ENDPOINT = "friends/";
+		internal const string ENDPOINT = "friends/";
 
 		public async Task<GameJoltResult<int[]>> FetchAsync(CancellationToken cancellationToken = default)
 		{
@@ -38,7 +40,7 @@ namespace Hertzole.GameJolt
 				sb.Append("&user_token=");
 				sb.Append(users.myToken);
 
-				string json = await webClient.GetStringAsync(sb.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(sb.ToString()), cancellationToken).ConfigureAwait(false);
 				FetchFriendsResponse response = serializer.Deserialize<FetchFriendsResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))

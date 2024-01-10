@@ -13,21 +13,23 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
+		private readonly GameJoltUrlBuilder urlBuilder;
 
 		public bool IsSessionOpen { get; private set; }
 
-		internal GameJoltSessions(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
+		internal GameJoltSessions(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users, GameJoltUrlBuilder urlBuilder)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
+			this.urlBuilder = urlBuilder;
 		}
 
 		private const string ENDPOINT = "sessions/";
-		private const string OPEN_ENDPOINT = ENDPOINT + "open/";
-		private const string PING_ENDPOINT = ENDPOINT + "ping/";
-		private const string CLOSE_ENDPOINT = ENDPOINT + "close/";
-		private const string CHECK_ENDPOINT = ENDPOINT + "check/";
+		internal const string OPEN_ENDPOINT = ENDPOINT + "open/";
+		internal const string PING_ENDPOINT = ENDPOINT + "ping/";
+		internal const string CLOSE_ENDPOINT = ENDPOINT + "close/";
+		internal const string CHECK_ENDPOINT = ENDPOINT + "check/";
 
 		internal const string SESSION_ALREADY_OPEN = "Session is already open.";
 		internal const string CANT_CLOSE_SESSION = "Can't close session because there is no session open.";
@@ -53,7 +55,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				SessionResponse response = serializer.Deserialize<SessionResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -88,7 +90,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				SessionResponse response = serializer.Deserialize<SessionResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -125,7 +127,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&status=");
 				builder.Append(GetStatusString(status));
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 
 				SessionResponse response = serializer.Deserialize<SessionResponse>(json);
 
@@ -155,7 +157,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
 
-				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				SessionResponse response = serializer.Deserialize<SessionResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -169,7 +171,7 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		private static string GetStatusString(SessionStatus status)
+		internal static string GetStatusString(SessionStatus status)
 		{
 			return status == SessionStatus.Active ? "active" : "idle";
 		}

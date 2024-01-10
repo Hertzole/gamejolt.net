@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace GameJolt.NET.Tests
 {
@@ -388,6 +389,51 @@ test
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
+		}
+
+		[Test]
+		public async Task Authenticate_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Users.AuthenticateAsync("Username", "Token"), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.AUTH_ENDPOINT + "?username=Username&user_token=Token"));
+			});
+		}
+
+		[Test]
+		public async Task Fetch_Username_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Users.FetchUserAsync("Username"), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username"));
+			});
+		}
+		
+		[Test]
+		public async Task Fetch_Id_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Users.FetchUserAsync(0), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0"));
+			});
+		}
+		
+		[Test]
+		public async Task Fetch_Usernames_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" }), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username,Username2"));
+			});
+		}
+		
+		[Test]
+		public async Task Fetch_Ids_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 }), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0,1"));
+			});
 		}
 	}
 }

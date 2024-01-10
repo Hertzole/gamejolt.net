@@ -194,5 +194,87 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(score.DisplayName, Is.EqualTo(string.Empty));
 		}
+
+		[Test]
+		[TestCase("")]
+		[TestCase("Extra Data")]
+		public async Task SubmitScore_ValidUrl(string extraData)
+		{
+			await AuthenticateAsync();
+			
+			await TestUrlAsync(() => GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", extraData),
+				url =>
+				{
+					if(string.IsNullOrEmpty(extraData))
+					{
+						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?username={Username}&user_token={Token}&score=0&sort=0&table_id=0"));
+					}
+					else
+					{
+						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?username={Username}&user_token={Token}&score=0&sort=0&extra_data={extraData}&table_id=0"));
+					}
+				});
+		}
+		
+		[Test]
+		[TestCase("")]
+		[TestCase("Extra Data")]
+		public async Task SubmitScoreAsGuest_ValidUrl(string extraData)
+		{
+			await AuthenticateAsync();
+			
+			await TestUrlAsync(() => GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", 0, "0", extraData),
+				url =>
+				{
+					if(string.IsNullOrEmpty(extraData))
+					{
+						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?guest=Guest&score=0&sort=0&table_id=0"));
+					}
+					else
+					{
+						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?guest=Guest&score=0&sort=0&extra_data={extraData}&table_id=0"));
+					}
+				});
+		}
+		
+		[Test]
+		public async Task GetRank_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Scores.GetRankAsync(0, 0),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.GET_RANK_ENDPOINT + "?sort=0&table_id=0"));
+				});
+		}
+
+		[Test]
+		public async Task GetTables_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Scores.GetTablesAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.GET_TABLES_ENDPOINT));
+				});
+		}
+		
+		[Test]
+		public async Task GetScores_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForUser("test", "test").BetterThan(0).WorseThan(0).GetAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&username=test&user_token=test&better_than=0&worse_than=0"));
+				});
+		}
+		
+		[Test]
+		public async Task GetScoresGuest_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("test").BetterThan(0).WorseThan(0).GetAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&guest=test&better_than=0&worse_than=0"));
+				});
+		}
 	}
 }

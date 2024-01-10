@@ -21,11 +21,11 @@ namespace Hertzole.GameJolt
 			TimeZone = GetTimeZone();
 		}
 
-		private const string ENDPOINT = "time/";
+		internal const string ENDPOINT = "time/";
 
 		public async Task<GameJoltResult<DateTime>> GetTimeAsync(CancellationToken cancellationToken = default)
 		{
-			string json = await webClient.GetStringAsync(ENDPOINT, cancellationToken).ConfigureAwait(false);
+			string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BASE_URL + ENDPOINT, cancellationToken).ConfigureAwait(false);
 			FetchTimeResponse response = settings.Deserialize<FetchTimeResponse>(json);
 
 			if (response.TryGetException(out Exception? exception))

@@ -358,5 +358,79 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltLockedTrophyException);
 		}
+
+		[Test]
+		public async Task GetTrophies_ValidUrl()
+		{
+			await AuthenticateAsync();
+			
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}"));
+			});
+		}
+		
+		[Test]
+		[TestCase(true)]
+		[TestCase(false)]
+		public async Task GetTrophies_Achieved_ValidUrl(bool achieved)
+		{
+			await AuthenticateAsync();
+			
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(achieved), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&achieved={(achieved ? "true" : "false")}"));
+			});
+		}
+		
+		[Test]
+		public async Task GetTrophies_Ids_ValidUrl()
+		{
+			await AuthenticateAsync();
+			
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(new[] { 0, 1 }), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id=0,1"));
+			});
+		}
+		
+		[Test]
+		public async Task GetTrophy_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			int id = DummyData.randomizer.Int();
+			
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophyAsync(id), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
+			});
+		}
+		
+		[Test]
+		public async Task UnlockTrophy_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			int id = DummyData.randomizer.Int();
+			
+			await TestUrlAsync(() => GameJoltAPI.Trophies.UnlockTrophyAsync(id), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ADD_ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
+			});
+		}
+		
+		[Test]
+		public async Task RemoveUnlockedTrophy_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			int id = DummyData.randomizer.Int();
+			
+			await TestUrlAsync(() => GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(id), url =>
+			{
+				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.REMOVE_ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
+			});
+		}
 	}
 }

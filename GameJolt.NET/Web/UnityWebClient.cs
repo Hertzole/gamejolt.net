@@ -15,10 +15,8 @@ namespace Hertzole.GameJolt
 		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
 		{
 			TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
-
-			string signedUrl = GameJoltUrlBuilder.BuildUrl(url);
 			
-			UnityWebRequest request = UnityWebRequest.Get(signedUrl);
+			UnityWebRequest request = UnityWebRequest.Get(url);
 			UnityWebRequestAsyncOperation operation = request.SendWebRequest();
 
 			operation.completed += _ =>

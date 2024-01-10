@@ -1,10 +1,5 @@
 ﻿#nullable enable
 
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
-#else
-using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
-#endif
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -12,6 +7,11 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#else
+using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -20,14 +20,16 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
+		private readonly GameJoltUrlBuilder urlBuilder;
 
 		private readonly ArrayPool<int> intPool;
 
-		internal GameJoltTrophies(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
+		internal GameJoltTrophies(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users, GameJoltUrlBuilder urlBuilder)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
+			this.urlBuilder = urlBuilder;
 
 			intPool = ArrayPool<int>.Create();
 		}
@@ -36,16 +38,16 @@ namespace Hertzole.GameJolt
 		internal const string ADD_ENDPOINT = ENDPOINT + "add-achieved/";
 		internal const string REMOVE_ENDPOINT = ENDPOINT + "remove-achieved/";
 
-		public async GameJoltTrophyArrayTask GetTrophiesAsync(CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		public async GameJoltTrophyArrayTask GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken).ConfigureAwait(false);
 		}
-		
+
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken).ConfigureAwait(false);
@@ -120,7 +122,7 @@ namespace Hertzole.GameJolt
 					}
 				}
 
-				string json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				FetchTrophiesResponse response = serializer.Deserialize<FetchTrophiesResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -156,7 +158,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&trophy_id=");
 				builder.Append(trophyId);
 
-				string json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -185,7 +187,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&trophy_id=");
 				builder.Append(trophyId);
 
-				string json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(urlBuilder.BuildUrl(builder.ToString()), cancellationToken).ConfigureAwait(false);
 				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))

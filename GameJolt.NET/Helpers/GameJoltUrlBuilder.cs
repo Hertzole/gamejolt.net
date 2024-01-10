@@ -6,11 +6,11 @@ using System;
 
 namespace Hertzole.GameJolt
 {
-	internal static class GameJoltUrlBuilder
+	internal sealed class GameJoltUrlBuilder
 	{
-		private const string BASE_URL = "https://api.gamejolt.com/api/game/v1_2/";
+		internal const string BASE_URL = "https://api.gamejolt.com/api/game/v1_2/";
 
-		public static string BuildUrl(string url)
+		public string BuildUrl(string url)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
 using StringTask = System.Threading.Tasks.ValueTask<string>;
+
 #else
 using StringTask = System.Threading.Tasks.Task<string>;
 #endif
@@ -15,9 +16,7 @@ namespace Hertzole.GameJolt
 
 		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
 		{
-			string signedUrl = GameJoltUrlBuilder.BuildUrl(url);
-            
-			string response = await client.GetStringAsync(signedUrl, cancellationToken).ConfigureAwait(false);
+			string response = await client.GetStringAsync(url, cancellationToken).ConfigureAwait(false);
 			if (string.IsNullOrEmpty(response))
 			{
 				throw new GameJoltException("Response was empty.");

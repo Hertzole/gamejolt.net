@@ -595,11 +595,11 @@ namespace GameJolt.NET.Tests
 
 				if (string.IsNullOrEmpty(pattern))
 				{
-					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT));
+					Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT));
 				}
 				else
 				{
-					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}"));
+					Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}"));
 				}
 
 				string json = serializer.Serialize(new GetKeysResponse(true, null, new[]
@@ -634,11 +634,11 @@ namespace GameJolt.NET.Tests
 
 				if (string.IsNullOrEmpty(pattern))
 				{
-					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT + "?username="));
+					Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT + "?username="));
 				}
 				else
 				{
-					Assert.That(arg, Does.StartWith(GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}&username="));
+					Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}&username="));
 				}
 
 				string json = serializer.Serialize(new GetKeysResponse(true, null, new[]
@@ -668,6 +668,246 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
+		}
+
+		[Test]
+		public async Task Set_String_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", "Value"),
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.SET_ENDPOINT + "?key=Key&data=Value")); });
+		}
+
+		[Test]
+		public async Task Set_Int_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", 1),
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.SET_ENDPOINT + "?key=Key&data=1")); });
+		}
+
+		[Test]
+		public async Task Set_Bytes_ValidUrl()
+		{
+			string bytes = Convert.ToBase64String(DummyData.Bytes());
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", bytes),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}")); });
+		}
+
+		[Test]
+		public async Task SetAsCurrentUser_String_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsyncAsCurrentUser("Key", "Value"), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data=Value&username={Username}&user_token={Token}"));
+			});
+		}
+
+		[Test]
+		public async Task SetAsCurrentUser_Int_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsyncAsCurrentUser("Key", 1), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data=1&username={Username}&user_token={Token}"));
+			});
+		}
+
+		[Test]
+		public async Task SetAsCurrentUser_Bytes_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			string bytes = Convert.ToBase64String(DummyData.Bytes());
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsyncAsCurrentUser("Key", bytes), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}&username={Username}&user_token={Token}"));
+			});
+		}
+
+		[Test]
+		public async Task Remove_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.RemoveAsync("Key"),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.REMOVE_ENDPOINT}?key=Key")); });
+		}
+
+		[Test]
+		public async Task RemoveAsCurrentUser_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("Key"), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.REMOVE_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
+			});
+		}
+
+		[Test]
+		[TestCase(StringOperation.Append)]
+		[TestCase(StringOperation.Prepend)]
+		public async Task UpdateAsync_String_ValidUrl(StringOperation operation)
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsync("Key", "Value", operation), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.UPDATE_ENDPOINT}?key=Key&operation={GameJoltDataStore.GetStringOperation(operation)}&value=Value"));
+			});
+		}
+
+		[Test]
+		[TestCase(NumericOperation.Add)]
+		[TestCase(NumericOperation.Subtract)]
+		[TestCase(NumericOperation.Multiply)]
+		[TestCase(NumericOperation.Divide)]
+		[TestCase(NumericOperation.Append)]
+		[TestCase(NumericOperation.Prepend)]
+		public async Task UpdateAsync_Int_ValidUrl(NumericOperation operation)
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsync("Key", 1, operation), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.UPDATE_ENDPOINT}?key=Key&operation={GameJoltDataStore.GetNumberOperation(operation)}&value=1"));
+			});
+		}
+
+		[Test]
+		[TestCase(StringOperation.Append)]
+		[TestCase(StringOperation.Prepend)]
+		public async Task UpdateAsyncAsCurrentUser_String_ValidUrl(StringOperation operation)
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("Key", "Value", operation), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.UPDATE_ENDPOINT}?key=Key&username={Username}&user_token={Token}&operation={GameJoltDataStore.GetStringOperation(operation)}&value=Value"));
+			});
+		}
+
+		[Test]
+		[TestCase(NumericOperation.Add)]
+		[TestCase(NumericOperation.Subtract)]
+		[TestCase(NumericOperation.Multiply)]
+		[TestCase(NumericOperation.Divide)]
+		[TestCase(NumericOperation.Append)]
+		[TestCase(NumericOperation.Prepend)]
+		public async Task UpdateAsyncAsCurrentUser_Int_ValidUrl(NumericOperation operation)
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("Key", 1, operation), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.UPDATE_ENDPOINT}?key=Key&username={Username}&user_token={Token}&operation={GameJoltDataStore.GetNumberOperation(operation)}&value=1"));
+			});
+		}
+
+		[Test]
+		public async Task GetValueAsync_String_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsStringAsync("Key"),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
+		}
+
+		[Test]
+		public async Task GetValueAsync_Int_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsIntAsync("Key"),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
+		}
+
+		[Test]
+		public async Task GetValueAsync_Bytes_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBytesAsync("Key"),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
+		}
+
+		[Test]
+		public async Task GetValueAsCurrentUserAsync_String_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsStringAsCurrentUserAsync("Key"),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
+				});
+		}
+
+		[Test]
+		public async Task GetValueAsCurrentUserAsync_Int_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsIntAsCurrentUserAsync("Key"),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
+				});
+		}
+
+		[Test]
+		public async Task GetValueAsCurrentUserAsync_Bytes_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("Key"),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
+				});
+		}
+		
+		[Test]
+		[TestCase("")]
+		[TestCase("*")]
+		public async Task GetKeysAsync_ValidUrl(string pattern)
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetKeysAsync(pattern),
+				url =>
+				{
+					if (string.IsNullOrEmpty(pattern))
+					{
+						Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}"));
+					}
+					else
+					{
+						Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?pattern={pattern}"));
+					}
+				});
+		}
+		
+		[Test]
+		[TestCase("")]
+		[TestCase("*")]
+		public async Task GetKeysAsCurrentUserAsync_ValidUrl(string pattern)
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync(pattern),
+				url =>
+				{
+					if (string.IsNullOrEmpty(pattern))
+					{
+						Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?username={Username}&user_token={Token}"));
+					}
+					else
+					{
+						Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?pattern={pattern}&username={Username}&user_token={Token}"));
+					}
+				});
 		}
 	}
 }

@@ -12,8 +12,7 @@ namespace Hertzole.GameJolt
 		private static GameJoltFriends? friends;
 		private static GameJoltTime? time;
 
-		internal static int GameId { get; private set; }
-		internal static string? PrivateKey { get; private set; }
+		internal static readonly GameJoltUrlBuilder urlBuilder = new GameJoltUrlBuilder();
 
 		internal static readonly IGameJoltSerializer serializer =
 #if NET6_0_OR_GREATER
@@ -27,6 +26,9 @@ namespace Hertzole.GameJolt
 #else
 			new StandardWebClient();
 #endif
+
+		internal static int GameId { get; private set; }
+		internal static string? PrivateKey { get; private set; }
 
 		public static GameJoltUsers Users
 		{
@@ -44,7 +46,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return sessions ??= new GameJoltSessions(webClient, serializer, users!);
+				return sessions ??= new GameJoltSessions(webClient, serializer, users!, urlBuilder);
 			}
 		}
 
@@ -54,7 +56,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return scores ??= new GameJoltScores(webClient, serializer, users!);
+				return scores ??= new GameJoltScores(webClient, serializer, users!, urlBuilder);
 			}
 		}
 
@@ -64,7 +66,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return trophies ??= new GameJoltTrophies(webClient, serializer, users!);
+				return trophies ??= new GameJoltTrophies(webClient, serializer, users!, urlBuilder);
 			}
 		}
 
@@ -74,7 +76,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return dataStore ??= new GameJoltDataStore(webClient, serializer, users!);
+				return dataStore ??= new GameJoltDataStore(webClient, serializer, users!, urlBuilder);
 			}
 		}
 
@@ -84,7 +86,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return friends ??= new GameJoltFriends(webClient, serializer, users!);
+				return friends ??= new GameJoltFriends(webClient, serializer, users!, urlBuilder);
 			}
 		}
 
@@ -105,7 +107,7 @@ namespace Hertzole.GameJolt
 			GameId = gameId;
 			PrivateKey = privateKey;
 
-			users = new GameJoltUsers(webClient, serializer);
+			users = new GameJoltUsers(webClient, serializer, urlBuilder);
 
 			IsInitialized = true;
 		}

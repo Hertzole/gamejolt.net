@@ -50,5 +50,17 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 			Assert.That(result.Value, Is.Null);
 		}
+
+		[Test]
+		public async Task Fetch_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.Friends.FetchAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltFriends.ENDPOINT + $"?username={Username}&user_token={Token}"));
+				});
+		}
 	}
 }

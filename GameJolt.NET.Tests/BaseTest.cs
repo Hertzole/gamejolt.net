@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -16,9 +17,16 @@ namespace GameJolt.NET.Tests
 	{
 		internal static readonly IGameJoltSerializer serializer = GameJoltAPI.serializer;
 
+		protected string Username { get; set; } = null!;
+
+		protected string Token { get; set; } = null!;
+
 		[SetUp]
 		public async Task Setup()
 		{
+			Username = DummyData.faker.Internet.UserName();
+			Token = DummyData.faker.Random.AlphaNumeric(6);
+			
 			GameJoltAPI.webClient = Substitute.For<IGameJoltWebClient>();
 
 			GameJoltAPI.Initialize(0, "");
@@ -42,7 +50,7 @@ namespace GameJolt.NET.Tests
 			return Task.CompletedTask;
 		}
 
-		protected static async Task AuthenticateAsync()
+		protected async Task AuthenticateAsync()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -61,11 +69,32 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync(Username, Token);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True);
+		}
+
+		protected static async Task TestUrlAsync(Func<Task> call, Action<string> assert)
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string url = info.Arg<string>();
+
+				assert.Invoke(url);
+
+				return FromResult("");
+			});
+
+			try
+			{
+				await call.Invoke();
+			}
+			catch (Exception)
+			{
+				// Do nothing
+			}
 		}
 
 		protected static StringTask FromResult(string result)
