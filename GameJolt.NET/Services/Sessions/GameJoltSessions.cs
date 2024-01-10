@@ -153,6 +153,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
+				builder.Append(users.myToken);
 
 				string? json = await webClient.GetStringAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
 				SessionResponse response = serializer.Deserialize<SessionResponse>(json);
