@@ -19,12 +19,12 @@ namespace Hertzole.GameJolt
 			int id = 0;
 
 			reader.Read();
-			
+
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
-				
+
 				if (propertyName.Equals("friend_id", StringComparison.OrdinalIgnoreCase))
 				{
 					id = GameJoltIntConverter.Instance.ReadJson(reader, typeof(int), existingValue.id, false, serializer);

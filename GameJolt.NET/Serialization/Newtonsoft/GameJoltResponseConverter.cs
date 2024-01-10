@@ -21,7 +21,11 @@ namespace Hertzole.GameJolt
 			writer.WriteEndObject();
 		}
 
-		public override GameJoltResponse<T> ReadJson(JsonReader reader, Type objectType, GameJoltResponse<T> existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override GameJoltResponse<T> ReadJson(JsonReader reader,
+			Type objectType,
+			GameJoltResponse<T> existingValue,
+			bool hasExistingValue,
+			JsonSerializer serializer)
 		{
 			// Deserialize { "response": { "success": true, "message": "Success!" } }
 
@@ -31,7 +35,7 @@ namespace Hertzole.GameJolt
 			reader.Read();
 
 			T response = serializer.Deserialize<T>(reader);
-			
+
 			// Read the end object token.
 			reader.Read();
 

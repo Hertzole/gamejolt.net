@@ -35,7 +35,7 @@ namespace Hertzole.GameJolt
 
 			return builder.ToString();
 		}
-		
+
 		private static bool EndsWithSlash(StringBuilder sb)
 		{
 			return sb.Length > 0 && sb[sb.Length - 1] == '/';

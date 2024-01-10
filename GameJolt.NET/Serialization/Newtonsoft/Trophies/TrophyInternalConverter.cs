@@ -22,11 +22,15 @@ namespace Hertzole.GameJolt
 			writer.WriteValue(value.imageUrl);
 			writer.WritePropertyName("achieved");
 			BooleanOrDateConverter.Instance.WriteJson(writer, value.achieved, serializer);
-			
+
 			writer.WriteEndObject();
 		}
 
-		public override TrophyInternal ReadJson(JsonReader reader, Type objectType, TrophyInternal existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override TrophyInternal ReadJson(JsonReader reader,
+			Type objectType,
+			TrophyInternal existingValue,
+			bool hasExistingValue,
+			JsonSerializer serializer)
 		{
 			int id = 0;
 			string title = string.Empty;
@@ -56,10 +60,11 @@ namespace Hertzole.GameJolt
 				}
 				else if (propertyName.Equals("difficulty", StringComparison.OrdinalIgnoreCase))
 				{
-					difficulty = GameJoltTrophyDifficultyConverter.Instance.ReadJson(reader, typeof(TrophyDifficulty), TrophyDifficulty.Bronze, false, serializer);
+					difficulty = GameJoltTrophyDifficultyConverter.Instance.ReadJson(reader, typeof(TrophyDifficulty), TrophyDifficulty.Bronze, false,
+						serializer);
 				}
 				else if (propertyName.Equals("image_url", StringComparison.OrdinalIgnoreCase))
-				{ 
+				{
 					imageUrl = reader.ReadAsString() ?? string.Empty;
 				}
 				else if (propertyName.Equals("achieved", StringComparison.OrdinalIgnoreCase))
@@ -70,7 +75,7 @@ namespace Hertzole.GameJolt
 				{
 					reader.Skip();
 				}
-				
+
 				// Read the next property name.
 				reader.Read();
 			}

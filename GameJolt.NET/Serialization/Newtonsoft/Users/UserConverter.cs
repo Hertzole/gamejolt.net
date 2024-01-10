@@ -35,7 +35,7 @@ namespace Hertzole.GameJolt
 			serializer.Serialize(writer, value.userWebsite);
 			writer.WritePropertyName("developer_description");
 			serializer.Serialize(writer, value.userDescription);
-			
+
 			writer.WriteEndObject();
 		}
 

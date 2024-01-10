@@ -46,7 +46,7 @@ namespace Hertzole.GameJolt
 			T existingData = default;
 
 			reader.Read();
-            
+
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.

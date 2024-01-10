@@ -1,23 +1,22 @@
 ﻿#nullable enable
 
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
 using GameJoltStringTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string>>;
 using GameJoltStringArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string[]>>;
-
 #else
 using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
 using GameJoltStringTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string>>;
 using GameJoltStringArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string[]>>;
 #endif
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Hertzole.GameJolt
 {
@@ -41,22 +40,22 @@ namespace Hertzole.GameJolt
 		internal const string FETCH_ENDPOINT = ENDPOINT;
 		internal const string FETCH_KEYS_ENDPOINT = ENDPOINT + "get-keys/";
 
-		public async Task<GameJoltResult> SetAsync(string key, string data, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask SetAsync(string key, string data, CancellationToken cancellationToken = default)
 		{
 			return await SetInternalAsync(key, data, null, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult> SetAsync(string key, int data, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask SetAsync(string key, int data, CancellationToken cancellationToken = default)
 		{
 			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult> SetAsync(string key, byte[] data, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask SetAsync(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
 			return await SetAsync(key, Convert.ToBase64String(data), cancellationToken).ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, string data, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask SetAsyncAsCurrentUser(string key, string data, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -66,7 +65,7 @@ namespace Hertzole.GameJolt
 			return await SetInternalAsync(key, data, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, int data, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask SetAsyncAsCurrentUser(string key, int data, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -77,7 +76,7 @@ namespace Hertzole.GameJolt
 				.ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, byte[] data, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask SetAsyncAsCurrentUser(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
 			return await SetAsyncAsCurrentUser(key, Convert.ToBase64String(data), cancellationToken).ConfigureAwait(false);
 		}
@@ -123,12 +122,12 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		public async Task<GameJoltResult> RemoveAsync(string key, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask RemoveAsync(string key, CancellationToken cancellationToken = default)
 		{
 			return await RemoveInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
 		}
 
-		public async Task<GameJoltResult> RemoveAsyncAsCurrentUser(string key, CancellationToken cancellationToken = default)
+		public async GameJoltResultTask RemoveAsyncAsCurrentUser(string key, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -172,7 +171,7 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		public async Task<GameJoltResult<string>> UpdateAsync(string key, string data, StringOperation operation, CancellationToken cancellationToken = default)
+		public async GameJoltStringTask UpdateAsync(string key, string data, StringOperation operation, CancellationToken cancellationToken = default)
 		{
 			GameJoltResult<(string stringValue, int intValue)> result =
 				await UpdateInternalAsync(key, GetStringOperation(operation), data, null, null, cancellationToken).ConfigureAwait(false);

@@ -2,7 +2,6 @@
 #nullable enable
 
 using System;
-using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace Hertzole.GameJolt
@@ -22,7 +21,7 @@ namespace Hertzole.GameJolt
 			string key = string.Empty;
 
 			reader.Read();
-			
+
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.

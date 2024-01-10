@@ -17,7 +17,7 @@ namespace Hertzole.GameJolt
 		protected override GetDataResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
 			string data = string.Empty;
-			
+
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.
@@ -28,11 +28,11 @@ namespace Hertzole.GameJolt
 					data = reader.ReadAsString() ?? string.Empty;
 					break;
 				}
-				
+
 				// Read the next property name.
 				reader.Read();
 			}
-			
+
 			return new GetDataResponse(false, null, data);
 		}
 

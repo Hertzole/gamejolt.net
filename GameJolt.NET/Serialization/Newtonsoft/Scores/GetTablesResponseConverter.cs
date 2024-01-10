@@ -10,14 +10,14 @@ namespace Hertzole.GameJolt
 	{
 		protected override void WriteResponseJson(JsonWriter writer, GetTablesResponse value, JsonSerializer serializer)
 		{
-			 writer.WritePropertyName("tables");
-			 serializer.Serialize(writer, value.tables);
+			writer.WritePropertyName("tables");
+			serializer.Serialize(writer, value.tables);
 		}
 
 		protected override GetTablesResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
 			TableInternal[] tables = Array.Empty<TableInternal>();
-			
+
 			while (reader.TokenType != JsonToken.EndObject)
 			{
 				// Read the property name.
@@ -33,7 +33,7 @@ namespace Hertzole.GameJolt
 				// Read the next property name.
 				reader.Read();
 			}
-			
+
 			return new GetTablesResponse(true, string.Empty, tables);
 		}
 

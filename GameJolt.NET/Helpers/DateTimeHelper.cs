@@ -8,7 +8,7 @@ namespace Hertzole.GameJolt
 		{
 			return DateTimeOffset.FromUnixTimeSeconds(timestamp).DateTime;
 		}
-		
+
 		public static long ToUnixTimestamp(DateTime time)
 		{
 			return new DateTimeOffset(time).ToUnixTimeSeconds();

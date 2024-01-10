@@ -5,7 +5,7 @@ namespace Hertzole.GameJolt
 	internal sealed class GameJoltTrophyDifficultyConverter : GameJoltEnumConverter<TrophyDifficulty>
 	{
 		public static readonly GameJoltTrophyDifficultyConverter Instance = new GameJoltTrophyDifficultyConverter();
-        
+
 		protected override bool GetValueFromString(string value, out TrophyDifficulty result)
 		{
 			if (value.Equals("bronze", StringComparison.OrdinalIgnoreCase))
@@ -13,25 +13,25 @@ namespace Hertzole.GameJolt
 				result = TrophyDifficulty.Bronze;
 				return true;
 			}
-			
+
 			if (value.Equals("silver", StringComparison.OrdinalIgnoreCase))
 			{
 				result = TrophyDifficulty.Silver;
 				return true;
 			}
-			
+
 			if (value.Equals("gold", StringComparison.OrdinalIgnoreCase))
 			{
 				result = TrophyDifficulty.Gold;
 				return true;
 			}
-			
+
 			if (value.Equals("platinum", StringComparison.OrdinalIgnoreCase))
 			{
 				result = TrophyDifficulty.Platinum;
 				return true;
 			}
-			
+
 			result = default;
 			return false;
 		}

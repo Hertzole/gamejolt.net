@@ -35,13 +35,13 @@ namespace Hertzole.GameJolt
 					{
 						return false;
 					}
-					
-					if(value.Equals("1", StringComparison.OrdinalIgnoreCase))
+
+					if (value.Equals("1", StringComparison.OrdinalIgnoreCase))
 					{
 						return true;
 					}
-					
-					if(value.Equals("0", StringComparison.OrdinalIgnoreCase))
+
+					if (value.Equals("0", StringComparison.OrdinalIgnoreCase))
 					{
 						return false;
 					}
