@@ -1,5 +1,11 @@
 ﻿#nullable enable
 
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
@@ -11,12 +17,6 @@ using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResu
 using GameJoltStringTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string>>;
 using GameJoltStringArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string[]>>;
 #endif
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Hertzole.GameJolt
 {
@@ -52,7 +52,12 @@ namespace Hertzole.GameJolt
 
 		public async Task<GameJoltResult> SetAsync(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
-			return await SetAsync(key, Convert.ToBase64String(data), cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, Convert.ToBase64String(data), null, null, cancellationToken).ConfigureAwait(false);
+		}
+
+		public async Task<GameJoltResult> SetAsync(string key, bool data, CancellationToken cancellationToken = default)
+		{
+			return await SetInternalAsync(key, data ? "true" : "false", null, null, cancellationToken).ConfigureAwait(false);
 		}
 
 		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, string data, CancellationToken cancellationToken = default)
@@ -79,6 +84,16 @@ namespace Hertzole.GameJolt
 		public async Task<GameJoltResult> SetAsyncAsCurrentUser(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
 			return await SetAsyncAsCurrentUser(key, Convert.ToBase64String(data), cancellationToken).ConfigureAwait(false);
+		}
+
+		public async Task<GameJoltResult> SetAsCurrentUserAsync(string key, bool data, CancellationToken cancellationToken = default)
+		{
+			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			{
+				return result;
+			}
+
+			return await SetInternalAsync(key, data ? "true" : "false", users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
 		}
 
 		private async GameJoltResultTask SetInternalAsync(string key, string data, string? username, string? token, CancellationToken cancellationToken)
@@ -337,6 +352,23 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		public async Task<GameJoltResult<bool>> GetValueAsBoolAsync(string key, CancellationToken cancellationToken = default)
+		{
+			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
+
+			if (result.HasError)
+			{
+				return GameJoltResult<bool>.Error(result.Exception!);
+			}
+
+			if (!bool.TryParse(result.Value, out bool boolValue))
+			{
+				return GameJoltResult<bool>.Error(new GameJoltInvalidDataStoreValueException("The value stored is not a boolean."));
+			}
+
+			return GameJoltResult<bool>.Success(boolValue);
+		}
+
 		public async Task<GameJoltResult<string>> GetValueAsStringAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
@@ -396,6 +428,28 @@ namespace Hertzole.GameJolt
 			{
 				return GameJoltResult<byte[]>.Error(e);
 			}
+		}
+
+		public async Task<GameJoltResult<bool>> GetValueAsBoolAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
+		{
+			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			{
+				return GameJoltResult<bool>.Error(result.Exception!);
+			}
+
+			GameJoltResult<string> result2 = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+
+			if (result2.HasError)
+			{
+				return GameJoltResult<bool>.Error(result2.Exception!);
+			}
+
+			if (!bool.TryParse(result2.Value, out bool boolValue))
+			{
+				return GameJoltResult<bool>.Error(new GameJoltInvalidDataStoreValueException("The value stored is not a boolean."));
+			}
+
+			return GameJoltResult<bool>.Success(boolValue);
 		}
 
 		private async GameJoltStringTask GetValueInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
