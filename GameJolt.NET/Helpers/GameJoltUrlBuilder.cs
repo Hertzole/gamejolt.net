@@ -1,20 +1,16 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using StringTask = System.Threading.Tasks.ValueTask<string>;
-#else
-using StringTask = System.Threading.Tasks.Task<string>;
+#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_3_OR_NEWER || NET5_0_OR_GREATER
+using System;
 #endif
 
 namespace Hertzole.GameJolt
 {
-	internal sealed partial class GameJoltWebClient : IGameJoltWebClient
+	internal static class GameJoltUrlBuilder
 	{
 		private const string BASE_URL = "https://api.gamejolt.com/api/game/v1_2/";
 
-		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
+		public static string BuildUrl(string url)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
@@ -47,17 +43,8 @@ namespace Hertzole.GameJolt
 					}
 				}
 
-				return await SendGetRequestAsync(builder.ToString(), cancellationToken).ConfigureAwait(false);
+				return builder.ToString();
 			}
-		}
-
-		private partial StringTask SendGetRequestAsync(string url, CancellationToken cancellationToken);
-
-		public void Dispose()
-		{
-#if !UNITY_2021_1_OR_NEWER
-			client.Dispose();
-#endif
 		}
 	}
 }

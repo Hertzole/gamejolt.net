@@ -15,12 +15,18 @@ namespace Hertzole.GameJolt
 		internal static int GameId { get; private set; }
 		internal static string? PrivateKey { get; private set; }
 
+		internal static readonly IGameJoltSerializer serializer =
 #if NET6_0_OR_GREATER
-		internal static readonly IGameJoltSerializer serializer = new SystemJsonSerializer();
+			new SystemJsonSerializer();
 #else
-		internal static readonly IGameJoltSerializer serializer = new NewtonsoftJsonSerializer();
+			new NewtonsoftJsonSerializer();
 #endif
-		internal static IGameJoltWebClient webClient = new GameJoltWebClient();
+		internal static IGameJoltWebClient webClient =
+#if UNITY_2021_1_OR_NEWER
+			new UnityWebClient();
+#else
+			new StandardWebClient();
+#endif
 
 		public static GameJoltUsers Users
 		{

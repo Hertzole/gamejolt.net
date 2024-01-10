@@ -10,13 +10,15 @@ using StringTask = System.Threading.Tasks.Task<string>;
 
 namespace Hertzole.GameJolt
 {
-	internal partial class GameJoltWebClient
+	internal sealed class UnityWebClient : IGameJoltWebClient
 	{
-		private partial async StringTask SendGetRequestAsync(string url, CancellationToken cancellationToken)
+		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
 		{
 			TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
 
-			UnityWebRequest request = UnityWebRequest.Get(url);
+			string signedUrl = GameJoltUrlBuilder.BuildUrl(url);
+			
+			UnityWebRequest request = UnityWebRequest.Get(signedUrl);
 			UnityWebRequestAsyncOperation operation = request.SendWebRequest();
 
 			operation.completed += _ =>
@@ -44,6 +46,11 @@ namespace Hertzole.GameJolt
 			});
 
 			return await tcs.Task.ConfigureAwait(false);
+		}
+
+		public void Dispose()
+		{
+			// Unity doesn't have anything to dispose.
 		}
 	}
 }
