@@ -63,8 +63,9 @@ jobs:
         # I can't for the life of me get a conditional to work here. So if it fails, ignore it. ¯\_(ツ)_/¯
         continue-on-error: true
         run: |
+          git config --global --add safe.directory /__w/gamejolt.net/gamejolt.net
           git config --global user.name 'github-bot'
           git config --global user.email 'github-bot@users.noreply.github.com'
           git add ./Unity/
           git commit -am "chore: synced unity from '${{ github.event.head_commit.message }}'"
-          git push -f -u origin master
+          git push -f -u origin ${{ github.ref }}
