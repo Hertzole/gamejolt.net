@@ -84,7 +84,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", "value");
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", "value");
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -102,7 +102,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", 1);
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", 1);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -120,7 +120,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", DummyData.Bytes());
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -147,7 +147,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task SetUser_NotAuthenticated_String_Fail()
 		{
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", "value");
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", "value");
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -157,7 +157,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task SetUser_NotAuthenticated_Int_Fail()
 		{
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", 1);
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", 1);
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -167,7 +167,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task SetUser_NotAuthenticated_Bytes_Fail()
 		{
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", DummyData.Bytes());
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -212,7 +212,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("key");
+			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsCurrentUserAsync("key");
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -221,7 +221,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task RemoveUser_NotAuthenticated_Fail()
 		{
-			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("key");
+			GameJoltResult result = await GameJoltAPI.DataStore.RemoveAsCurrentUserAsync("key");
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -368,7 +368,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", "1", operation);
+			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", "1", operation);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -430,7 +430,7 @@ namespace GameJolt.NET.Tests
 				return FromResult(json);
 			});
 
-			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", 1, operation);
+			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", 1, operation);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -463,7 +463,7 @@ namespace GameJolt.NET.Tests
 		[TestCase(StringOperation.Prepend)]
 		public async Task UpdateUser_NotAuthenticated_String_Fail(StringOperation operation)
 		{
-			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", "1", operation);
+			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", "1", operation);
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -479,7 +479,7 @@ namespace GameJolt.NET.Tests
 		[TestCase(NumericOperation.Prepend)]
 		public async Task UpdateUser_NotAuthenticated_Int_Fail(NumericOperation operation)
 		{
-			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("key", 1, operation);
+			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", 1, operation);
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -797,7 +797,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsyncAsCurrentUser("Key", "Value"), url =>
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsCurrentUserAsync("Key", "Value"), url =>
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data=Value&username={Username}&user_token={Token}"));
@@ -809,7 +809,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsyncAsCurrentUser("Key", 1), url =>
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsCurrentUserAsync("Key", 1), url =>
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data=1&username={Username}&user_token={Token}"));
@@ -823,7 +823,7 @@ namespace GameJolt.NET.Tests
 
 			string bytes = Convert.ToBase64String(DummyData.Bytes());
 
-			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsyncAsCurrentUser("Key", bytes), url =>
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsCurrentUserAsync("Key", bytes), url =>
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}&username={Username}&user_token={Token}"));
@@ -856,7 +856,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await TestUrlAsync(() => GameJoltAPI.DataStore.RemoveAsyncAsCurrentUser("Key"), url =>
+			await TestUrlAsync(() => GameJoltAPI.DataStore.RemoveAsCurrentUserAsync("Key"), url =>
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.REMOVE_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
@@ -898,7 +898,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("Key", "Value", operation), url =>
+			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("Key", "Value", operation), url =>
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.UPDATE_ENDPOINT}?key=Key&username={Username}&user_token={Token}&operation={GameJoltDataStore.GetStringOperation(operation)}&value=Value"));
@@ -916,7 +916,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsyncAsCurrentUser("Key", 1, operation), url =>
+			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("Key", 1, operation), url =>
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.UPDATE_ENDPOINT}?key=Key&username={Username}&user_token={Token}&operation={GameJoltDataStore.GetNumberOperation(operation)}&value=1"));
