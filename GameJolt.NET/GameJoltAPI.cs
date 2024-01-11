@@ -2,6 +2,9 @@
 
 namespace Hertzole.GameJolt
 {
+	/// <summary>
+	///     The main class for the Game Jolt API where you can access all the API features.
+	/// </summary>
 	public static class GameJoltAPI
 	{
 		private static GameJoltUsers? users;
@@ -28,6 +31,10 @@ namespace Hertzole.GameJolt
 		internal static int GameId { get; private set; }
 		internal static string? PrivateKey { get; private set; }
 
+		/// <summary>
+		///     Access user-based features.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltUsers Users
 		{
 			get
@@ -38,6 +45,10 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Set up sessions for your game.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltSessions Sessions
 		{
 			get
@@ -48,6 +59,10 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Manipulate scores on score tables.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltScores Scores
 		{
 			get
@@ -58,6 +73,10 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Manage trophies for your game.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltTrophies Trophies
 		{
 			get
@@ -68,6 +87,10 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Manipulate items in a cloud-based data storage.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltDataStore DataStore
 		{
 			get
@@ -78,6 +101,10 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     List a user's friends.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltFriends Friends
 		{
 			get
@@ -88,6 +115,10 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Get the server's time.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		public static GameJoltTime Time
 		{
 			get
@@ -98,8 +129,16 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Has the API been initialized?
+		/// </summary>
 		public static bool IsInitialized { get; private set; }
 
+		/// <summary>
+		///     Initializes the API.
+		/// </summary>
+		/// <param name="gameId">The ID for your game.</param>
+		/// <param name="privateKey">The private key for your game.</param>
 		public static void Initialize(int gameId, string privateKey)
 		{
 			GameId = gameId;
@@ -110,6 +149,9 @@ namespace Hertzole.GameJolt
 			IsInitialized = true;
 		}
 
+		/// <summary>
+		///     Shuts down the API.
+		/// </summary>
 		public static void Shutdown()
 		{
 			ThrowIfNotInitialized();
@@ -129,6 +171,10 @@ namespace Hertzole.GameJolt
 			IsInitialized = false;
 		}
 
+		/// <summary>
+		///     Throws an exception if the API has not been initialized.
+		/// </summary>
+		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
 		private static void ThrowIfNotInitialized()
 		{
 			if (!IsInitialized)

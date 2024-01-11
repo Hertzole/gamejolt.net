@@ -229,8 +229,8 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Append)]
 		[TestCase(StringOperation.Prepend)]
+		[TestCase(StringOperation.Append)]
 		public async Task UpdateGlobal_String_Success(StringOperation operation)
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -238,10 +238,10 @@ namespace GameJolt.NET.Tests
 				string result;
 				switch (operation)
 				{
-					case StringOperation.Prepend:
+					case StringOperation.Append:
 						result = "1value";
 						break;
-					case StringOperation.Append:
+					case StringOperation.Prepend:
 						result = "value1";
 						break;
 					default:
@@ -260,10 +260,10 @@ namespace GameJolt.NET.Tests
 
 			switch (operation)
 			{
-				case StringOperation.Prepend:
+				case StringOperation.Append:
 					Assert.That(result.Value, Is.EqualTo("1value"));
 					break;
-				case StringOperation.Append:
+				case StringOperation.Prepend:
 					Assert.That(result.Value, Is.EqualTo("value1"));
 					break;
 				default:
@@ -342,8 +342,8 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Append)]
 		[TestCase(StringOperation.Prepend)]
+		[TestCase(StringOperation.Append)]
 		public async Task UpdateUser_Authenticated_String_Success(StringOperation operation)
 		{
 			await AuthenticateAsync();
@@ -353,10 +353,10 @@ namespace GameJolt.NET.Tests
 				string result;
 				switch (operation)
 				{
-					case StringOperation.Prepend:
+					case StringOperation.Append:
 						result = "1value";
 						break;
-					case StringOperation.Append:
+					case StringOperation.Prepend:
 						result = "value1";
 						break;
 					default:
@@ -375,10 +375,10 @@ namespace GameJolt.NET.Tests
 
 			switch (operation)
 			{
-				case StringOperation.Prepend:
+				case StringOperation.Append:
 					Assert.That(result.Value, Is.EqualTo("1value"));
 					break;
-				case StringOperation.Append:
+				case StringOperation.Prepend:
 					Assert.That(result.Value, Is.EqualTo("value1"));
 					break;
 				default:
@@ -459,8 +459,8 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Append)]
 		[TestCase(StringOperation.Prepend)]
+		[TestCase(StringOperation.Append)]
 		public async Task UpdateUser_NotAuthenticated_String_Fail(StringOperation operation)
 		{
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", "1", operation);
@@ -864,8 +864,8 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Append)]
 		[TestCase(StringOperation.Prepend)]
+		[TestCase(StringOperation.Append)]
 		public async Task UpdateAsync_String_ValidUrl(StringOperation operation)
 		{
 			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsync("Key", "Value", operation), url =>
@@ -892,8 +892,8 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Append)]
 		[TestCase(StringOperation.Prepend)]
+		[TestCase(StringOperation.Append)]
 		public async Task UpdateAsyncAsCurrentUser_String_ValidUrl(StringOperation operation)
 		{
 			await AuthenticateAsync();

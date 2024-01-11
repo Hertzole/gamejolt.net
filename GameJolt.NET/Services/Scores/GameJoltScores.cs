@@ -1,20 +1,24 @@
 ﻿#nullable enable
 
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
-using GameJoltScoreArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
-#else
-using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
-using GameJoltScoreArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
-#endif
 using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
+using GameJoltScoreArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
+
+#else
+using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
+using GameJoltScoreArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
+#endif
 
 namespace Hertzole.GameJolt
 {
+	/// <summary>
+	///     Used to submit, get and manage scores.
+	/// </summary>
 	public sealed class GameJoltScores
 	{
 		private readonly IGameJoltWebClient webClient;
@@ -33,6 +37,16 @@ namespace Hertzole.GameJolt
 		internal const string GET_RANK_ENDPOINT = ENDPOINT + "get-rank/";
 		internal const string GET_TABLES_ENDPOINT = ENDPOINT + "tables/";
 
+		/// <summary>
+		///     Submits a score for the current user. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="tableId">The ID of the score table to submit to.</param>
+		/// <param name="sort">The numerical sorting value associated with the score. All sorting will be based on this number.</param>
+		/// <param name="score">This is a string value associated with the score.</param>
+		/// <param name="extraData">If there's any extra data you would like to store as a string, you can use this field.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			int sort,
 			string score,
@@ -48,6 +62,16 @@ namespace Hertzole.GameJolt
 				.ConfigureAwait(false);
 		}
 
+		/// <summary>
+		///     Submits a score for the current user. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="tableId">The ID of the score table to submit to.</param>
+		/// <param name="guestName">The name of the guest to submit the score for.</param>
+		/// <param name="sort">The numerical sorting value associated with the score. All sorting will be based on this number.</param>
+		/// <param name="score">This is a string value associated with the score.</param>
+		/// <param name="extraData">If there's any extra data you would like to store as a string, you can use this field.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			int sort,
@@ -116,6 +140,13 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Returns the rank of a score in a score table.
+		/// </summary>
+		/// <param name="tableId">The ID of the score table from which you want to get the rank.</param>
+		/// <param name="score">This is a numerical sorting value that is represented by a rank on the score table.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and the rank of the score.</returns>
 		public async Task<GameJoltResult<int>> GetRankAsync(int tableId, int score, CancellationToken cancellationToken = default)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
@@ -140,6 +171,11 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Returns a list of all the score tables for your game.
+		/// </summary>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and a list of score tables.</returns>
 		public async Task<GameJoltResult<GameJoltTable[]>> GetTablesAsync(CancellationToken cancellationToken = default)
 		{
 			string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BASE_URL + GET_TABLES_ENDPOINT, cancellationToken).ConfigureAwait(false);
@@ -162,6 +198,10 @@ namespace Hertzole.GameJolt
 			return GameJoltResult<GameJoltTable[]>.Success(tables);
 		}
 
+		/// <summary>
+		///     Used to get scores from a score table.
+		/// </summary>
+		/// <returns>A query where you can set the parameters for the request.</returns>
 		public GetScoresQuery QueryScores()
 		{
 			return new GetScoresQuery(this);

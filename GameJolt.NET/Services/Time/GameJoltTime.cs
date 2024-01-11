@@ -7,11 +7,17 @@ using System.Threading.Tasks;
 
 namespace Hertzole.GameJolt
 {
+	/// <summary>
+	///     Time is used to get the current time from the Game Jolt servers.
+	/// </summary>
 	public sealed class GameJoltTime
 	{
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer settings;
 
+		/// <summary>
+		///     The timezone of the Game Jolt servers.
+		/// </summary>
 		public TimeZoneInfo TimeZone { get; }
 
 		internal GameJoltTime(IGameJoltWebClient webClient, IGameJoltSerializer settings)
@@ -23,6 +29,11 @@ namespace Hertzole.GameJolt
 
 		internal const string ENDPOINT = "time/";
 
+		/// <summary>
+		///     Fetches the current time from the Game Jolt servers.
+		/// </summary>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and the current server time.</returns>
 		public async Task<GameJoltResult<DateTime>> GetTimeAsync(CancellationToken cancellationToken = default)
 		{
 			string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BASE_URL + ENDPOINT, cancellationToken).ConfigureAwait(false);

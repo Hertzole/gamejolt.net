@@ -1,10 +1,5 @@
 ﻿#nullable enable
 
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
-#else
-using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
-#endif
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -12,9 +7,17 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#else
+using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+#endif
 
 namespace Hertzole.GameJolt
 {
+	/// <summary>
+	///     Used to get and manage trophies.
+	/// </summary>
 	public sealed class GameJoltTrophies
 	{
 		private readonly IGameJoltWebClient webClient;
@@ -36,21 +39,57 @@ namespace Hertzole.GameJolt
 		internal const string ADD_ENDPOINT = ENDPOINT + "add-achieved/";
 		internal const string REMOVE_ENDPOINT = ENDPOINT + "remove-achieved/";
 
+		/// <summary>
+		///     Gets all trophies for the current user. This method will get both locked and unlocked trophies. This method
+		///     requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and the trophies.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		///     Gets all trophies for the current user. This method allows you to pick whether to get locked or unlocked trophies.
+		///     This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="getAchieved">
+		///     Pass in <c>true</c> to only get trophies that are unlocked, <c>false</c> to only get trophies
+		///     that are locked.
+		/// </param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and the trophies.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		///     Get all trophies for the current user with the specified IDs. This method requires the current user to be
+		///     authenticated.
+		/// </summary>
+		/// <param name="trophyIds">The IDs of the trophies to get.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and the trophies.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
 			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		///     Gets a trophy for the current user with the specified ID. This method requires the current user to be
+		///     authenticated.
+		/// </summary>
+		/// <param name="trophyId"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns>The result of the request and the trophy.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy>> GetTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
 			int[] trophyIds = intPool.Rent(1);
@@ -139,6 +178,14 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Unlocks a trophy for the current user. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="trophyId">The ID of the trophy to unlock.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
 		public async Task<GameJoltResult> UnlockTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
@@ -168,6 +215,14 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Removes an unlocked trophy for the current user. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="trophyId">The ID of the trophy to remove.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
 		public async Task<GameJoltResult> RemoveUnlockedTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))

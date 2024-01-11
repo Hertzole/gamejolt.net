@@ -8,12 +8,19 @@ using System.Threading.Tasks;
 
 namespace Hertzole.GameJolt
 {
+	/// <summary>
+	///     Sessions are used to tell Game jolt when a user is playing a game, and what state they are in while playing (active
+	///     or idle).
+	/// </summary>
 	public sealed class GameJoltSessions
 	{
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
 
+		/// <summary>
+		///     Gets if there is a session open.
+		/// </summary>
 		public bool IsSessionOpen { get; private set; }
 
 		internal GameJoltSessions(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
@@ -33,6 +40,13 @@ namespace Hertzole.GameJolt
 		internal const string CANT_CLOSE_SESSION = "Can't close session because there is no session open.";
 		internal const string CANT_PING_SESSION = "Can't ping session because there is no session open.";
 
+		/// <summary>
+		///     Opens a session.
+		/// </summary>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltSessionException">Returned if there is already a session open.</exception>
 		public async Task<GameJoltResult> OpenAsync(CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
@@ -68,6 +82,14 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Closes the session.
+		/// </summary>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// ///
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltSessionException">Returned if there is no session open.</exception>
 		public async Task<GameJoltResult> CloseAsync(CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
@@ -103,6 +125,14 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Pings the session.
+		/// </summary>
+		/// <param name="status">The status of the session.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltSessionException">Returned if there is no session open.</exception>
 		public async Task<GameJoltResult> PingAsync(SessionStatus status, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
@@ -140,6 +170,11 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Checks if the session is active.
+		/// </summary>
+		/// <param name="cancellationToken"> Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request and if the session is active.</returns>
 		public async Task<GameJoltResult<bool>> CheckAsync(CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult<bool> result))
