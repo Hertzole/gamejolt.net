@@ -43,7 +43,7 @@ jobs:
             Library-${{ inputs.unity_version }}
             Library-
 
-      - uses: game-ci/unity-test-runner@v4
+      - uses: game-ci/unity-test-runner@main # Must be on main until a fix regarding character limit is published
         id: testRunner
         env:
           UNITY_LICENSE: ${{ secrets.unity_license }}
