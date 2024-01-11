@@ -260,10 +260,12 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetScores_ValidUrl()
 		{
+			await AuthenticateAsync();
+			
 			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync(),
 				url =>
 				{
-					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&username=test&user_token=test&better_than=0&worse_than=0"));
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + $"?table_id=0&limit=0&username={Username}&user_token={Token}&better_than=0&worse_than=0"));
 				});
 		}
 		
