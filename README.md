@@ -1,8 +1,6 @@
 <div align="center">
 <img src="https://github.com/Hertzole/gamejolt.net/assets/5569364/c2574e9a-2ab8-4e35-8c00-994f6cf07fd7" alt="GameJolt.NET Logo">
 <h4>A modern C# wrapper around the GameJolt Game API for .NET and Unity</h4>
-<img src="https://img.shields.io/github/actions/workflow/status/hertzole/gamejolt.net/test.yml?style=flat&logo=.net&label=.NET%20Tests">
-<img src="https://img.shields.io/github/actions/workflow/status/hertzole/gamejolt.net/unity.yml?style=flat&logo=unity&label=Unity%20Tests">
 <a href="https://gamejolt.com/game-api"><img src="https://img.shields.io/badge/Game_Jolt_API-v1.2-%23CCFF00?style=flat&logo=gamejolt"></a>
 <br>
 <a href="https://github.com/sponsors/Hertzole"><img src="https://img.shields.io/badge/Sponsor_me-GitHub-%23EA4AAA?style=flat&logo=githubsponsors" alt="Sponsor me on github badge"></a>
@@ -350,6 +348,8 @@ GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(id
 
 #### OpenUPM (Recommended)
 
+The minimum Unity version for GameJolt.NET is 2021.3.
+
 You can install the package through [OpenUPM](https://openupm.com/) by using the [OpenUPM CLI](https://github.com/openupm/openupm-cli#openupm-cli).
 
 ```bash
@@ -372,10 +372,10 @@ If you don't have the CLI installed, you can follow these steps:
 
 ### .NET Project
 
-You can install the package through NuGet.
+You can install the package through NuGet. GameJolt.NET supports .NET Standard 2.0/2.1 and .NET 5.0+.
 
 ```bash
-dotnet add package Hertzole.GameJolt.Net
+dotnet add package GameJolt.Net
 ```
 
 ## 💻 Development
