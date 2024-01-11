@@ -25,7 +25,7 @@ The API uses the result pattern for calls. This means that all calls return a `G
 It can be used like this:
 
 ```csharp
-GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(123456);
+GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.GetUserAsync(123456);
 
 if (result.HasError)
 {
