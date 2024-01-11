@@ -32,7 +32,7 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request and a list of the user's friends.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
-		public async Task<GameJoltResult<int[]>> FetchAsync(CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<int[]>> GetFriendsAsync(CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult<int[]> result))
 			{

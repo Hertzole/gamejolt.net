@@ -21,7 +21,7 @@ namespace GameJolt.NET.Tests
 				})));
 			});
 
-			GameJoltResult<int[]> result = await GameJoltAPI.Friends.FetchAsync();
+			GameJoltResult<int[]> result = await GameJoltAPI.Friends.GetFriendsAsync();
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -43,7 +43,7 @@ namespace GameJolt.NET.Tests
 				})));
 			});
 
-			GameJoltResult<int[]> result = await GameJoltAPI.Friends.FetchAsync();
+			GameJoltResult<int[]> result = await GameJoltAPI.Friends.GetFriendsAsync();
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -56,7 +56,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await TestUrlAsync(() => GameJoltAPI.Friends.FetchAsync(),
+			await TestUrlAsync(() => GameJoltAPI.Friends.GetFriendsAsync(),
 				url =>
 				{
 					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltFriends.ENDPOINT + $"?username={Username}&user_token={Token}"));
