@@ -178,24 +178,29 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and a list of score tables.</returns>
 		public async Task<GameJoltResult<GameJoltTable[]>> GetTablesAsync(CancellationToken cancellationToken = default)
 		{
-			string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BASE_URL + GET_TABLES_ENDPOINT, cancellationToken).ConfigureAwait(false);
-			GetTablesResponse response = serializer.Deserialize<GetTablesResponse>(json);
-
-			if (response.TryGetException(out Exception? exception))
+			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				return GameJoltResult<GameJoltTable[]>.Error(exception!);
+				builder.Append(GET_TABLES_ENDPOINT);
+                
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				GetTablesResponse response = serializer.Deserialize<GetTablesResponse>(json);
+
+				if (response.TryGetException(out Exception? exception))
+				{
+					return GameJoltResult<GameJoltTable[]>.Error(exception!);
+				}
+
+				Debug.Assert(response.success, "Response was successful but success was false.");
+
+				GameJoltTable[] tables = new GameJoltTable[response.tables.Length];
+
+				for (int i = 0; i < response.tables.Length; i++)
+				{
+					tables[i] = response.tables[i].ToPublicTable();
+				}
+
+				return GameJoltResult<GameJoltTable[]>.Success(tables);
 			}
-
-			Debug.Assert(response.success, "Response was successful but success was false.");
-
-			GameJoltTable[] tables = new GameJoltTable[response.tables.Length];
-
-			for (int i = 0; i < response.tables.Length; i++)
-			{
-				tables[i] = response.tables[i].ToPublicTable();
-			}
-
-			return GameJoltResult<GameJoltTable[]>.Success(tables);
 		}
 
 		/// <summary>
