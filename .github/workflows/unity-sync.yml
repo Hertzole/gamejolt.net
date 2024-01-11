@@ -63,7 +63,6 @@ jobs:
         # I can't for the life of me get a conditional to work here. So if it fails, ignore it. ¯\_(ツ)_/¯
         continue-on-error: true
         run: |
-          git config --global --add safe.directory /__w/gamejolt.net.test/gamejolt.net.test 
           git config --global user.name 'github-bot'
           git config --global user.email 'github-bot@users.noreply.github.com'
           git add ./Unity/
