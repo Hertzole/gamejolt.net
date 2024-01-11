@@ -70,10 +70,13 @@ namespace Hertzole.GameJolt
 			return new GetScoresQuery(scores, tableId, limit, username, userToken, guest, betterThan, worseThan);
 		}
 
-		//TODO: Use local user instead of username and token.
-		public GetScoresQuery ForUser(string username, string userToken)
+		/// <summary>
+		///     Only return scores for the current user.
+		/// </summary>
+		/// <returns>The query.</returns>
+		public GetScoresQuery ForCurrentUser()
 		{
-			return new GetScoresQuery(scores, tableId, limit, username, userToken, null, betterThan, worseThan);
+			return new GetScoresQuery(scores, tableId, limit, GameJoltAPI.Users.myUsername, GameJoltAPI.Users.myToken, null, betterThan, worseThan);
 		}
 
 		/// <summary>

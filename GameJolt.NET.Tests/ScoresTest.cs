@@ -137,7 +137,7 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltScore[]> result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForUser("test", "test")
+			GameJoltResult<GameJoltScore[]> result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser()
 			                                                          .BetterThan(0).WorseThan(0).GetAsync();
 
 			Assert.That(result.HasError, Is.False);
@@ -260,7 +260,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetScores_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForUser("test", "test").BetterThan(0).WorseThan(0).GetAsync(),
+			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync(),
 				url =>
 				{
 					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&username=test&user_token=test&better_than=0&worse_than=0"));
