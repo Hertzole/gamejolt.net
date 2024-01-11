@@ -85,7 +85,7 @@ namespace Hertzole.GameJolt
 					return GameJoltResult.Error(exception!);
 				}
 
-				GameJoltResult<GameJoltUser> fetchResponse = await FetchUserAsync(myUsername, cancellationToken).ConfigureAwait(false);
+				GameJoltResult<GameJoltUser> fetchResponse = await GetUserAsync(myUsername, cancellationToken).ConfigureAwait(false);
 				if (!fetchResponse.HasError)
 				{
 					CurrentUser = fetchResponse.Value;
@@ -189,7 +189,7 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request and the user's data.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		public async Task<GameJoltResult<GameJoltUser>> FetchUserAsync(string username, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltUser>> GetUserAsync(string username, CancellationToken cancellationToken = default)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
@@ -216,7 +216,7 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request and the user's data.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		public async Task<GameJoltResult<GameJoltUser>> FetchUserAsync(int userId, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltUser>> GetUserAsync(int userId, CancellationToken cancellationToken = default)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
@@ -244,7 +244,7 @@ namespace Hertzole.GameJolt
 		/// <returns> The result of the request and the users' data.</returns>
 		/// <exception cref="ArgumentNullException">Returned if <paramref name="usernames" /> is null.</exception>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		public async Task<GameJoltResult<GameJoltUser[]>> FetchUsersAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltUser[]>> GetUsersAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
 		{
 			if (usernames == null)
 			{
@@ -283,7 +283,7 @@ namespace Hertzole.GameJolt
 		/// <returns> The result of the request and the users' data.</returns>
 		/// <exception cref="ArgumentNullException">Returned if <paramref name="userIds" /> is null.</exception>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		public async Task<GameJoltResult<GameJoltUser[]>> FetchUsersAsync(IEnumerable<int> userIds, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltUser[]>> GetUsersAsync(IEnumerable<int> userIds, CancellationToken cancellationToken = default)
 		{
 			if (userIds == null)
 			{

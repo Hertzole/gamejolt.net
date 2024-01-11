@@ -202,7 +202,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync("Username");
+			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.GetUserAsync("Username");
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -228,7 +228,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(0);
+			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.GetUserAsync(0);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -252,7 +252,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync("Username");
+			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.GetUserAsync("Username");
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -276,7 +276,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.FetchUserAsync(0);
+			GameJoltResult<GameJoltUser> result = await GameJoltAPI.Users.GetUserAsync(0);
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -303,7 +303,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" });
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(new[] { "Username", "Username2" });
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -333,7 +333,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 });
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(new[] { 0, 1 });
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
@@ -360,7 +360,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" });
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(new[] { "Username", "Username2" });
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -384,7 +384,7 @@ test
 				return FromResult("");
 			});
 
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 });
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(new[] { 0, 1 });
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -403,7 +403,7 @@ test
 		[Test]
 		public async Task Fetch_Username_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.FetchUserAsync("Username"), url =>
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUserAsync("Username"), url =>
 			{
 				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username"));
 			});
@@ -412,7 +412,7 @@ test
 		[Test]
 		public async Task Fetch_Id_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.FetchUserAsync(0), url =>
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUserAsync(0), url =>
 			{
 				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0"));
 			});
@@ -421,7 +421,7 @@ test
 		[Test]
 		public async Task Fetch_Usernames_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.FetchUsersAsync(new[] { "Username", "Username2" }), url =>
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(new[] { "Username", "Username2" }), url =>
 			{
 				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username,Username2"));
 			});
@@ -430,7 +430,7 @@ test
 		[Test]
 		public async Task Fetch_Ids_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.FetchUsersAsync(new[] { 0, 1 }), url =>
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(new[] { 0, 1 }), url =>
 			{
 				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0,1"));
 			});
