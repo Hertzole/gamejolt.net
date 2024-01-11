@@ -7,7 +7,7 @@
         <Title>GameJolt.NET</Title>
         <Authors>Hertzole</Authors>
         <Company>Hertzole</Company>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <AssemblyVersion>1.0.1</AssemblyVersion>
         <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
         <Configurations>Debug;Release;Unity</Configurations>
         <Platforms>AnyCPU</Platforms>

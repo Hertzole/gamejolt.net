@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/Hertzole/gamejolt.net/compare/v1.0.0...v1.0.1) (2024-01-11)
+
+
+### Bug Fixes
+
+* producing invalid signature in .NET 5+ ([e748955](https://github.com/Hertzole/gamejolt.net/commit/e7489557ad00ad48624f85251f8ed6bbfc84b8b2))
+
 # 1.0.0 (2024-01-11)
 
 
