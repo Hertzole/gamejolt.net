@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
@@ -201,7 +200,7 @@ namespace Hertzole.GameJolt
 				sb.Append("?key=");
 				sb.Append(key);
 				sb.Append("&data=");
-				sb.Append(HttpUtility.UrlEncode(data));
+				sb.Append(data);
 
 				if (!string.IsNullOrEmpty(username))
 				{
@@ -430,7 +429,7 @@ namespace Hertzole.GameJolt
 				sb.Append("&operation=");
 				sb.Append(operation);
 				sb.Append("&value=");
-				sb.Append(HttpUtility.UrlEncode(value));
+				sb.Append(value);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken).ConfigureAwait(false);
 				UpdateDataResponse response = serializer.Deserialize<UpdateDataResponse>(json);
