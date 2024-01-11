@@ -2,7 +2,6 @@
 using System.Text;
 #if NET5_0_OR_GREATER
 using System;
-using System.Runtime.InteropServices;
 #endif
 
 namespace Hertzole.GameJolt
@@ -40,14 +39,16 @@ namespace Hertzole.GameJolt
 #if NET5_0_OR_GREATER
 		private static void AppendHashSpan(StringBuilder builder, ReadOnlySpan<char> baseString)
 		{
-			Span<byte> hash = stackalloc byte[32];
-			MD5.HashData(MemoryMarshal.AsBytes(builder.ToString().AsSpan()));
+			Span<byte> hash = stackalloc byte[16];
+			Span<byte> bytes = stackalloc byte[builder.Length];
+			Encoding.UTF8.GetBytes(builder.ToString(), bytes);
+			int hashCount = MD5.HashData(bytes, hash);
 			builder.Clear();
-			
+
 			builder.Append(baseString);
 			builder.Append("&signature=");
-			
-			for (int i = 0; i < hash.Length; i++)
+
+			for (int i = 0; i < hashCount; i++)
 			{
 				builder.Append(hash[i].ToString("x2"));
 			}
