@@ -52,8 +52,6 @@ jobs:
         with:
           projectPath: ./Unity
           unityVersion: ${{ inputs.unity_version }}
-          githubToken: ${{ secrets.access_token }}
-          checkName: "Test Results - Unity ${{ inputs.unity_version }}"
 
       - name: Upload test results
         id: upload_test_results
