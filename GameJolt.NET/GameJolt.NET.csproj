@@ -11,6 +11,13 @@
         <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
         <Configurations>Debug;Release;Unity</Configurations>
         <Platforms>AnyCPU</Platforms>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>A modern .NET wrapper around the Game Jolt Game API.</Description>
+        <PackageProjectUrl>https://github.com/Hertzole/gamejolt.net</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/Hertzole/gamejolt.net/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/Hertzole/gamejolt.net</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>gamejolt game jolt</PackageTags>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Unity' ">
