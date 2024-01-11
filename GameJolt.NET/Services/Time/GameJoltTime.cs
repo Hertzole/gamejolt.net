@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,18 +37,23 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and the current server time.</returns>
 		public async Task<GameJoltResult<DateTime>> GetTimeAsync(CancellationToken cancellationToken = default)
 		{
-			string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BASE_URL + ENDPOINT, cancellationToken).ConfigureAwait(false);
-			FetchTimeResponse response = settings.Deserialize<FetchTimeResponse>(json);
-
-			if (response.TryGetException(out Exception? exception))
+			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				return GameJoltResult<DateTime>.Error(exception!);
+				builder.Append(ENDPOINT);
+                
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				FetchTimeResponse response = settings.Deserialize<FetchTimeResponse>(json);
+
+				if (response.TryGetException(out Exception? exception))
+				{
+					return GameJoltResult<DateTime>.Error(exception!);
+				}
+
+				Debug.Assert(response.Success, "Response was successful, but success was false.");
+
+				DateTime time = DateTimeHelper.FromUnixTimestamp(response.timestamp);
+				return GameJoltResult<DateTime>.Success(time);
 			}
-
-			Debug.Assert(response.Success, "Response was successful, but success was false.");
-
-			DateTime time = DateTimeHelper.FromUnixTimestamp(response.timestamp);
-			return GameJoltResult<DateTime>.Success(time);
 		}
 
 		private static TimeZoneInfo GetTimeZone()
