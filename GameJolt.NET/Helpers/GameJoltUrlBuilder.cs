@@ -1,5 +1,9 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+#if NET5_0_OR_GREATER
+using System;
+using System.Runtime.InteropServices;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -19,6 +23,38 @@ namespace Hertzole.GameJolt
 
 			builder.Append(GameJoltAPI.PrivateKey);
 
+			AppendHash(builder, baseString);
+
+			return builder.ToString();
+		}
+
+		private static void AppendHash(StringBuilder builder, string baseString)
+		{
+#if NET5_0_OR_GREATER
+			AppendHashSpan(builder, baseString);
+#else
+			AppendHashString(builder, baseString);
+#endif
+		}
+
+#if NET5_0_OR_GREATER
+		private static void AppendHashSpan(StringBuilder builder, ReadOnlySpan<char> baseString)
+		{
+			Span<byte> hash = stackalloc byte[32];
+			MD5.HashData(MemoryMarshal.AsBytes(builder.ToString().AsSpan()));
+			builder.Clear();
+			
+			builder.Append(baseString);
+			builder.Append("&signature=");
+			
+			for (int i = 0; i < hash.Length; i++)
+			{
+				builder.Append(hash[i].ToString("x2"));
+			}
+		}
+#else
+		private static void AppendHashString(StringBuilder builder, string baseString)
+		{
 			using (MD5 md5 = MD5.Create())
 			{
 				byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(builder.ToString()));
@@ -32,9 +68,8 @@ namespace Hertzole.GameJolt
 					builder.Append(hash[i].ToString("x2"));
 				}
 			}
-
-			return builder.ToString();
 		}
+#endif
 
 		private static bool EndsWithSlash(StringBuilder sb)
 		{
