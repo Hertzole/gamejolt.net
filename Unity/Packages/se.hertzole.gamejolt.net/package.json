@@ -1,0 +1,25 @@
+{
+    "name": "se.hertzole.gamejolt.net",
+    "version": "1.0.0",
+    "displayName": "GameJolt.NET",
+    "description": "A modern C# wrapper around the GameJolt Game API for .NET and Unity",
+    "unity": "2021.1",
+    "unityRelease": "0f1",
+    "licensesUrl": "https://github.com/Hertzole/gamejolt.net/blob/master/LICENSE",
+    "documentationUrl": "https://github.com/Hertzole/gamejolt.net",
+    "changelogUrl": "https://github.com/Hertzole/gamejolt.net/blob/master/CHANGELOG.md",
+    "dependencies": {
+      "com.unity.modules.unitywebrequest": "1.0.0",
+      "com.unity.nuget.newtonsoft-json": "3.2.1"
+   },
+   "keywords": [
+      "game",
+      "jolt",
+      "gamejolt"
+    ],
+    "author": {
+      "name": "Hertzole",
+      "email": "contact@hertzole.se",
+      "url": "https://www.hertzole.se"
+    }
+  }
