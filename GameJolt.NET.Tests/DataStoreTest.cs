@@ -57,6 +57,22 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task SetGlobal_Bool_Success()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.Serialize(new StoreDataResponse(true, null));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", true);
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+		}
+
+		[Test]
 		public async Task SetUser_Authenticated_String_Success()
 		{
 			await AuthenticateAsync();
@@ -109,6 +125,24 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 		}
+		
+		[Test]
+		public async Task SetUser_Authenticated_Bool_Success()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.Serialize(new StoreDataResponse(true, null));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", true);
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+		}
 
 		[Test]
 		public async Task SetUser_NotAuthenticated_String_Fail()
@@ -134,6 +168,16 @@ namespace GameJolt.NET.Tests
 		public async Task SetUser_NotAuthenticated_Bytes_Fail()
 		{
 			GameJoltResult result = await GameJoltAPI.DataStore.SetAsyncAsCurrentUser("key", DummyData.Bytes());
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
+		}
+		
+		[Test]
+		public async Task SetUser_NotAuthenticated_Bool_Fail()
+		{
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", true);
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -494,6 +538,23 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(bytes));
 		}
+		
+		[Test]
+		public async Task GetValueGlobal_Bool_Success()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.Serialize(new GetDataResponse(true, null, "true"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<bool> result = await GameJoltAPI.DataStore.GetValueAsBoolAsync("key");
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.True);
+		}
 
 		[Test]
 		public async Task GetValueUser_Authenticated_String_Success()
@@ -553,6 +614,25 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(bytes));
 		}
+		
+		[Test]
+		public async Task GetValueUser_Authenticated_Bool_Success()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.Serialize(new GetDataResponse(true, null, "true"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<bool> result = await GameJoltAPI.DataStore.GetValueAsBoolAsCurrentUserAsync("key");
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.True);
+		}
 
 		[Test]
 		public async Task GetValueUser_NotAuthenticated_String_Fail()
@@ -578,6 +658,16 @@ namespace GameJolt.NET.Tests
 		public async Task GetValueUser_NotAuthenticated_Bytes_Fail()
 		{
 			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
+		}
+		
+		[Test]
+		public async Task GetValueUser_NotAuthenticated_Bool_Fail()
+		{
+			GameJoltResult<bool> result = await GameJoltAPI.DataStore.GetValueAsBoolAsCurrentUserAsync("key");
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -692,6 +782,15 @@ namespace GameJolt.NET.Tests
 			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", bytes),
 				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}")); });
 		}
+		
+		[Test]
+		[TestCase(true)]
+		[TestCase(false)]
+		public async Task Set_Bool_ValidUrl(bool value)
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", value),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={value.ToString().ToLowerInvariant()}")); });
+		}
 
 		[Test]
 		public async Task SetAsCurrentUser_String_ValidUrl()
@@ -728,6 +827,20 @@ namespace GameJolt.NET.Tests
 			{
 				Assert.That(url, Does.StartWith(
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}&username={Username}&user_token={Token}"));
+			});
+		}
+		
+		[Test]
+		[TestCase(true)]
+		[TestCase(false)]
+		public async Task SetAsCurrentUser_Bool_ValidUrl(bool value)
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsCurrentUserAsync("Key", value), url =>
+			{
+				Assert.That(url, Does.StartWith(
+					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={value.ToString().ToLowerInvariant()}&username={Username}&user_token={Token}"));
 			});
 		}
 
@@ -830,6 +943,13 @@ namespace GameJolt.NET.Tests
 			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBytesAsync("Key"),
 				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
 		}
+		
+		[Test]
+		public async Task GetValueAsync_Bool_ValidUrl()
+		{
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBoolAsync("Key"),
+				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
+		}
 
 		[Test]
 		public async Task GetValueAsCurrentUserAsync_String_ValidUrl()
@@ -863,6 +983,19 @@ namespace GameJolt.NET.Tests
 			await AuthenticateAsync();
 
 			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("Key"),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
+				});
+		}
+
+		[Test]
+		public async Task GetValueAsCurrentUserAsync_Bool_ValidUrl()
+		{
+			await AuthenticateAsync();
+
+			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBoolAsCurrentUserAsync("Key"),
 				url =>
 				{
 					Assert.That(url,
