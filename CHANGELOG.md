@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Hertzole/gamejolt.net/compare/v1.0.1...v1.0.2) (2024-01-11)
+
+
+### Bug Fixes
+
+* making nuget package ([1519ff7](https://github.com/Hertzole/gamejolt.net/commit/1519ff749d1d079116256301554b597b6b7efd2a))
+
 ## [1.0.1](https://github.com/Hertzole/gamejolt.net/compare/v1.0.0...v1.0.1) (2024-01-11)
 
 
