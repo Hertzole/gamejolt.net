@@ -9,17 +9,17 @@
     "documentationUrl": "https://github.com/Hertzole/gamejolt.net",
     "changelogUrl": "https://github.com/Hertzole/gamejolt.net/blob/master/CHANGELOG.md",
     "dependencies": {
-      "com.unity.modules.unitywebrequest": "1.0.0",
-      "com.unity.nuget.newtonsoft-json": "3.2.1"
-   },
-   "keywords": [
-      "game",
-      "jolt",
-      "gamejolt"
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+    },
+    "keywords": [
+        "game",
+        "jolt",
+        "gamejolt"
     ],
     "author": {
-      "name": "Hertzole",
-      "email": "contact@hertzole.se",
-      "url": "https://www.hertzole.se"
+        "name": "Hertzole",
+        "email": "contact@hertzole.se",
+        "url": "https://www.hertzole.se"
     }
-  }
+}
