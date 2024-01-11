@@ -348,7 +348,7 @@ GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(id
 
 #### OpenUPM (Recommended)
 
-The minimum Unity version for GameJolt.NET is 2021.1.
+The minimum Unity version for GameJolt.NET is 2021.3.
 
 You can install the package through [OpenUPM](https://openupm.com/) by using the [OpenUPM CLI](https://github.com/openupm/openupm-cli#openupm-cli).
 
