@@ -1,0 +1,71 @@
+name: Test Unity Project
+on:
+  workflow_call:
+    secrets:
+      unity_license:
+        required: true
+      unity_email:
+        required: true
+      unity_password:
+        required: true
+      access_token:
+        required: true
+    inputs:
+      unity_version:
+        type: string
+        required: true
+      test_results_name:
+        type: string
+        required: true
+    outputs:
+      test_results:
+        value: ${{ jobs.test.outputs.test-results }}
+      coverage_results:
+        value: ${{ jobs.test.outputs.coverage-results }}
+
+jobs:
+  test:
+    name: Test Unity ${{ inputs.unity_version }}
+    runs-on: ubuntu-latest
+    outputs:
+      test-results: "unity-${{ inputs.unity_version }}-test-results"
+      coverage-results: "unity-${{ inputs.unity_version }}-coverage"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: actions/cache@v3
+        with:
+          path: ./Unity/Library
+          key: Library-${{ inputs.unity_version }}
+          restore-keys: |
+            Library-${{ inputs.unity_version }}
+            Library-
+
+      - uses: game-ci/unity-test-runner@v4
+        id: testRunner
+        env:
+          UNITY_LICENSE: ${{ secrets.unity_license }}
+          UNITY_EMAIL: ${{ secrets.unity_email }}
+          UNITY_PASSWORD: ${{ secrets.unity_password }}
+        with:
+          projectPath: ./Unity
+          unityVersion: ${{ inputs.unity_version }}
+          githubToken: ${{ secrets.access_token }}
+          checkName: "Test Results - Unity ${{ inputs.unity_version }}"
+
+      - name: Upload test results
+        id: upload_test_results
+        uses: actions/upload-artifact@v4
+        with:
+          name: "unity-${{ inputs.unity_version }}-test-results"
+          path: ${{ steps.testRunner.outputs.artifactsPath }}
+
+      - name: Upload coverage results
+        id: upload_coverage_results
+        uses: actions/upload-artifact@v4
+        if: ${{ steps.testRunner.outputs.coveragePath != '' }}
+        with:
+          name: "unity-${{ inputs.unity_version }}-coverage"
+          path: ${{ steps.testRunner.outputs.coveragePath }}

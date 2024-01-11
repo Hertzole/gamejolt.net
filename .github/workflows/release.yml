@@ -1,0 +1,115 @@
+name: Release Workflow
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/**"
+      - "GameJolt.NET/**"
+      - "GameJolt.NET.Tests/**"
+      - "Unity/**"
+      - "ci/**"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/changelog
+            @semantic-release/git
+          branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create UPM package
+        run: |
+          git branch -d upm &> /dev/null || echo upm branch not found
+          git subtree split -P "$PKG_ROOT" -b upm
+          if [[ -d "Assets/Samples" ]]; then
+            mv "Assets/Samples" /tmp/example
+          fi
+          if [[ -f "CHANGELOG.md" ]]; then
+            mv CHANGELOG.md /tmp/CHANGELOG.md
+          fi
+          if [[ -f "LICENSE" ]]; then
+            mv LICENSE /tmp/LICENSE
+          fi
+          if [[ -f "README.md" ]]; then
+            mv README.md /tmp/README.md
+          fi
+          git checkout upm
+          if [[ -f "/tmp/README.md" ]]; then
+            mv /tmp/README.md README.md
+            git add README.md
+          fi
+          if [[ -d "/tmp/example" ]]; then
+            mkdir "Samples~"
+            mv /tmp/example/* "Samples~/"
+            git add "Samples~"
+          fi
+          if [[ -f "/tmp/CHANGELOG.md" ]]; then
+            mv /tmp/CHANGELOG.md CHANGELOG.md
+            git add CHANGELOG.md
+          fi
+          if [[ -f "/tmp/LICENSE" ]]; then
+            mv /tmp/LICENSE LICENSE
+            git add LICENSE
+          fi
+          if [[ -d "Tests" ]]; then
+            rm -rf Tests
+            rm -f Tests.meta
+          fi
+          git config --global user.name 'github-bot'
+          git config --global user.email 'github-bot@users.noreply.github.com'
+          git commit -am "chore: create upm package"
+          git push -f -u origin upm
+        env:
+          PKG_ROOT: "Unity/Packages/se.hertzole.gamejolt.net"
+        shell: bash
+
+      - name: Create Release Tag
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          git tag $TAG upm
+          git push origin --tags
+        env:
+          TAG: package/v${{ steps.semantic.outputs.new_release_version }}
+      
+      - name: Go to master
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          git checkout master
+
+      - name: Install .NET
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Add NuGet Source
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
+      - name: Pack NuGet Package
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: dotnet pack -c Release -p:VERSION=${{ steps.semantic.outputs.new_release_version }} -o output
+
+      - name: Publish to GitHub packages
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: dotnet nuget push output/*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+
+      - name: Publish to NuGet
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: dotnet nuget push output/*.nupkg --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

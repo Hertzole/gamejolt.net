@@ -1,0 +1,40 @@
+name: Test .NET
+on:
+  workflow_call:
+    outputs:
+      test_results:
+        value: ${{ jobs.build.outputs.test_results }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      test_results: net-test-results
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            5
+            6
+            7
+            8
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage;Format=opencover" --results-directory TestResults --logger:"trx;LogFileName=TestResults.trx" --logger:"console;verbosity=normal"
+      
+      - name: Upload test results
+        id: upload_test_results
+        uses: actions/upload-artifact@v4
+        with:
+          name: net-test-results
+          path: TestResults

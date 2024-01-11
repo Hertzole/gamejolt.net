@@ -1,0 +1,126 @@
+name: SonarCloud Scan
+on:
+  workflow_call:
+    secrets:
+      unity_license:
+        required: true
+      access_token:
+        required: true
+      sonar_token:
+        required: true
+    inputs:
+      cache_key:
+        type: string
+        required: true
+      unity_container:
+        type: string
+        required: true
+      net_test_reports:
+        type: string
+        required: false
+        default: ''
+      unity_test_reports:
+        type: string
+        required: false
+        default: ''
+      unity_coverage_reports:
+        type: string
+        required: false
+        default: ''
+
+env:
+  SONAR_TOKEN: ${{ secrets.sonar_token }}
+  UNITY_LICENSE: ${{ secrets.unity_license }}
+
+jobs:
+  scan:
+    name: SonarScan
+    runs-on: ubuntu-latest
+    container: ${{ inputs.unity_container }}
+    steps:
+      - name: Say test reports
+        run: |
+          echo "Net test reports: ${{ inputs.net_test_reports }}"
+          echo "Unity test reports: ${{ inputs.unity_test_reports }}"
+          echo "Unity coverage reports: ${{ inputs.unity_coverage_reports }}"
+      - name: Activate Unity
+        continue-on-error: true
+        run: |
+          echo "$UNITY_LICENSE" | tr -d '\r' > License.ulf
+          unity-editor -nographics -logFile /dev/stdout -manualLicenseFile License.ulf -quit
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache library
+        uses: actions/cache@v3.0.11
+        with:
+          path: ./Unity/Library
+          key: ${{ inputs.cache_key }}
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            5
+            6
+            7
+            8
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install scanner
+        run: |
+          dotnet tool install dotnet-sonarscanner --tool-path .
+
+      - name: Generate Solution
+        run: unity-editor -nographics -logFile /dev/stdout -customBuildName Unity -projectPath ./Unity/ -executeMethod GitTools.Solution.Sync -quit
+
+      - name: Get test reports
+        if: ${{ inputs.net_test_reports != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: "${{ inputs.net_test_reports }}"
+          path: TestResults/net/
+
+      - name: Get Unity test reports
+        if: ${{ inputs.unity_test_reports != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: "${{ inputs.unity_test_reports }}"
+          path: TestResults/unity/
+
+      - name: Get Unity coverage reports
+        if: ${{ inputs.unity_coverage_reports != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: "${{ inputs.unity_coverage_reports }}"
+          path: Coverage/unity/
+          
+      # The test results have a different path than what SonarQube can read.
+      # We need to remove the github/workspace/ path.
+      - name: Fix paths
+        run: |
+          chmod +x ./ci/fix_paths.sh
+          ./ci/fix_paths.sh
+
+      - name: Run scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.sonar_token }}
+        run: |
+          ./dotnet-sonarscanner begin \
+            /o:hertzole \
+            /k:hertzole_gamejolt-net \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.token="${{ secrets.sonar_token }}" \
+            /d:sonar.cs.nunit.reportsPaths="TestResults/unity/*.xml" \
+            /d:sonar.cs.vstest.reportsPaths="TestResults/net/TestResults.trx" \
+            /d:sonar.cs.opencover.reportsPaths="Coverage/unity/Unity-opencov/**.xml","TestResults/**opencover.xml"
+          dotnet build
+          ./dotnet-sonarscanner end /d:sonar.token="${{ secrets.sonar_token }}"
