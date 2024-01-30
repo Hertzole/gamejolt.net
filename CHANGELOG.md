@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/Hertzole/gamejolt.net/compare/v1.0.2...v1.0.3) (2024-01-30)
+
+
+### Bug Fixes
+
+* no readme or license in NuGet package ([8abed6d](https://github.com/Hertzole/gamejolt.net/commit/8abed6d0dafdbd57fe70a98f859dbeb5aeb4aee1))
+
 ## [1.0.2](https://github.com/Hertzole/gamejolt.net/compare/v1.0.1...v1.0.2) (2024-01-11)
 
 
