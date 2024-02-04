@@ -58,8 +58,7 @@ namespace Hertzole.GameJolt
 				return result;
 			}
 
-			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort, score, extraData, cancellationToken)
-				.ConfigureAwait(false);
+			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort, score, extraData, cancellationToken);
 		}
 
 		/// <summary>
@@ -79,7 +78,7 @@ namespace Hertzole.GameJolt
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
-			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort, score, extraData, cancellationToken).ConfigureAwait(false);
+			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort, score, extraData, cancellationToken);
 		}
 
 		private async GameJoltResultTask SubmitScoreInternalAsync(int? tableId,
@@ -126,7 +125,7 @@ namespace Hertzole.GameJolt
 					builder.Append(tableId.Value);
 				}
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				SubmitScoreResponse response = serializer.Deserialize<SubmitScoreResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -157,7 +156,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&table_id=");
 				builder.Append(tableId);
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				GetScoreRankResponse response = serializer.Deserialize<GetScoreRankResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -182,7 +181,7 @@ namespace Hertzole.GameJolt
 			{
 				builder.Append(GET_TABLES_ENDPOINT);
                 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				GetTablesResponse response = serializer.Deserialize<GetTablesResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -251,7 +250,7 @@ namespace Hertzole.GameJolt
 					builder.Append(query.worseThan.Value);
 				}
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				GetScoresResponse response = serializer.Deserialize<GetScoresResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
