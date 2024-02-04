@@ -76,7 +76,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&user_token=");
 				builder.Append(token);
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 
 				AuthResponse response = serializer.Deserialize<AuthResponse>(json);
 
@@ -85,7 +85,7 @@ namespace Hertzole.GameJolt
 					return GameJoltResult.Error(exception!);
 				}
 
-				GameJoltResult<GameJoltUser> fetchResponse = await GetUserAsync(myUsername, cancellationToken).ConfigureAwait(false);
+				GameJoltResult<GameJoltUser> fetchResponse = await GetUserAsync(myUsername, cancellationToken);
 				if (!fetchResponse.HasError)
 				{
 					CurrentUser = fetchResponse.Value;
@@ -126,7 +126,7 @@ namespace Hertzole.GameJolt
 			    && QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
 			    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
 			{
-				return await AuthenticateAsync(username!, token!, cancellationToken).ConfigureAwait(false);
+				return await AuthenticateAsync(username!, token!, cancellationToken);
 			}
 
 			return GameJoltResult.Error(new ArgumentException("Invalid URL.", nameof(url)));
@@ -179,7 +179,7 @@ namespace Hertzole.GameJolt
 			string username = lines[1];
 			string token = lines[2];
 
-			return await AuthenticateAsync(username, token, cancellationToken).ConfigureAwait(false);
+			return await AuthenticateAsync(username, token, cancellationToken);
 		}
 
 		/// <summary>
@@ -197,7 +197,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?username=");
 				builder.Append(username);
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -224,7 +224,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?user_id=");
 				builder.Append(userId);
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -257,7 +257,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?username=");
 				builder.Append(usernames.ToCommaSeparatedString());
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -296,7 +296,7 @@ namespace Hertzole.GameJolt
 				builder.Append("?user_id=");
 				builder.Append(userIds.ToCommaSeparatedString());
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
