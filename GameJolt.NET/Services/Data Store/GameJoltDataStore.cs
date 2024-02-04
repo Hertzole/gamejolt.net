@@ -54,7 +54,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, string data, CancellationToken cancellationToken = default)
 		{
-			return await SetInternalAsync(key, data, null, null, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, data, null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, int data, CancellationToken cancellationToken = default)
 		{
-			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -80,7 +80,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
-			return await SetInternalAsync(key, Convert.ToBase64String(data), null, null, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, Convert.ToBase64String(data), null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, bool data, CancellationToken cancellationToken = default)
 		{
-			return await SetInternalAsync(key, data ? "true" : "false", null, null, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, data ? "true" : "false", null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -113,7 +113,7 @@ namespace Hertzole.GameJolt
 				return authResult;
 			}
 
-			return await SetInternalAsync(key, data, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, data, users.myUsername, users.myToken, cancellationToken);
 		}
 
 		/// <summary>
@@ -134,7 +134,7 @@ namespace Hertzole.GameJolt
 			}
 
 			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken, cancellationToken)
-				.ConfigureAwait(false);
+				;
 		}
 
 		/// <summary>
@@ -154,7 +154,7 @@ namespace Hertzole.GameJolt
 				return authResult;
 			}
 
-			return await SetInternalAsync(key, Convert.ToBase64String(data), users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, Convert.ToBase64String(data), users.myUsername, users.myToken, cancellationToken);
 		}
 
 		/// <summary>
@@ -174,7 +174,7 @@ namespace Hertzole.GameJolt
 				return authResult;
 			}
 
-			return await SetInternalAsync(key, data ? "true" : "false", users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await SetInternalAsync(key, data ? "true" : "false", users.myUsername, users.myToken, cancellationToken);
 		}
 
 		/// <summary>
@@ -214,7 +214,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
 				StoreDataResponse result = serializer.Deserialize<StoreDataResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -236,7 +236,7 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the operation.</returns>
 		public async Task<GameJoltResult> RemoveAsync(string key, CancellationToken cancellationToken = default)
 		{
-			return await RemoveInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
+			return await RemoveInternalAsync(key, null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -253,7 +253,7 @@ namespace Hertzole.GameJolt
 				return authResult;
 			}
 
-			return await RemoveInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await RemoveInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 		}
 
 		private async GameJoltResultTask RemoveInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
@@ -276,7 +276,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
 				StoreDataResponse result = serializer.Deserialize<StoreDataResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -303,7 +303,7 @@ namespace Hertzole.GameJolt
 		public async Task<GameJoltResult<string>> UpdateAsync(string key, string data, StringOperation operation, CancellationToken cancellationToken = default)
 		{
 			GameJoltResult<(string stringValue, int intValue)> result =
-				await UpdateInternalAsync(key, GetStringOperation(operation), data, null, null, cancellationToken).ConfigureAwait(false);
+				await UpdateInternalAsync(key, GetStringOperation(operation), data, null, null, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -327,7 +327,7 @@ namespace Hertzole.GameJolt
 		{
 			GameJoltResult<(string stringValue, int intValue)> result =
 				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken)
-					.ConfigureAwait(false);
+					;
 
 			if (result.HasError)
 			{
@@ -358,7 +358,7 @@ namespace Hertzole.GameJolt
 			}
 
 			GameJoltResult<(string stringValue, int intValue)> result =
-				await UpdateInternalAsync(key, GetStringOperation(operation), data, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+				await UpdateInternalAsync(key, GetStringOperation(operation), data, users.myUsername, users.myToken, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -391,7 +391,7 @@ namespace Hertzole.GameJolt
 			GameJoltResult<(string stringValue, int intValue)> result =
 				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken,
 						cancellationToken)
-					.ConfigureAwait(false);
+					;
 
 			if (result.HasError)
 			{
@@ -431,7 +431,7 @@ namespace Hertzole.GameJolt
 				sb.Append("&value=");
 				sb.Append(value);
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
 				UpdateDataResponse response = serializer.Deserialize<UpdateDataResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -460,7 +460,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		public async Task<GameJoltResult<string>> GetValueAsStringAsync(string key, CancellationToken cancellationToken = default)
 		{
-			return await GetValueInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
+			return await GetValueInternalAsync(key, null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -473,7 +473,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidDataStoreValueException">Returned if the value is not an integer.</exception>
 		public async Task<GameJoltResult<int>> GetValueAsIntAsync(string key, CancellationToken cancellationToken = default)
 		{
-			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -499,7 +499,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
 		public async Task<GameJoltResult<byte[]>> GetValueAsBytesAsync(string key, CancellationToken cancellationToken = default)
 		{
-			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -531,7 +531,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidDataStoreValueException">Returned if the value is not a bool.</exception>
 		public async Task<GameJoltResult<bool>> GetValueAsBoolAsync(string key, CancellationToken cancellationToken = default)
 		{
-			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -562,7 +562,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<string>.Error(authResult.Exception!);
 			}
 
-			return await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 		}
 
 		/// <summary>
@@ -582,7 +582,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<int>.Error(authResult.Exception!);
 			}
 
-			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -614,7 +614,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<byte[]>.Error(authResult.Exception!);
 			}
 
-			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -653,7 +653,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<bool>.Error(authResult.Exception!);
 			}
 
-			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -688,7 +688,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
 				GetDataResponse result = serializer.Deserialize<GetDataResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
@@ -710,7 +710,7 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the operation and the keys.</returns>
 		public async Task<GameJoltResult<string[]>> GetKeysAsync(string? pattern = null, CancellationToken cancellationToken = default)
 		{
-			return await GetKeysInternalAsync(pattern, null, null, cancellationToken).ConfigureAwait(false);
+			return await GetKeysInternalAsync(pattern, null, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -728,7 +728,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<string[]>.Error(authResult.Exception!);
 			}
 
-			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, cancellationToken).ConfigureAwait(false);
+			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, cancellationToken);
 		}
 
 		private async GameJoltStringArrayTask GetKeysInternalAsync(string? pattern, string? username, string? token, CancellationToken cancellationToken)
@@ -756,7 +756,7 @@ namespace Hertzole.GameJolt
 					sb.Append(token);
 				}
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
 				GetKeysResponse result = serializer.Deserialize<GetKeysResponse>(json);
 
 				if (result.TryGetException(out Exception? exception))
