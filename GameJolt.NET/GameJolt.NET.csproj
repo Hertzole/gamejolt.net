@@ -21,7 +21,7 @@
         <RepositoryUrl>https://github.com/Hertzole/gamejolt.net</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>gamejolt game jolt</PackageTags>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile>README_nuget.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
