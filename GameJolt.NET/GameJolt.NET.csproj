@@ -6,7 +6,7 @@
         <RootNamespace>GameJolt</RootNamespace>
         <AssemblyVersion>1.0.3</AssemblyVersion>
         <TargetFrameworks>net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
-        <Configurations>Debug;Release;Unity</Configurations>
+        <Configurations>Debug;Release;Unity;Unity 2023</Configurations>
         <Platforms>AnyCPU</Platforms>
         
     </PropertyGroup>
@@ -26,14 +26,19 @@
 
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\"/>
+        <None Include="..\README_nuget.md" Pack="true" PackagePath="\"/>
         <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Unity' ">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023' ">
         <DefineConstants>TRACE,UNITY_2021_1_OR_NEWER</DefineConstants>
     </PropertyGroup>
 
-    <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0')) == false Or '$(Configuration)' == 'Unity'">
+    <PropertyGroup Condition="'$(Configuration)' == 'Unity 2023' ">
+        <DefineConstants>TRACE,UNITY_2021_1_OR_NEWER,UNITY_2023_1_OR_NEWER</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0')) == false Or '$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023'">
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
@@ -45,7 +50,7 @@
         <Reference Include="System.Net.Http"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(Configuration)' == 'Unity'">
+    <ItemGroup Condition="'$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023'">
         <PackageReference Include="Unity3D" Version="2.1.3"/>
     </ItemGroup>
 

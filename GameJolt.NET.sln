@@ -9,6 +9,7 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 		Unity|Any CPU = Unity|Any CPU
+		Unity 2023|Any CPU = Unity 2023|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{19DF479A-7296-4F75-87A6-BEA1D052C99E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -17,11 +18,15 @@ Global
 		{19DF479A-7296-4F75-87A6-BEA1D052C99E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19DF479A-7296-4F75-87A6-BEA1D052C99E}.Unity|Any CPU.ActiveCfg = Unity|Any CPU
 		{19DF479A-7296-4F75-87A6-BEA1D052C99E}.Unity|Any CPU.Build.0 = Unity|Any CPU
+		{19DF479A-7296-4F75-87A6-BEA1D052C99E}.Unity 2023|Any CPU.ActiveCfg = Unity 2023|Any CPU
+		{19DF479A-7296-4F75-87A6-BEA1D052C99E}.Unity 2023|Any CPU.Build.0 = Unity 2023|Any CPU
 		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Unity|Any CPU.ActiveCfg = Unity|Any CPU
 		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Unity|Any CPU.Build.0 = Unity|Any CPU
+		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Unity 2023|Any CPU.ActiveCfg = Unity 2023|Any CPU
+		{C15A00EB-0E9D-4338-8ACC-78E1C30FAB62}.Unity 2023|Any CPU.Build.0 = Unity 2023|Any CPU
 	EndGlobalSection
 EndGlobal

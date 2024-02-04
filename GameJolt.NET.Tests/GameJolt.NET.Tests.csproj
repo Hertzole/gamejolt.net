@@ -8,7 +8,7 @@
 
         <LangVersion>9</LangVersion>
 
-        <Configurations>Debug;Release;Unity</Configurations>
+        <Configurations>Debug;Release;Unity;Unity 2023</Configurations>
 
         <Platforms>AnyCPU</Platforms>
         <InvariantGlobalization>true</InvariantGlobalization>

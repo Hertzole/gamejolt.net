@@ -1,5 +1,8 @@
 <Project>
-    <PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Unity' ">
         <UnityProjectPath>$(SolutionDir)\Unity</UnityProjectPath>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Unity 2023' ">
+        <UnityVersion>2023.2.2f1</UnityVersion>
     </PropertyGroup>
 </Project>
