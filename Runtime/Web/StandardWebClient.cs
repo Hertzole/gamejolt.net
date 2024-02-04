@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt
 
 		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
 		{
-			string response = await client.GetStringAsync(url, cancellationToken).ConfigureAwait(false);
+			string response = await client.GetStringAsync(url, cancellationToken);
 			if (string.IsNullOrEmpty(response))
 			{
 				throw new GameJoltException("Response was empty.");

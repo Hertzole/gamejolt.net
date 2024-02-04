@@ -48,7 +48,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
 		{
-			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken).ConfigureAwait(false);
+			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
 		{
-			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken).ConfigureAwait(false);
+			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken);
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
-			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken).ConfigureAwait(false);
+			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace Hertzole.GameJolt
 		{
 			int[] trophyIds = intPool.Rent(1);
 			trophyIds[0] = trophyId;
-			GameJoltResult<GameJoltTrophy[]> result = await GetTrophiesInternalAsync(trophyIds, 1, null, cancellationToken).ConfigureAwait(false);
+			GameJoltResult<GameJoltTrophy[]> result = await GetTrophiesInternalAsync(trophyIds, 1, null, cancellationToken);
 
 			intPool.Return(trophyIds);
 
@@ -159,7 +159,7 @@ namespace Hertzole.GameJolt
 					}
 				}
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				FetchTrophiesResponse response = serializer.Deserialize<FetchTrophiesResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -203,7 +203,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&trophy_id=");
 				builder.Append(trophyId);
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
@@ -240,7 +240,7 @@ namespace Hertzole.GameJolt
 				builder.Append("&trophy_id=");
 				builder.Append(trophyId);
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken).ConfigureAwait(false);
+				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
