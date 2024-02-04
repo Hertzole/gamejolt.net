@@ -19,14 +19,6 @@ on:
         type: string
         required: false
         default: ''
-      unity_test_reports:
-        type: string
-        required: false
-        default: ''
-      unity_coverage_reports:
-        type: string
-        required: false
-        default: ''
 
 env:
   SONAR_TOKEN: ${{ secrets.sonar_token }}
@@ -38,11 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     container: ${{ inputs.unity_container }}
     steps:
-      - name: Say test reports
-        run: |
-          echo "Net test reports: ${{ inputs.net_test_reports }}"
-          echo "Unity test reports: ${{ inputs.unity_test_reports }}"
-          echo "Unity coverage reports: ${{ inputs.unity_coverage_reports }}"
       - name: Activate Unity
         continue-on-error: true
         run: |
@@ -90,18 +77,16 @@ jobs:
           path: TestResults/net/
 
       - name: Get Unity test reports
-        if: ${{ inputs.unity_test_reports != '' }}
         uses: actions/download-artifact@v4
         with:
-          name: "${{ inputs.unity_test_reports }}"
           path: TestResults/unity/
+          pattern: unity-*-test-results
 
       - name: Get Unity coverage reports
-        if: ${{ inputs.unity_coverage_reports != '' }}
         uses: actions/download-artifact@v4
         with:
-          name: "${{ inputs.unity_coverage_reports }}"
           path: Coverage/unity/
+          pattern: unity-*-coverage
           
       # The test results have a different path than what SonarQube can read.
       # We need to remove the github/workspace/ path.
@@ -119,8 +104,8 @@ jobs:
             /k:hertzole_gamejolt-net \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="${{ secrets.sonar_token }}" \
-            /d:sonar.cs.nunit.reportsPaths="TestResults/unity/*.xml" \
+            /d:sonar.cs.nunit.reportsPaths="TestResults/unity/**.xml" \
             /d:sonar.cs.vstest.reportsPaths="TestResults/net/TestResults.trx" \
-            /d:sonar.cs.opencover.reportsPaths="Coverage/unity/Unity-opencov/**.xml","TestResults/**opencover.xml"
+            /d:sonar.cs.opencover.reportsPaths="Coverage/unity/**.xml","TestResults/**opencover.xml"
           dotnet build
           ./dotnet-sonarscanner end /d:sonar.token="${{ secrets.sonar_token }}"

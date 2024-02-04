@@ -58,5 +58,3 @@ jobs:
       cache_key: LibraryFolder
       unity_container: unityci/editor:ubuntu-2022.3.15f1-base-3.0.0
       net_test_reports: ${{ needs.net_test.outputs.test_results }}
-      unity_test_reports: ${{ needs.unity-test.outputs.test_results }}
-      unity_coverage_reports: ${{ needs.unity-test.outputs.coverage_results }}

@@ -52,6 +52,7 @@ jobs:
         with:
           projectPath: ./Unity
           unityVersion: ${{ inputs.unity_version }}
+          coverageOptions: 'generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;assemblyFilters:+GameJolt.NET'
 
       - name: Upload test results
         id: upload_test_results
