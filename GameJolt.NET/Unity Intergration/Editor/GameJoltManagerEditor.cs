@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 namespace Hertzole.GameJolt.Editor
@@ -35,3 +36,4 @@ namespace Hertzole.GameJolt.Editor
 		}
 	}
 }
+#endif

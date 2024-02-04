@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#if UNITY_EDITOR
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -129,3 +130,4 @@ namespace Hertzole.GameJolt.Editor
 		}
 	}
 }
+#endif
