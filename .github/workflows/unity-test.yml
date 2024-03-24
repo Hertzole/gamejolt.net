@@ -43,6 +43,15 @@ jobs:
             Library-${{ inputs.unity_version }}
             Library-
 
+      - name: Delete old package
+        run: rm -rf ./Unity/Packages/se.hertzole.gamejolt.net/
+
+      - name: Download synced package
+        uses: actions/download-artifact@v4.1.4
+        with:
+          name: unity-package-folder
+          path: ./Unity/Packages/se.hertzole.gamejolt.net/
+
       - uses: game-ci/unity-test-runner@main # Must be on main until a fix regarding character limit is published
         id: testRunner
         env:
