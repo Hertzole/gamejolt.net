@@ -16,43 +16,50 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void Shutdown_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(GameJoltAPI.Shutdown);
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(GameJoltAPI.Shutdown, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
 		public void AccessUsers_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Users; });
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(() => { _ = GameJoltAPI.Users; }, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
 		public void AccessSessions_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Sessions; });
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(() => { _ = GameJoltAPI.Sessions; }, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
 		public void AccessScores_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Scores; });
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(() => { _ = GameJoltAPI.Scores; }, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
 		public void AccessTrophies_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Trophies; });
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(() => { _ = GameJoltAPI.Trophies; }, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
 		public void AccessDataStore_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.DataStore; });
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(() => { _ = GameJoltAPI.DataStore; }, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
 		public void AccessFriends_NotInitialized_ThrowsException()
 		{
-			Assert.Throws<GameJoltInitializationException>(() => { _ = GameJoltAPI.Friends; });
+			Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			Assert.That(() => { _ = GameJoltAPI.Friends; }, Throws.TypeOf<GameJoltInitializationException>());
 		}
 
 		[Test]
@@ -64,7 +71,7 @@ namespace GameJolt.NET.Tests
 			GameJoltAPI.Initialize(0, "");
 
 			Assert.That(invoked, Is.True);
-			
+
 			GameJoltAPI.Shutdown(); // Clean up.
 		}
 
@@ -84,7 +91,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(invoked, Is.True);
 		}
-		
+
 		[Test]
 		public void ShutdownComplete_OnShutdownComplete_IsInvoked()
 		{
