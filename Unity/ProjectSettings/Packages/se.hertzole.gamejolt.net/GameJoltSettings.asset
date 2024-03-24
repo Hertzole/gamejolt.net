@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 61
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 440ee02a803402e409bc16cdbb00a733, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameId: 0
+  privateGameKey: 
+  autoInitialize: 0
+  autoShutdown: 0
+  autoSignInFromWeb: 0
+  autoSignInFromClient: 0
+  autoStartSessions: 0
+  autoCloseSessions: 0
+  autoPingSessions: 0
+  pingStatus: 1
