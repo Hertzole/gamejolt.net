@@ -10,6 +10,12 @@ namespace Hertzole.GameJolt
 	public sealed class GameJoltManager : MonoBehaviour
 	{
 		private static GameJoltManager instance;
+		
+		// There's no built-in destroy cancellation token pre Unity 2022.2, so we make our own.
+#if !UNITY_2022_2_OR_NEWER
+		private readonly CancellationTokenSource destroyCancellationTokenSource = new CancellationTokenSource();
+		private CancellationToken destroyCancellationToken { get { return destroyCancellationTokenSource.Token; } }
+#endif
 
 		private void Awake()
 		{
@@ -74,10 +80,16 @@ namespace Hertzole.GameJolt
 
 		private async void OnDestroy()
 		{
+			// There's no built-in destroy cancellation token pre Unity 2022.2, so we make our own.
+#if !UNITY_2022_2_OR_NEWER
+			destroyCancellationTokenSource.Cancel();
+#endif
+			
 			GameJoltAPI.Users.OnUserAuthenticated -= OnUserAuthenticated;
 
 			if (GameJoltSettings.AutoCloseSessions && GameJoltAPI.Sessions.IsSessionOpen)
 			{
+				// Don't pass the destroyCancellationToken here, we want to close the session no matter what.
 				GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 				if (result.HasError)
 				{
