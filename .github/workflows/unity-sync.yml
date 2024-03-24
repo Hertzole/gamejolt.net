@@ -42,7 +42,7 @@ jobs:
           find ./Unity/Packages/se.hertzole.gamejolt.net/Tests -name \*.cs.meta -type f -delete
 
       - name: Copy runtime
-        run: rsync -av --exclude='*.csproj' --exclude='./GameJolt.NET/Unity Integration/Editor' './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
+        run: rsync -av --exclude={'*.csproj','./GameJolt.NET/Unity Integration/Editor/'} './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
 
       - name: Copy editor
         run: rsync -av --exclude='*.csproj' './GameJolt.NET/Unity Integration/Editor/' './Unity/Packages/se.hertzole.gamejolt.net/Editor/'
