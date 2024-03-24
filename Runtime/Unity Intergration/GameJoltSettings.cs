@@ -13,22 +13,22 @@ namespace Hertzole.GameJolt
 		private int gameId = default;
 		[SerializeField]
 		private string privateGameKey = default;
-		[SerializeField] 
+		[SerializeField]
 		private bool autoInitialize = true;
-		[SerializeField] 
+		[SerializeField]
 		private bool autoShutdown = true;
-		[SerializeField] 
+		[SerializeField]
 		private bool autoSignInFromWeb = true;
-		[SerializeField] 
+		[SerializeField]
 		private bool autoSignInFromClient = true;
-		
-		[SerializeField] 
+
+		[SerializeField]
 		private bool autoStartSessions = true;
-		[SerializeField] 
+		[SerializeField]
 		private bool autoCloseSessions = true;
-		[SerializeField] 
+		[SerializeField]
 		private bool autoPingSessions = true;
-		[SerializeField] 
+		[SerializeField]
 		private SessionStatus pingStatus = SessionStatus.Active;
 
 		private static GameJoltSettings instance;
@@ -58,7 +58,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoInitialize
 		{
 			get { return Instance.autoInitialize; }
@@ -71,7 +71,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoShutdown
 		{
 			get { return Instance.autoShutdown; }
@@ -84,7 +84,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoSignInFromWeb
 		{
 			get { return Instance.autoSignInFromWeb; }
@@ -97,7 +97,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoSignInFromClient
 		{
 			get { return Instance.autoSignInFromClient; }
@@ -110,7 +110,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoStartSessions
 		{
 			get { return Instance.autoStartSessions; }
@@ -123,7 +123,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoCloseSessions
 		{
 			get { return Instance.autoCloseSessions; }
@@ -136,7 +136,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static bool AutoPingSessions
 		{
 			get { return Instance.autoPingSessions; }
@@ -149,7 +149,7 @@ namespace Hertzole.GameJolt
 				}
 			}
 		}
-		
+
 		public static SessionStatus PingStatus
 		{
 			get { return Instance.pingStatus; }
@@ -163,25 +163,25 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		public static bool AutoSignIn
 		{
 			get { return EditorPrefs.GetBool("GameJolt.NET.AutoSignIn", false); }
 			set { EditorPrefs.SetBool("GameJolt.NET.AutoSignIn", value); }
 		}
-		
+
 		public static string SignInUsername
 		{
 			get { return EditorPrefs.GetString("GameJolt.NET.SignInUsername", string.Empty); }
 			set { EditorPrefs.SetString("GameJolt.NET.SignInUsername", value); }
 		}
-		
+
 		public static string SignInToken
 		{
 			get { return EditorPrefs.GetString("GameJolt.NET.SignInToken", string.Empty); }
 			set { EditorPrefs.SetString("GameJolt.NET.SignInToken", value); }
 		}
-		#endif
+#endif
 
 		internal static GameJoltSettings Instance
 		{

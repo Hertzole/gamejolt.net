@@ -22,7 +22,7 @@ namespace Hertzole.GameJolt.Editor
 				"If true, the GameJoltManager will automatically sign in the user when the game starts in a web player.");
 			public static readonly GUIContent autoSignInFromClient = new GUIContent("Auto Sign-In From Client",
 				"If true, the GameJoltManager will automatically sign in the user when the game starts from the Game Jolt client.");
-			
+
 			public static readonly GUIContent editorSettings = new GUIContent("Editor Settings");
 			public static readonly GUIContent
 				autoSignIn = new GUIContent("Auto Sign-In", "Automatically sign in when the game starts, but only in the editor!");
@@ -33,6 +33,8 @@ namespace Hertzole.GameJolt.Editor
 			public static readonly GUIContent sessionSettings = new GUIContent("Session Settings");
 			public static readonly GUIContent autoStartSessions =
 				new GUIContent("Auto Start Sessions", "Automatically start a session when the player has signed in.");
+			public static readonly GUIContent autoCloseSessions =
+				new GUIContent("Auto Close Sessions", "Automatically close the session when the player has signed out.");
 			public static readonly GUIContent autoPingSessions =
 				new GUIContent("Auto Ping Sessions", "Automatically ping the session when the a session is running.");
 			public static readonly GUIContent pingStatus = new GUIContent("Ping Status", "The status to ping the session with.");
@@ -86,6 +88,7 @@ namespace Hertzole.GameJolt.Editor
 			GUILayout.Label(Labels.sessionSettings, EditorStyles.boldLabel);
 
 			GameJoltSettings.AutoStartSessions = EditorGUILayout.Toggle(Labels.autoStartSessions, GameJoltSettings.AutoStartSessions);
+			GameJoltSettings.AutoCloseSessions = EditorGUILayout.Toggle(Labels.autoCloseSessions, GameJoltSettings.AutoCloseSessions);
 			GameJoltSettings.AutoPingSessions = EditorGUILayout.Toggle(Labels.autoPingSessions, GameJoltSettings.AutoPingSessions);
 			oEnabled = GUI.enabled;
 			GUI.enabled = GameJoltSettings.AutoPingSessions;
