@@ -24,6 +24,11 @@ namespace Hertzole.GameJolt.Editor
 
 			EditorGUILayout.Space();
 
+			if (!GameJoltAPI.IsInitialized)
+			{
+				return;
+			}
+
 			EditorGUILayout.LabelField("User Information", EditorStyles.boldLabel);
 			EditorGUILayout.Toggle("Is Authenticated", GameJoltAPI.Users.IsAuthenticated);
 			EditorGUILayout.TextField("Username", GameJoltAPI.Users.IsAuthenticated ? GameJoltAPI.Users.CurrentUser!.Value.Username : "Not Authenticated");
@@ -32,7 +37,11 @@ namespace Hertzole.GameJolt.Editor
 
 			EditorGUILayout.LabelField("Session Information", EditorStyles.boldLabel);
 
+			bool oEnabled = GUI.enabled;
+
+			GUI.enabled = GameJoltAPI.Users.IsAuthenticated;
 			EditorGUILayout.Toggle("Is Session Open", GameJoltAPI.Sessions.IsSessionOpen);
+			GUI.enabled = oEnabled;
 		}
 	}
 }

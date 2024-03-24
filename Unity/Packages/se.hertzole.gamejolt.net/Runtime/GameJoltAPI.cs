@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+
 namespace Hertzole.GameJolt
 {
 	/// <summary>
@@ -135,6 +137,26 @@ namespace Hertzole.GameJolt
 		public static bool IsInitialized { get; private set; }
 
 		/// <summary>
+		///     Event that is invoked when the API has been initialized with a game ID and private key.
+		/// </summary>
+		public static event Action? OnInitialized;
+		/// <summary>
+		///     Event that is invoked when the API is shutting down.
+		/// </summary>
+		/// <remarks>
+		///     The API will still be accessible when this event is invoked and <see cref="IsInitialized" /> will still be true,
+		///     unlike <see cref="OnShutdownComplete" />.
+		/// </remarks>
+		public static event Action? OnShutdown;
+		/// <summary>
+		///     Event that is invoked when the API has been completely shutdown.
+		/// </summary>
+		/// <remarks>
+		///     All the API features will be null after this event has been invoked and <see cref="IsInitialized" /> will be false.
+		/// </remarks>
+		public static event Action? OnShutdownComplete;
+
+		/// <summary>
 		///     Initializes the API.
 		/// </summary>
 		/// <param name="gameId">The ID for your game.</param>
@@ -147,6 +169,7 @@ namespace Hertzole.GameJolt
 			users = new GameJoltUsers(webClient, serializer);
 
 			IsInitialized = true;
+			OnInitialized?.Invoke();
 		}
 
 		/// <summary>
@@ -155,6 +178,9 @@ namespace Hertzole.GameJolt
 		public static void Shutdown()
 		{
 			ThrowIfNotInitialized();
+
+			// Call the event before cleaning up so that the event can still access the API.
+			OnShutdown?.Invoke();
 
 			users!.Shutdown();
 
@@ -169,6 +195,7 @@ namespace Hertzole.GameJolt
 			time = null;
 
 			IsInitialized = false;
+			OnShutdownComplete?.Invoke();
 		}
 
 		/// <summary>
