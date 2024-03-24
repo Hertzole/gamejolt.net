@@ -1,0 +1,18 @@
+{
+    "name": "GameJolt.NET.Editor",
+    "rootNamespace": "GameJolt.NET.Editor",
+    "references": [
+        "GUID:ca851cb0f53a9a2418ea8b5ed9b11639"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
