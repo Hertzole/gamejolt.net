@@ -36,16 +36,11 @@ jobs:
         run: |
           find ./Unity/Packages/se.hertzole.gamejolt.net/Runtime -name \*.cs -type f -delete
           find ./Unity/Packages/se.hertzole.gamejolt.net/Runtime -name \*.cs.meta -type f -delete
-          find ./Unity/Packages/se.hertzole.gamejolt.net/Editor -name \*.cs -type f -delete
-          find ./Unity/Packages/se.hertzole.gamejolt.net/Editor -name \*.cs.meta -type f -delete
           find ./Unity/Packages/se.hertzole.gamejolt.net/Tests -name \*.cs -type f -delete
           find ./Unity/Packages/se.hertzole.gamejolt.net/Tests -name \*.cs.meta -type f -delete
 
       - name: Copy runtime
-        run: rsync -av --exclude={'*.csproj','./GameJolt.NET/Unity Integration/Editor/'} './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
-
-      - name: Copy editor
-        run: rsync -av --exclude='*.csproj' './GameJolt.NET/Unity Integration/Editor/' './Unity/Packages/se.hertzole.gamejolt.net/Editor/'
+        run: rsync -av --exclude=*.csproj' './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
 
       - name: Copy tests
         run: rsync -av --exclude='*.csproj' './GameJolt.NET.Tests/' './Unity/Packages/se.hertzole.gamejolt.net/Tests/'
