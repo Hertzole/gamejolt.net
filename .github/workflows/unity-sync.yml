@@ -35,9 +35,7 @@ jobs:
       - name: Remove old files
         run: |
           find ./Unity/Packages/se.hertzole.gamejolt.net/Runtime -name \*.cs -type f -delete
-          find ./Unity/Packages/se.hertzole.gamejolt.net/Runtime -name \*.cs.meta -type f -delete
           find ./Unity/Packages/se.hertzole.gamejolt.net/Tests -name \*.cs -type f -delete
-          find ./Unity/Packages/se.hertzole.gamejolt.net/Tests -name \*.cs.meta -type f -delete
 
       - name: Copy runtime
         run: rsync -av --exclude='*.csproj' './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
