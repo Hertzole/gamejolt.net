@@ -78,6 +78,12 @@ namespace Hertzole.GameJolt
 			{
 				return;
 			}
+			
+			// No need to do anything if the API isn't initialized.
+			if (!GameJoltAPI.IsInitialized)
+			{
+				return;
+			}
 
 			if (GameJoltSettings.AutoCloseSessions && GameJoltAPI.Sessions.IsSessionOpen)
 			{
