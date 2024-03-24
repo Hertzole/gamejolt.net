@@ -5,6 +5,14 @@ namespace GameJolt.NET.Tests
 {
 	public class ApiTest
 	{
+#if UNITY_64 // Just for the Unity version.
+		[SetUp]
+		public void SetUp()
+		{
+			Assert.That(GameJoltSettings.AutoInitialize, Is.False, "AutoInitialize is not supported when running tests.");
+		}
+#endif
+
 		[Test]
 		public void Shutdown_NotInitialized_ThrowsException()
 		{

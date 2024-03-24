@@ -24,6 +24,19 @@ namespace GameJolt.NET.Tests
 		[SetUp]
 		public async Task Setup()
 		{
+#if UNITY_64
+			Assert.That(GameJoltSettings.AutoInitialize, Is.False, "AutoInitialize is not supported when running tests.");
+			Assert.That(GameJoltSettings.AutoShutdown, Is.False, "AutoShutdown is not supported when running tests.");
+			Assert.That(GameJoltSettings.AutoSignInFromWeb, Is.False, "AutoSignInFromWeb is not supported when running tests.");
+			Assert.That(GameJoltSettings.AutoSignInFromClient, Is.False, "AutoSignInFromClient is not supported when running tests.");
+			Assert.That(GameJoltSettings.AutoStartSessions, Is.False, "AutoStartSessions is not supported when running tests.");
+			Assert.That(GameJoltSettings.AutoCloseSessions, Is.False, "AutoCloseSessions is not supported when running tests.");
+			Assert.That(GameJoltSettings.AutoPingSessions, Is.False, "AutoPingSessions is not supported when running tests.");
+#if UNITY_EDITOR
+			Assert.That(GameJoltSettings.AutoSignIn, Is.False, "AutoSignIn is not supported when running tests.");
+#endif
+#endif
+			
 			Username = DummyData.faker.Internet.UserName();
 			Token = DummyData.faker.Random.AlphaNumeric(6);
 			
