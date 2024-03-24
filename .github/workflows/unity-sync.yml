@@ -45,7 +45,7 @@ jobs:
         run: rsync -av --exclude='*.csproj' './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
 
       - name: Copy editor
-        run: rsync -av --exclude='*.csproj' './GameJolt.NET.Editor/' './Unity/Packages/se.hertzole.gamejolt.net/Editor/'
+        run: rsync -av --exclude='*.csproj' './GameJolt.NET/Unity Integration/Editor/' './Unity/Packages/se.hertzole.gamejolt.net/Editor/'
 
       - name: Copy tests
         run: rsync -av --exclude='*.csproj' './GameJolt.NET.Tests/' './Unity/Packages/se.hertzole.gamejolt.net/Tests/'
