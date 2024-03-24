@@ -1,6 +1,7 @@
 ﻿#if UNITY_2021_1_OR_NEWER
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -9,73 +10,60 @@ namespace Hertzole.GameJolt
 {
 	public sealed class GameJoltManager : MonoBehaviour
 	{
+		private bool isMainInstance;
+
 		private static GameJoltManager instance;
-		
-		// There's no built-in destroy cancellation token pre Unity 2022.2, so we make our own.
-#if !UNITY_2022_2_OR_NEWER
-		private readonly CancellationTokenSource destroyCancellationTokenSource = new CancellationTokenSource();
-		private CancellationToken destroyCancellationToken { get { return destroyCancellationTokenSource.Token; } }
-#endif
 
 		private void Awake()
 		{
+			isMainInstance = false;
+
 			if (instance != null)
 			{
 				Destroy(gameObject);
 				return;
 			}
 
+			// This is used in OnDestroy to only close the session if this is the main instance.
+			isMainInstance = true;
+
 			instance = this;
+		}
+
+		private void Start()
+		{
+			// If this is not the main instance, we don't want to do anything else.
+			if (!isMainInstance)
+			{
+				return;
+			}
 
 			if (GameJoltSettings.AutoInitialize)
 			{
 				GameJoltAPI.Initialize(GameJoltSettings.GameId, GameJoltSettings.PrivateGameKey);
 			}
-
-			GameJoltAPI.Users.OnUserAuthenticated += OnUserAuthenticated;
 		}
 
-		private async void Start()
+		private void OnEnable()
 		{
-#if UNITY_EDITOR
-			if (GameJoltSettings.AutoSignIn)
+			if (!isMainInstance)
 			{
-				GameJoltResult result =
-					await GameJoltAPI.Users.AuthenticateAsync(GameJoltSettings.SignInUsername, GameJoltSettings.SignInToken, destroyCancellationToken);
-
-				if (result.HasError)
-				{
-					Debug.LogError("Failed to sign in: " + result.Exception);
-				}
-
 				return;
 			}
 
-#endif
+			GameJoltAPI.OnInitialized += OnInitialized;
+			GameJoltAPI.OnShutdown += OnShutdown;
+		}
 
-#if UNITY_WEBGL
-			if (GameJoltSettings.AutoSignInFromWeb)
+		private void OnDisable()
+		{
+			if (!isMainInstance)
 			{
-				GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(Application.absoluteURL, destroyCancellationToken);
-				if (result.HasError)
-				{
-					Debug.LogError("Failed to sign in: " + result.Exception);
-				}
+				return;
 			}
-#else
-			if (GameJoltSettings.AutoSignInFromClient)
-			{
-				string credentials = File.ReadAllText(Path.GetFullPath(Application.dataPath + "/../" + ".gj-credentials"));
-				
-				GameJoltResult result =
-					await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(credentials, destroyCancellationToken);
 
-				if (result.HasError)
-				{
-					Debug.LogError("Failed to sign in: " + result.Exception);
-				}
-			}
-#endif
+			GameJoltAPI.OnInitialized -= OnInitialized;
+			GameJoltAPI.OnShutdown -= OnShutdown;
 		}
 
 		private async void OnDestroy()
@@ -84,8 +72,12 @@ namespace Hertzole.GameJolt
 #if !UNITY_2022_2_OR_NEWER
 			destroyCancellationTokenSource.Cancel();
 #endif
-			
-			GameJoltAPI.Users.OnUserAuthenticated -= OnUserAuthenticated;
+
+			// If this is not the main instance, we don't want to do anything else.
+			if (!isMainInstance)
+			{
+				return;
+			}
 
 			if (GameJoltSettings.AutoCloseSessions && GameJoltAPI.Sessions.IsSessionOpen)
 			{
@@ -101,6 +93,66 @@ namespace Hertzole.GameJolt
 			{
 				GameJoltAPI.Shutdown();
 			}
+		}
+
+		private async void OnInitialized()
+		{
+			GameJoltAPI.Users.OnUserAuthenticated += OnUserAuthenticated;
+
+#if UNITY_EDITOR
+			if (GameJoltSettings.AutoSignIn)
+			{
+				GameJoltResult result =
+					await GameJoltAPI.Users.AuthenticateAsync(GameJoltSettings.SignInUsername, GameJoltSettings.SignInToken, destroyCancellationToken);
+
+				if (result.HasError)
+				{
+					Debug.LogError("Failed to sign in from editor: " + result.Exception);
+				}
+
+				return;
+			}
+
+#endif
+
+#if UNITY_WEBGL
+			if (GameJoltSettings.AutoSignInFromWeb)
+			{
+				GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(Application.absoluteURL, destroyCancellationToken);
+				if (result.HasError)
+				{
+					Debug.LogError("Failed to sign in from web: " + result.Exception);
+				}
+			}
+#else
+			if (GameJoltSettings.AutoSignInFromClient)
+			{
+				using (StringBuilderPool.Rent(out StringBuilder pathBuilder))
+				{
+					pathBuilder.Append(Application.dataPath);
+					pathBuilder.Append("/../.gj-credentials");
+
+					string credentialsPath = Path.GetFullPath(pathBuilder.ToString());
+					if (File.Exists(credentialsPath))
+					{
+						string credentials = await File.ReadAllTextAsync(credentialsPath, destroyCancellationToken);
+
+						GameJoltResult result =
+							await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(credentials, destroyCancellationToken);
+
+						if (result.HasError)
+						{
+							Debug.LogError("Failed to sign in from client: " + result.Exception);
+						}
+					}
+				}
+			}
+#endif
+		}
+
+		private void OnShutdown()
+		{
+			GameJoltAPI.Users.OnUserAuthenticated -= OnUserAuthenticated;
 		}
 
 		private async void OnUserAuthenticated(GameJoltUser obj)
@@ -139,6 +191,15 @@ namespace Hertzole.GameJolt
 				await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
 			}
 		}
+
+		// There's no built-in destroy cancellation token pre Unity 2022.2, so we make our own.
+#if !UNITY_2022_2_OR_NEWER
+		private readonly CancellationTokenSource destroyCancellationTokenSource = new CancellationTokenSource();
+		private CancellationToken destroyCancellationToken
+		{
+			get { return destroyCancellationTokenSource.Token; }
+		}
+#endif
 	}
 }
 #endif
