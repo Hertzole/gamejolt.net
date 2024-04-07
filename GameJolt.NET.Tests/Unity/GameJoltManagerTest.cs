@@ -249,6 +249,8 @@ namespace GameJolt.NET.Tests.Unity
 
 			await File.WriteAllTextAsync(credentialsPath, credentialsFileContent);
 
+			Assert.That(File.Exists(credentialsPath), Is.True, "Credentials file does not exist.");
+
 			currentManager = CreateManager();
 
 			SetUpWebClientForAuth();
