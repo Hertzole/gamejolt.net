@@ -1,19 +1,20 @@
 ﻿#nullable enable
 
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
 using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 #endif
-using System;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct FetchTimeResponse : IResponse
+	internal readonly struct FetchTimeResponse : IResponse, IEquatable<FetchTimeResponse>
 	{
 		[JsonName("timestamp")]
 		[JsonConverter(typeof(GameJoltLongConverter))]
@@ -80,6 +81,46 @@ namespace Hertzole.GameJolt
 			second = time.Second;
 			Success = success;
 			Message = message;
+		}
+
+		public bool Equals(FetchTimeResponse other)
+		{
+			return timestamp == other.timestamp && year == other.year && month == other.month && day == other.day &&
+			       hour == other.hour && minute == other.minute && second == other.second &&
+			       EqualityHelper.StringEquals(timezone, other.timezone) &&
+			       EqualityHelper.ResponseEquals(this, other);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is FetchTimeResponse other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = timestamp.GetHashCode();
+				hashCode = (hashCode * 397) ^ year;
+				hashCode = (hashCode * 397) ^ month;
+				hashCode = (hashCode * 397) ^ day;
+				hashCode = (hashCode * 397) ^ hour;
+				hashCode = (hashCode * 397) ^ minute;
+				hashCode = (hashCode * 397) ^ second;
+				hashCode = (hashCode * 397) ^ timezone.GetHashCode();
+				hashCode = EqualityHelper.ResponseHashCode(hashCode, this);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(FetchTimeResponse left, FetchTimeResponse right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(FetchTimeResponse left, FetchTimeResponse right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }
