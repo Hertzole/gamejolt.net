@@ -199,7 +199,7 @@ namespace Hertzole.GameJolt
 			while (GameJoltAPI.IsInitialized)
 			{
 				await GameJoltAPI.Sessions.PingAsync(GameJoltSettings.PingStatus, cancellationToken);
-				await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
+				await Task.Delay(TimeSpan.FromSeconds(GameJoltSettings.PingInterval), cancellationToken);
 			}
 		}
 

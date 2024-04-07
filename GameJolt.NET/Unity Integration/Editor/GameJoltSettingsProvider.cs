@@ -95,6 +95,7 @@ namespace Hertzole.GameJolt.Editor
 			oEnabled = GUI.enabled;
 			GUI.enabled = GameJoltSettings.AutoPingSessions;
 			GameJoltSettings.PingStatus = (SessionStatus) EditorGUILayout.EnumPopup(Labels.pingStatus, GameJoltSettings.PingStatus);
+			GameJoltSettings.PingInterval = EditorGUILayout.Slider("Ping Interval", GameJoltSettings.PingInterval, 1f, 120f);
 			GUI.enabled = oEnabled;
 
 			// Reset the label width.

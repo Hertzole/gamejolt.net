@@ -1,6 +1,7 @@
 ﻿#if UNITY_2021_1_OR_NEWER
 using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -30,6 +31,8 @@ namespace Hertzole.GameJolt
 		private bool autoPingSessions = true;
 		[SerializeField]
 		private SessionStatus pingStatus = SessionStatus.Active;
+		[SerializeField]
+		private float pingInterval = 30f;
 
 		private static GameJoltSettings instance;
 
@@ -158,6 +161,25 @@ namespace Hertzole.GameJolt
 				if (Instance.pingStatus != value)
 				{
 					Instance.pingStatus = value;
+					Instance.EditorSave();
+				}
+			}
+		}
+
+		public static float PingInterval
+		{
+			get { return Instance.pingInterval; }
+			set
+			{
+				float v = Mathf.Clamp(value, 1f, 120f);
+				if (value < 1f || value > 120f)
+				{
+					Debug.LogWarning($"Ping interval must be between 1 and 120 seconds. Clamping value to {v}");
+				}
+
+				if (Mathf.Abs(Instance.pingInterval - v) > float.Epsilon)
+				{
+					Instance.pingInterval = v;
 					Instance.EditorSave();
 				}
 			}
