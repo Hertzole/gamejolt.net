@@ -180,7 +180,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(GET_TABLES_ENDPOINT);
-                
+
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				GetTablesResponse response = serializer.Deserialize<GetTablesResponse>(json);
 

@@ -1,8 +1,8 @@
-﻿#if NET6_0_OR_GREATER
+﻿using System;
+#if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
-
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
@@ -11,7 +11,7 @@ using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct TableInternal
+	internal readonly struct TableInternal : IEquatable<TableInternal>
 	{
 		[JsonName("id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
@@ -31,6 +31,40 @@ namespace Hertzole.GameJolt
 			this.name = name;
 			this.description = description;
 			this.isPrimary = isPrimary;
+		}
+
+		public bool Equals(TableInternal other)
+		{
+			return id == other.id && isPrimary == other.isPrimary &&
+			       EqualityHelper.StringEquals(name, other.name) &&
+			       EqualityHelper.StringEquals(description, other.description);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is TableInternal other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = id;
+				hashCode = (hashCode * 397) ^ isPrimary.GetHashCode();
+				hashCode = (hashCode * 397) ^ (name != null ? name.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (description != null ? description.GetHashCode() : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(TableInternal left, TableInternal right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(TableInternal left, TableInternal right)
+		{
+			return !left.Equals(right);
 		}
 
 		public GameJoltTable ToPublicTable()

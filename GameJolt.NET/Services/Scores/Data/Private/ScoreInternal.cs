@@ -1,8 +1,8 @@
-﻿#if NET6_0_OR_GREATER
+﻿using System;
+#if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
-
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
@@ -11,7 +11,7 @@ using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct ScoreInternal
+	internal readonly struct ScoreInternal : IEquatable<ScoreInternal>
 	{
 		[JsonName("sort")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
@@ -44,6 +44,47 @@ namespace Hertzole.GameJolt
 			this.guestName = guestName;
 			this.stored = stored;
 			this.storedTimestamp = storedTimestamp;
+		}
+
+		public bool Equals(ScoreInternal other)
+		{
+			return sort == other.sort && userId == other.userId && storedTimestamp == other.storedTimestamp &&
+			       EqualityHelper.StringEquals(score, other.score) &&
+			       EqualityHelper.StringEquals(extraData, other.extraData) &&
+			       EqualityHelper.StringEquals(username, other.username) &&
+			       EqualityHelper.StringEquals(guestName, other.guestName) &&
+			       EqualityHelper.StringEquals(stored, other.stored);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is ScoreInternal other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = sort;
+				hashCode = (hashCode * 397) ^ userId;
+				hashCode = (hashCode * 397) ^ storedTimestamp.GetHashCode();
+				hashCode = (hashCode * 397) ^ (score != null ? score.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (extraData != null ? extraData.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (username != null ? username.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (guestName != null ? guestName.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (stored != null ? stored.GetHashCode() : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(ScoreInternal left, ScoreInternal right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(ScoreInternal left, ScoreInternal right)
+		{
+			return !left.Equals(right);
 		}
 
 		public GameJoltScore ToPublicScore()
