@@ -34,9 +34,14 @@ jobs:
     strategy:
       matrix:
         unity-version:
-          - 2021.3.33f1
-          - 2022.3.15f1
-          - 2023.2.3f1
+          - 2021.1.28f1
+          - 2021.2.19f1
+          - 2021.3.36f1
+          - 2022.1.24f1
+          - 2022.2.21f1
+          - 2022.3.22f1
+          - 2023.1.20f1
+          - 2023.2.16f1
     secrets:
       unity_license: ${{ secrets.UNITY_LICENSE }}
       unity_email: ${{ secrets.UNITY_EMAIL }}
