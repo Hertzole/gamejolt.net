@@ -6,6 +6,7 @@ using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
 using JsonIgnore = System.Text.Json.Serialization.JsonIgnoreAttribute;
+
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
@@ -47,7 +48,7 @@ namespace Hertzole.GameJolt
 
 		public bool Equals(GetScoreRankResponse other)
 		{
-			return success == other.success && EqualityHelper.StringEquals(message, other.message) && rank == other.rank;
+			return EqualityHelper.ResponseEquals(this, other) && rank == other.rank;
 		}
 
 		public override bool Equals(object? obj)
@@ -59,8 +60,7 @@ namespace Hertzole.GameJolt
 		{
 			unchecked
 			{
-				int hashCode = success.GetHashCode();
-				hashCode = (hashCode * 397) ^ (message != null ? message.GetHashCode() : 0);
+				int hashCode = EqualityHelper.ResponseHashCode(0, this);
 				hashCode = (hashCode * 397) ^ rank;
 				return hashCode;
 			}

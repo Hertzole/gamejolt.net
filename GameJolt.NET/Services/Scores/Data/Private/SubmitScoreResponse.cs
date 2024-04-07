@@ -5,6 +5,7 @@ using System;
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
@@ -30,7 +31,7 @@ namespace Hertzole.GameJolt
 
 		public bool Equals(SubmitScoreResponse other)
 		{
-			return Success == other.Success && EqualityHelper.StringEquals(Message, other.Message);
+			return EqualityHelper.ResponseEquals(this, other);
 		}
 
 		public override bool Equals(object? obj)
@@ -40,10 +41,7 @@ namespace Hertzole.GameJolt
 
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				return (Success.GetHashCode() * 397) ^ (Message != null ? Message.GetHashCode() : 0);
-			}
+			return EqualityHelper.ResponseHashCode(0, this);
 		}
 
 		public static bool operator ==(SubmitScoreResponse left, SubmitScoreResponse right)
