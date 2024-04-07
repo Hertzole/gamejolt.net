@@ -41,10 +41,7 @@ namespace Hertzole.GameJolt
 
 		public override int GetHashCode()
 		{
-			unchecked
-			{
-				return EqualityHelper.ResponseHashCode(0, this);
-			}
+			return EqualityHelper.ResponseHashCode(0, this);
 		}
 
 		public static bool operator ==(StoreDataResponse left, StoreDataResponse right)
