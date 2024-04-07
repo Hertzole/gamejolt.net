@@ -259,7 +259,8 @@ namespace GameJolt.NET.Tests.Unity
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 
-			await WaitFramesAsync(1);
+			// Wait for the authentication to finish. It may take some time.
+			await Task.Delay(TimeSpan.FromSeconds(2));
 
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated.");
 			Assert.That(GameJoltAPI.Users.CurrentUser.HasValue, Is.True, "Current user is null.");
