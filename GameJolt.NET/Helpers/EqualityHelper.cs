@@ -49,5 +49,21 @@ namespace Hertzole.GameJolt
 
 			return string.Equals(a, b, StringComparison.Ordinal);
 		}
+
+		public static bool ResponseEquals<T>(T a, T b) where T : IResponse
+		{
+			return a.Success == b.Success && StringEquals(a.Message, b.Message);
+		}
+
+		public static int ResponseHashCode<T>(int hashCode, T response) where T : IResponse
+		{
+			unchecked
+			{
+				hashCode = (hashCode * 397) ^ response.Success.GetHashCode();
+				hashCode = (hashCode * 397) ^ (response.Message?.GetHashCode() ?? 0);
+			}
+			
+			return hashCode;
+		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿#if NET6_0_OR_GREATER
+﻿using System;
+#if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
 
@@ -9,7 +10,7 @@ using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct DataKey
+	internal readonly struct DataKey : IEquatable<DataKey>
 	{
 		[JsonName("key")]
 		public readonly string key;
@@ -18,6 +19,31 @@ namespace Hertzole.GameJolt
 		public DataKey(string key)
 		{
 			this.key = key;
+		}
+
+		public bool Equals(DataKey other)
+		{
+			return EqualityHelper.StringEquals(key, other.key);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is DataKey other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			return key != null ? key.GetHashCode() : 0;
+		}
+
+		public static bool operator ==(DataKey left, DataKey right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(DataKey left, DataKey right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }
