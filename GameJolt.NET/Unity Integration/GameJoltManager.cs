@@ -141,7 +141,12 @@ namespace Hertzole.GameJolt
 					string credentialsPath = Path.GetFullPath(pathBuilder.ToString());
 					if (File.Exists(credentialsPath))
 					{
-						string credentials = await File.ReadAllTextAsync(credentialsPath, destroyCancellationToken);
+						string credentials =
+#if NETSTANDARD2_1 || NETCOREAPP2_0_OR_GREATER
+							await File.ReadAllTextAsync(credentialsPath, destroyCancellationToken);
+#else
+							File.ReadAllText(credentialsPath);
+#endif
 
 						GameJoltResult result =
 							await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(credentials, destroyCancellationToken);
