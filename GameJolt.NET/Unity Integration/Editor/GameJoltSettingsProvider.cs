@@ -76,6 +76,8 @@ namespace Hertzole.GameJolt.Editor
 
 			EditorGUILayout.Space();
 			GUILayout.Label(Labels.editorSettings, EditorStyles.boldLabel);
+			
+			EditorGUILayout.HelpBox("These settings are only used in the editor and will only be saved for you. They are not shared with anyone else.", MessageType.Info);
 
 			GameJoltSettings.AutoSignIn = EditorGUILayout.Toggle(Labels.autoSignIn, GameJoltSettings.AutoSignIn);
 			bool oEnabled = GUI.enabled;
