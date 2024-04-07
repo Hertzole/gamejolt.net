@@ -76,6 +76,8 @@ namespace Hertzole.GameJolt.Editor
 
 			EditorGUILayout.Space();
 			GUILayout.Label(Labels.editorSettings, EditorStyles.boldLabel);
+			
+			EditorGUILayout.HelpBox("These settings are only used in the editor and will only be saved for you. They are not shared with anyone else.", MessageType.Info);
 
 			GameJoltSettings.AutoSignIn = EditorGUILayout.Toggle(Labels.autoSignIn, GameJoltSettings.AutoSignIn);
 			bool oEnabled = GUI.enabled;
@@ -93,6 +95,7 @@ namespace Hertzole.GameJolt.Editor
 			oEnabled = GUI.enabled;
 			GUI.enabled = GameJoltSettings.AutoPingSessions;
 			GameJoltSettings.PingStatus = (SessionStatus) EditorGUILayout.EnumPopup(Labels.pingStatus, GameJoltSettings.PingStatus);
+			GameJoltSettings.PingInterval = EditorGUILayout.Slider("Ping Interval", GameJoltSettings.PingInterval, 1f, 120f);
 			GUI.enabled = oEnabled;
 
 			// Reset the label width.

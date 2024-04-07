@@ -1,5 +1,8 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Extensions;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,10 +24,20 @@ namespace GameJolt.NET.Tests
 
 		protected string Token { get; set; } = null!;
 
+#if UNITY_64
+		private float originalPingInterval;
+#if UNITY_EDITOR
+		private string? originalSignInUsername;
+		private string? originalSignInToken;
+#endif
+#endif
+
 		[SetUp]
 		public async Task Setup()
 		{
 #if UNITY_64
+			originalPingInterval = GameJoltSettings.PingInterval;
+
 			Assert.That(GameJoltSettings.AutoInitialize, Is.False, "AutoInitialize is not supported when running tests.");
 			Assert.That(GameJoltSettings.AutoShutdown, Is.False, "AutoShutdown is not supported when running tests.");
 			Assert.That(GameJoltSettings.AutoSignInFromWeb, Is.False, "AutoSignInFromWeb is not supported when running tests.");
@@ -34,15 +47,27 @@ namespace GameJolt.NET.Tests
 			Assert.That(GameJoltSettings.AutoPingSessions, Is.False, "AutoPingSessions is not supported when running tests.");
 #if UNITY_EDITOR
 			Assert.That(GameJoltSettings.AutoSignIn, Is.False, "AutoSignIn is not supported when running tests.");
+
+			originalSignInUsername = GameJoltSettings.SignInUsername;
+			originalSignInToken = GameJoltSettings.SignInToken;
 #endif
 #endif
-			
+
 			Username = DummyData.faker.Internet.UserName();
 			Token = DummyData.faker.Random.AlphaNumeric(6);
-			
+
+#if UNITY_EDITOR
+			GameJoltSettings.SignInUsername = Username;
+			GameJoltSettings.SignInToken = Token;
+#endif
+
 			GameJoltAPI.webClient = Substitute.For<IGameJoltWebClient>();
 
-			GameJoltAPI.Initialize(0, "");
+			if (!TestContext.CurrentContext.Test.HasSkipInitializationAttribute())
+			{
+				GameJoltAPI.Initialize(0, "");
+			}
+
 			await OnSetupAsync();
 		}
 
@@ -54,7 +79,30 @@ namespace GameJolt.NET.Tests
 		[TearDown]
 		public async Task TearDown()
 		{
-			GameJoltAPI.Shutdown();
+			if (GameJoltAPI.IsInitialized)
+			{
+				GameJoltAPI.Shutdown();
+			}
+
+			Assert.That(GameJoltAPI.IsInitialized, Is.False, "GameJoltAPI is initialized.");
+
+#if UNITY_64
+			GameJoltSettings.PingInterval = originalPingInterval;
+
+			GameJoltSettings.AutoInitialize = false;
+			GameJoltSettings.AutoShutdown = false;
+			GameJoltSettings.AutoSignInFromWeb = false;
+			GameJoltSettings.AutoSignInFromClient = false;
+			GameJoltSettings.AutoStartSessions = false;
+			GameJoltSettings.AutoCloseSessions = false;
+			GameJoltSettings.AutoPingSessions = false;
+#if UNITY_EDITOR
+			GameJoltSettings.AutoSignIn = false;
+			GameJoltSettings.SignInUsername = originalSignInUsername;
+			GameJoltSettings.SignInToken = originalSignInToken;
+#endif
+#endif
+
 			await OnTearDownAsync();
 		}
 
@@ -65,13 +113,24 @@ namespace GameJolt.NET.Tests
 
 		protected async Task AuthenticateAsync()
 		{
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			SetUpWebClientForAuth();
+
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync(Username, Token);
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True);
+		}
+
+		protected void SetUpWebClientForAuth()
+		{
+			GameJoltAPI.webClient.GetStringAsync("https://api.gamejolt.com/api/game/v1_2/users/auth", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
 
 				if (arg.Contains("users/?"))
 				{
-					return FromResult(serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User())));
+					return FromResult(serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User(username: Username))));
 				}
 
 				if (arg.Contains("users/auth"))
@@ -79,14 +138,13 @@ namespace GameJolt.NET.Tests
 					return FromResult(serializer.Serialize(new AuthResponse(true, null)));
 				}
 
+				if (arg.Contains("sessions/close") || arg.Contains("sessions/open"))
+				{
+					return FromResult(serializer.Serialize(new SessionResponse(true, null)));
+				}
+
 				return FromResult("");
 			});
-
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync(Username, Token);
-
-			Assert.That(result.HasError, Is.False);
-			Assert.That(result.Exception, Is.Null);
-			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True);
 		}
 
 		protected static async Task TestUrlAsync(Func<Task> call, Action<string> assert)
