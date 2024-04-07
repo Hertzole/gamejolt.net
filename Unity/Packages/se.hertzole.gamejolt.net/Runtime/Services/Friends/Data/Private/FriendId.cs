@@ -1,4 +1,5 @@
-﻿#if NET6_0_OR_GREATER
+﻿using System;
+#if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
@@ -11,7 +12,7 @@ using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct FriendId
+	internal readonly struct FriendId : IEquatable<FriendId>
 	{
 		[JsonName("friend_id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
@@ -21,6 +22,31 @@ namespace Hertzole.GameJolt
 		public FriendId(int id)
 		{
 			this.id = id;
+		}
+
+		public bool Equals(FriendId other)
+		{
+			return id == other.id;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is FriendId other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			return id;
+		}
+
+		public static bool operator ==(FriendId left, FriendId right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(FriendId left, FriendId right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

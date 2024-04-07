@@ -1,19 +1,20 @@
 ﻿#nullable enable
 
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
 using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 #endif
-using System;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct User
+	internal readonly struct User : IEquatable<User>
 	{
 		[JsonName("id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
@@ -71,6 +72,54 @@ namespace Hertzole.GameJolt
 			this.displayName = displayName;
 			this.userWebsite = userWebsite;
 			this.userDescription = userDescription;
+		}
+
+		public bool Equals(User other)
+		{
+			return id == other.id && type == other.type && signedUpTimestamp == other.signedUpTimestamp &&
+			       lastLoggedInTimestamp == other.lastLoggedInTimestamp && status == other.status &&
+			       EqualityHelper.StringEquals(username, other.username) &&
+			       EqualityHelper.StringEquals(avatarUrl, other.avatarUrl) &&
+			       EqualityHelper.StringEquals(signedUp, other.signedUp) &&
+			       EqualityHelper.StringEquals(lastLoggedIn, other.lastLoggedIn) &&
+			       EqualityHelper.StringEquals(displayName, other.displayName) &&
+			       EqualityHelper.StringEquals(userWebsite, other.userWebsite) &&
+			       EqualityHelper.StringEquals(userDescription, other.userDescription);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is User other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = id;
+				hashCode = (hashCode * 397) ^ (int) type;
+				hashCode = (hashCode * 397) ^ signedUpTimestamp.GetHashCode();
+				hashCode = (hashCode * 397) ^ lastLoggedInTimestamp.GetHashCode();
+				hashCode = (hashCode * 397) ^ (int) status;
+				hashCode = (hashCode * 397) ^ username.GetHashCode();
+				hashCode = (hashCode * 397) ^ avatarUrl.GetHashCode();
+				hashCode = (hashCode * 397) ^ signedUp.GetHashCode();
+				hashCode = (hashCode * 397) ^ lastLoggedIn.GetHashCode();
+				hashCode = (hashCode * 397) ^ displayName.GetHashCode();
+				hashCode = (hashCode * 397) ^ (userWebsite != null ? userWebsite.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ userDescription.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(User left, User right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(User left, User right)
+		{
+			return !left.Equals(right);
 		}
 
 		public GameJoltUser ToPublicUser()

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
@@ -15,7 +16,7 @@ using JsonIgnore = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct GetTablesResponse : IResponse
+	internal readonly struct GetTablesResponse : IResponse, IEquatable<GetTablesResponse>
 	{
 		[JsonName("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
@@ -42,6 +43,36 @@ namespace Hertzole.GameJolt
 			this.success = success;
 			this.message = message;
 			this.tables = tables;
+		}
+
+		public bool Equals(GetTablesResponse other)
+		{
+			return EqualityHelper.ResponseEquals(this, other) && EqualityHelper.ArrayEquals(tables, other.tables);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is GetTablesResponse other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = EqualityHelper.ResponseHashCode(0, this);
+				hashCode = (hashCode * 397) ^ tables.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GetTablesResponse left, GetTablesResponse right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GetTablesResponse left, GetTablesResponse right)
+		{
+			return !left.Equals(right);
 		}
 
 		public override string ToString()

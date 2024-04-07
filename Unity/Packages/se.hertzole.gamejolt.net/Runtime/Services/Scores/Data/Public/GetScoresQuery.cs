@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,9 +9,9 @@ namespace Hertzole.GameJolt
 	/// <summary>
 	///     A query to get scores from a <see cref="GameJoltTable">score table</see>.
 	/// </summary>
-	public readonly struct GetScoresQuery
+	public readonly struct GetScoresQuery : IEquatable<GetScoresQuery>
 	{
-		private readonly GameJoltScores scores;
+		private readonly GameJoltScores? scores;
 		internal readonly int? tableId;
 		internal readonly int limit;
 		internal readonly string? username;
@@ -19,7 +20,7 @@ namespace Hertzole.GameJolt
 		internal readonly int? betterThan;
 		internal readonly int? worseThan;
 
-		internal GetScoresQuery(GameJoltScores scores)
+		internal GetScoresQuery(GameJoltScores? scores)
 		{
 			this.scores = scores;
 			tableId = null;
@@ -31,7 +32,7 @@ namespace Hertzole.GameJolt
 			worseThan = null;
 		}
 
-		private GetScoresQuery(GameJoltScores scores,
+		internal GetScoresQuery(GameJoltScores? scores,
 			int? tableId,
 			int limit,
 			string? username,
@@ -48,6 +49,46 @@ namespace Hertzole.GameJolt
 			this.guest = guest;
 			this.betterThan = betterThan;
 			this.worseThan = worseThan;
+		}
+
+		public bool Equals(GetScoresQuery other)
+		{
+			return tableId == other.tableId && limit == other.limit && betterThan == other.betterThan && worseThan == other.worseThan &&
+			       EqualityHelper.StringEquals(username, other.username) &&
+			       EqualityHelper.StringEquals(userToken, other.userToken) &&
+			       EqualityHelper.StringEquals(guest, other.guest) &&
+			       ReferenceEquals(scores, other.scores);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is GetScoresQuery other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = tableId.GetHashCode();
+				hashCode = (hashCode * 397) ^ limit;
+				hashCode = (hashCode * 397) ^ betterThan.GetHashCode();
+				hashCode = (hashCode * 397) ^ worseThan.GetHashCode();
+				hashCode = (hashCode * 397) ^ (username != null ? username.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (userToken != null ? userToken.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (guest != null ? guest.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (scores != null ? scores.GetHashCode() : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GetScoresQuery left, GetScoresQuery right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GetScoresQuery left, GetScoresQuery right)
+		{
+			return !left.Equals(right);
 		}
 
 		/// <summary>
@@ -116,7 +157,7 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and a list of scores.</returns>
 		public async Task<GameJoltResult<GameJoltScore[]>> GetAsync(CancellationToken cancellationToken = default)
 		{
-			return await scores.GetScoresAsync(this, cancellationToken);
+			return await scores!.GetScoresAsync(this, cancellationToken);
 		}
 	}
 }

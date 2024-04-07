@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
@@ -15,7 +16,7 @@ using JsonIgnore = Newtonsoft.Json.JsonIgnoreAttribute;
 
 namespace Hertzole.GameJolt
 {
-	internal readonly struct GetScoresResponse : IResponse
+	internal readonly struct GetScoresResponse : IResponse, IEquatable<GetScoresResponse>
 	{
 		[JsonName("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
@@ -42,6 +43,36 @@ namespace Hertzole.GameJolt
 			this.success = success;
 			this.message = message;
 			this.scores = scores;
+		}
+
+		public bool Equals(GetScoresResponse other)
+		{
+			return EqualityHelper.ResponseEquals(this, other) && EqualityHelper.ArrayEquals(scores, other.scores);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is GetScoresResponse other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = EqualityHelper.ResponseHashCode(0, this);
+				hashCode = (hashCode * 397) ^ scores.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GetScoresResponse left, GetScoresResponse right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GetScoresResponse left, GetScoresResponse right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }
