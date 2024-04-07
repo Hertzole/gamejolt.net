@@ -1,9 +1,11 @@
-﻿namespace Hertzole.GameJolt
+﻿using System;
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     A Game Jolt score table.
 	/// </summary>
-	public readonly struct GameJoltTable
+	public readonly struct GameJoltTable : IEquatable<GameJoltTable>
 	{
 		/// <summary>
 		///     The ID of the score table.
@@ -28,6 +30,39 @@
 			Name = name;
 			Description = description;
 			IsPrimary = isPrimary;
+		}
+
+		public bool Equals(GameJoltTable other)
+		{
+			return Id == other.Id && IsPrimary == other.IsPrimary &&
+			       EqualityHelper.StringEquals(Name, other.Name) && EqualityHelper.StringEquals(Description, other.Description);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is GameJoltTable other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = Id;
+				hashCode = (hashCode * 397) ^ IsPrimary.GetHashCode();
+				hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (Description != null ? Description.GetHashCode() : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GameJoltTable left, GameJoltTable right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GameJoltTable left, GameJoltTable right)
+		{
+			return !left.Equals(right);
 		}
 
 		public override string ToString()

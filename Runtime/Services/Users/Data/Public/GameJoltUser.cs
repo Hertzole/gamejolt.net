@@ -7,7 +7,7 @@ namespace Hertzole.GameJolt
 	/// <summary>
 	///     A Game Jolt user.
 	/// </summary>
-	public readonly struct GameJoltUser
+	public readonly struct GameJoltUser : IEquatable<GameJoltUser>
 	{
 		/// <summary>
 		///     The ID of the user.
@@ -78,6 +78,51 @@ namespace Hertzole.GameJolt
 			SignedUp = signedUp;
 			LastLoggedIn = lastLoggedIn;
 			OnlineNow = onlineNow;
+		}
+
+		public bool Equals(GameJoltUser other)
+		{
+			return Id == other.Id && Type == other.Type && Status == other.Status && SignedUp.Equals(other.SignedUp) &&
+			       LastLoggedIn.Equals(other.LastLoggedIn) && OnlineNow == other.OnlineNow &&
+			       EqualityHelper.StringEquals(Username, other.Username) &&
+			       EqualityHelper.StringEquals(AvatarUrl, other.AvatarUrl) &&
+			       EqualityHelper.StringEquals(DisplayName, other.DisplayName) &&
+			       EqualityHelper.StringEquals(UserWebsite, other.UserWebsite) &&
+			       EqualityHelper.StringEquals(UserDescription, other.UserDescription);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is GameJoltUser other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = Id;
+				hashCode = (hashCode * 397) ^ (int) Type;
+				hashCode = (hashCode * 397) ^ (int) Status;
+				hashCode = (hashCode * 397) ^ SignedUp.GetHashCode();
+				hashCode = (hashCode * 397) ^ LastLoggedIn.GetHashCode();
+				hashCode = (hashCode * 397) ^ OnlineNow.GetHashCode();
+				hashCode = (hashCode * 397) ^ Username.GetHashCode();
+				hashCode = (hashCode * 397) ^ AvatarUrl.GetHashCode();
+				hashCode = (hashCode * 397) ^ DisplayName.GetHashCode();
+				hashCode = (hashCode * 397) ^ (UserWebsite != null ? UserWebsite.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ UserDescription.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GameJoltUser left, GameJoltUser right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GameJoltUser left, GameJoltUser right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace Hertzole.GameJolt
 	/// <summary>
 	///     A Game Jolt score from a <see cref="GameJoltTable">score table</see>.
 	/// </summary>
-	public readonly struct GameJoltScore
+	public readonly struct GameJoltScore : IEquatable<GameJoltScore>
 	{
 		/// <summary>
 		///     The score's numerical sort value.
@@ -72,6 +72,45 @@ namespace Hertzole.GameJolt
 			UserId = userId;
 			GuestName = guestName;
 			Stored = stored;
+		}
+
+		public bool Equals(GameJoltScore other)
+		{
+			return Sort == other.Sort && UserId == other.UserId && Stored.Equals(other.Stored) &&
+			       EqualityHelper.StringEquals(Score, other.Score) &&
+			       EqualityHelper.StringEquals(ExtraData, other.ExtraData) &&
+			       EqualityHelper.StringEquals(Username, other.Username) &&
+			       EqualityHelper.StringEquals(GuestName, other.GuestName);
+		}
+
+		public override bool Equals(object? obj)
+		{
+			return obj is GameJoltScore other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = Sort;
+				hashCode = (hashCode * 397) ^ UserId.GetHashCode();
+				hashCode = (hashCode * 397) ^ Stored.GetHashCode();
+				hashCode = (hashCode * 397) ^ Score.GetHashCode();
+				hashCode = (hashCode * 397) ^ (ExtraData != null ? ExtraData.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (Username != null ? Username.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (GuestName != null ? GuestName.GetHashCode() : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GameJoltScore left, GameJoltScore right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GameJoltScore left, GameJoltScore right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }
