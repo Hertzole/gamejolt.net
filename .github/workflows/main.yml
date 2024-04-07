@@ -32,6 +32,7 @@ jobs:
     needs: unity-sync
     uses: ./.github/workflows/unity-test.yml
     strategy:
+      fail-fast: false
       matrix:
         unity-version:
           - 2021.3.36f1
