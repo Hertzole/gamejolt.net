@@ -1,13 +1,14 @@
 ﻿#if UNITY_64 // Just to make sure it works in any modern Unity version
 #nullable enable
-using System.Collections;
+using System;
 using System.IO;
+using System.Threading.Tasks;
 using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
+using Object = UnityEngine.Object;
 
 namespace GameJolt.NET.Tests.Unity
 {
@@ -19,27 +20,27 @@ namespace GameJolt.NET.Tests.Unity
 
 		private readonly string credentialsPath = Path.GetFullPath(Application.dataPath + "/../.gj-credentials");
 
-		[UnitySetUp]
-		public IEnumerator UnitySetUp()
+		protected override async Task OnSetupAsync()
 		{
 			if (GameJoltManager.instance != null)
 			{
 				Object.Destroy(GameJoltManager.instance.gameObject);
-				yield return null;
+				await WaitFramesAsync(1);
 			}
 
 			Assert.That(GameJoltManager.instance == null, Is.True, "GameJoltManager.instance is not null.");
+
+			await base.OnSetupAsync();
 		}
 
-		[UnityTearDown]
-		public IEnumerator UnityTearDown()
+		protected override async Task OnTearDownAsync()
 		{
 			GameJoltSettings.AutoInitialize = false;
 
 			if (currentManager != null)
 			{
 				Object.Destroy(currentManager.gameObject);
-				yield return null;
+				await WaitFramesAsync(1);
 			}
 
 			Assert.That(GameJoltManager.instance == null, Is.True, "GameJoltManager.instance is not null.");
@@ -48,39 +49,41 @@ namespace GameJolt.NET.Tests.Unity
 			{
 				File.Delete(credentialsPath);
 			}
+
+			await base.OnTearDownAsync();
 		}
 
-		[UnityTest]
-		public IEnumerator Singleton_SingleInstance()
+		[Test]
+		public async Task Singleton_SingleInstance()
 		{
 			currentManager = CreateManager();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltManager.instance == null, Is.False, "GameJoltManager.instance is null.");
 			Assert.That(GameJoltManager.instance!.isMainInstance, Is.True, "GameJoltManager.instance is not the main instance.");
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			GameJoltManager sceneInstance = Object.FindObjectOfType<GameJoltManager>();
 
 			Assert.That(sceneInstance == null, Is.False, "GameJoltManager in scene is null.");
 			Assert.That(sceneInstance, Is.EqualTo(GameJoltManager.instance), "GameJoltManager in scene is not the same as the instance.");
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			GameJoltManager newInstance = new GameObject().AddComponent<GameJoltManager>();
 
 			Assert.That(newInstance, Is.Not.EqualTo(GameJoltManager.instance), "New instance is the same as the main instance.");
 			Assert.That(newInstance.isMainInstance, Is.False, "New instance is the main instance.");
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(newInstance == null, Is.True, "New instance was not destroyed.");
 		}
 
-		[UnityTest]
-		public IEnumerator AutoInitialize_Initialized()
+		[Test]
+		public async Task AutoInitialize_Initialized()
 		{
 			GameJoltSettings.AutoInitialize = true;
 			bool invoked = false;
@@ -89,13 +92,13 @@ namespace GameJolt.NET.Tests.Unity
 
 			currentManager = CreateManager();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 			Assert.That(invoked, Is.True, "OnInitialized was not invoked.");
 
 			GameJoltAPI.OnInitialized -= Invoked; // Clean up.
-			yield break;
+			return;
 
 			void Invoked()
 			{
@@ -103,8 +106,8 @@ namespace GameJolt.NET.Tests.Unity
 			}
 		}
 
-		[UnityTest]
-		public IEnumerator NoAutoInitialize_NotInitialized()
+		[Test]
+		public async Task NoAutoInitialize_NotInitialized()
 		{
 			GameJoltSettings.AutoInitialize = false;
 			bool invoked = false;
@@ -113,13 +116,13 @@ namespace GameJolt.NET.Tests.Unity
 
 			currentManager = CreateManager();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.False, "GameJoltAPI was initialized.");
 			Assert.That(invoked, Is.False, "OnInitialized was invoked.");
 
 			GameJoltAPI.OnInitialized -= Invoked; // Clean up.
-			yield break;
+			return;
 
 			void Invoked()
 			{
@@ -127,8 +130,8 @@ namespace GameJolt.NET.Tests.Unity
 			}
 		}
 
-		[UnityTest]
-		public IEnumerator AutoShutdown_NotInitialized()
+		[Test]
+		public async Task AutoShutdown_NotInitialized()
 		{
 			GameJoltSettings.AutoShutdown = true;
 			bool invokedShutdown = false;
@@ -139,7 +142,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			currentManager = CreateManager();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			GameJoltAPI.Initialize(0, "");
 
@@ -147,7 +150,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			Object.Destroy(currentManager.gameObject);
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.False, "GameJoltAPI is initialized.");
 			Assert.That(invokedShutdown, Is.True, "OnShutdown was not invoked.");
@@ -156,7 +159,7 @@ namespace GameJolt.NET.Tests.Unity
 			GameJoltAPI.OnShutdown -= InvokedShutdown; // Clean up.
 			GameJoltAPI.OnShutdownComplete -= InvokedShutdownComplete; // Clean up.
 
-			yield break;
+			return;
 
 			void InvokedShutdown()
 			{
@@ -169,8 +172,8 @@ namespace GameJolt.NET.Tests.Unity
 			}
 		}
 
-		[UnityTest]
-		public IEnumerator NoAutoShutdown_IsInitialized()
+		[Test]
+		public async Task NoAutoShutdown_IsInitialized()
 		{
 			GameJoltSettings.AutoShutdown = false;
 			bool invokedShutdown = false;
@@ -181,7 +184,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			currentManager = CreateManager();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			GameJoltAPI.Initialize(0, "");
 
@@ -189,7 +192,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			Object.Destroy(currentManager.gameObject);
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 			Assert.That(invokedShutdown, Is.False, "OnShutdown was invoked.");
@@ -198,7 +201,7 @@ namespace GameJolt.NET.Tests.Unity
 			GameJoltAPI.OnShutdown -= InvokedShutdown; // Clean up.
 			GameJoltAPI.OnShutdownComplete -= InvokedShutdownComplete; // Clean up.
 
-			yield break;
+			return;
 
 			void InvokedShutdown()
 			{
@@ -212,8 +215,8 @@ namespace GameJolt.NET.Tests.Unity
 		}
 
 #if UNITY_EDITOR
-		[UnityTest]
-		public IEnumerator AutoSignIn_Editor()
+		[Test]
+		public async Task AutoSignIn_Editor()
 		{
 			GameJoltSettings.AutoInitialize = true;
 			GameJoltSettings.AutoSignIn = true;
@@ -222,11 +225,11 @@ namespace GameJolt.NET.Tests.Unity
 
 			SetUpWebClientForAuth();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated.");
 			Assert.That(GameJoltAPI.Users.CurrentUser.HasValue, Is.True, "Current user is null.");
@@ -236,25 +239,25 @@ namespace GameJolt.NET.Tests.Unity
 		}
 #endif
 
-		[UnityTest]
-		public IEnumerator AutoSignIn_Client()
+		[Test]
+		public async Task AutoSignIn_Client()
 		{
 			GameJoltSettings.AutoInitialize = true;
 			GameJoltSettings.AutoSignInFromClient = true;
 
 			string credentialsFileContent = $"blah\n{Username}\n{Token}";
 
-			File.WriteAllText(credentialsPath, credentialsFileContent);
+			await File.WriteAllTextAsync(credentialsPath, credentialsFileContent);
 
 			currentManager = CreateManager();
 
 			SetUpWebClientForAuth();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated.");
 			Assert.That(GameJoltAPI.Users.CurrentUser.HasValue, Is.True, "Current user is null.");
@@ -263,26 +266,26 @@ namespace GameJolt.NET.Tests.Unity
 			Assert.That(GameJoltAPI.Users.myToken, Is.EqualTo(Token), "Token is not correct.");
 		}
 
-		[UnityTest]
-		public IEnumerator AutoStartSessions_SessionStarted()
+		[Test]
+		public async Task AutoStartSessions_SessionStarted()
 		{
 			GameJoltSettings.AutoInitialize = true;
 			GameJoltSettings.AutoStartSessions = true;
 
 			currentManager = CreateManager();
 
-			yield return null; // Wait for the manager to initialize.
+			await WaitFramesAsync(1); // Wait for the manager to initialize.
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 
-			yield return AuthenticateAsync();
+			await AuthenticateAsync();
 
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated.");
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True, "Session is not open.");
 		}
 
-		[UnityTest]
-		public IEnumerator AutoCloseSessions_SessionClosed()
+		[Test]
+		public async Task AutoCloseSessions_SessionClosed()
 		{
 			GameJoltSettings.AutoInitialize = true;
 			GameJoltSettings.AutoStartSessions = true;
@@ -290,24 +293,24 @@ namespace GameJolt.NET.Tests.Unity
 
 			currentManager = CreateManager();
 
-			yield return null; // Wait for the manager to initialize.
+			await WaitFramesAsync(1); // Wait for the manager to initialize.
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 
-			yield return AuthenticateAsync();
+			await AuthenticateAsync();
 
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated.");
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True, "Session is not open.");
 
 			Object.Destroy(currentManager.gameObject);
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False, "Session is still open.");
 		}
 
-		[UnityTest]
-		public IEnumerator AutoPingSessions_SessionPinged()
+		[Test]
+		public async Task AutoPingSessions_SessionPinged()
 		{
 			GameJoltSettings.AutoInitialize = true;
 			GameJoltSettings.AutoStartSessions = true;
@@ -316,11 +319,11 @@ namespace GameJolt.NET.Tests.Unity
 
 			currentManager = CreateManager();
 
-			yield return null; // Wait for the manager to initialize.
+			await WaitFramesAsync(1); // Wait for the manager to initialize.
 
 			Assert.That(GameJoltAPI.IsInitialized, Is.True, "GameJoltAPI is not initialized.");
 
-			yield return AuthenticateAsync();
+			await AuthenticateAsync();
 
 			bool pinged = false;
 
@@ -340,14 +343,14 @@ namespace GameJolt.NET.Tests.Unity
 			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated.");
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True, "Session is not open.");
 
-			yield return new WaitForSeconds(1.1f);
+			await Task.Delay(TimeSpan.FromSeconds(1.1));
 
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True, "Session is not open.");
 			Assert.That(pinged, Is.True, "Session was not pinged.");
 		}
 
-		[UnityTest]
-		public IEnumerator Initialize_CreatesSingleton()
+		[Test]
+		public async Task Initialize_CreatesSingleton()
 		{
 			GameJoltManager[]? managers = Object.FindObjectsOfType<GameJoltManager>();
 
@@ -355,7 +358,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			GameJoltManager.Initialize();
 
-			yield return null;
+			await WaitFramesAsync(1);
 
 			managers = Object.FindObjectsOfType<GameJoltManager>();
 
@@ -364,10 +367,10 @@ namespace GameJolt.NET.Tests.Unity
 			currentManager = managers[0];
 		}
 
-		[UnityTest]
-		public IEnumerator Initialize_ExistingSingleton()
+		[Test]
+		public async Task Initialize_ExistingSingleton()
 		{
-			yield return Initialize_CreatesSingleton();
+			await Initialize_CreatesSingleton();
 
 			GameJoltManager.Initialize();
 
@@ -381,6 +384,16 @@ namespace GameJolt.NET.Tests.Unity
 		private static GameJoltManager CreateManager()
 		{
 			return new GameObject().AddComponent<GameJoltManager>();
+		}
+
+		private static async Task WaitFramesAsync(int frames)
+		{
+			int expectedFrameCount = Time.frameCount + frames;
+
+			while (Time.frameCount < expectedFrameCount)
+			{
+				await Task.Yield();
+			}
 		}
 	}
 }
