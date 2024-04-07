@@ -134,14 +134,21 @@ namespace Hertzole.GameJolt
 #else
 			if (GameJoltSettings.AutoSignInFromClient)
 			{
+				Debug.Log("Sign in from client");
+				
 				using (StringBuilderPool.Rent(out StringBuilder pathBuilder))
 				{
 					pathBuilder.Append(Application.dataPath);
 					pathBuilder.Append("/../.gj-credentials");
 
 					string credentialsPath = Path.GetFullPath(pathBuilder.ToString());
+					
+					Debug.Log("Credentials path: " + credentialsPath);
+					
 					if (File.Exists(credentialsPath))
 					{
+						Debug.Log("Read credentials");
+						
 						string credentials =
 #if NETSTANDARD2_1 || NETCOREAPP2_0_OR_GREATER
 							await File.ReadAllTextAsync(credentialsPath, destroyCancellationToken);
@@ -156,6 +163,10 @@ namespace Hertzole.GameJolt
 						{
 							Debug.LogError("Failed to sign in from client: " + result.Exception);
 						}
+					}
+					else
+					{
+						Debug.Log("CREDS FILE DOES NOT EXIST!");
 					}
 				}
 			}
