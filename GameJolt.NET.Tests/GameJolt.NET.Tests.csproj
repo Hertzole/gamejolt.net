@@ -32,6 +32,14 @@
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0"/>
     </ItemGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023' ">
+        <DefineConstants>TRACE,UNITY_EDITOR,UNITY_2021_1_OR_NEWER,UNITY_64</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Unity 2023' ">
+        <DefineConstants>TRACE,UNITY_EDITOR,UNITY_2021_1_OR_NEWER,UNITY_2023_1_OR_NEWER,UNITY_64</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\GameJolt.NET\GameJolt.NET.csproj"/>
     </ItemGroup>

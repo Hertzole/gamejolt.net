@@ -9,26 +9,27 @@ namespace GameJolt.NET.Tests
 		internal static readonly Randomizer randomizer = new Randomizer();
 		internal static readonly Faker faker = new Faker();
 
-		internal static User User()
+		internal static User User(int? id = null, UserType? type = null, string? username = null, string? avatarUrl = null, DateTime? signedUp = null,
+			DateTime? lastLoggedIn = null, UserStatus? status = null, string? displayName = null, string? userWebsite = null, string? userDescription = null)
 		{
-			int id = randomizer.Int(1, (int) (int.MaxValue * 0.5f));
-			UserType type = (UserType) randomizer.Int(0, 3);
-			string username = faker.Internet.UserName();
-			string avatarUrl = faker.Internet.Avatar();
-			DateTime signedUp = faker.Date.Past();
-			DateTime lastLoggedIn = faker.Date.Past();
-			UserStatus status = randomizer.Enum<UserStatus>();
-			string displayName = faker.Name.FullName();
-			string? userWebsite = faker.Internet.Url();
-			string userDescription = faker.Lorem.Sentence();
+			id ??= randomizer.Int(1, (int) (int.MaxValue * 0.5f));
+			type ??= (UserType) randomizer.Int(0, 3);
+			username ??= faker.Internet.UserName();
+			avatarUrl ??= faker.Internet.Avatar();
+			signedUp ??= faker.Date.Past();
+			lastLoggedIn ??= faker.Date.Past();
+			status ??= randomizer.Enum<UserStatus>();
+			displayName ??= faker.Name.FullName();
+			userWebsite ??= faker.Internet.Url();
+			userDescription ??= faker.Lorem.Sentence();
 
-			string signedUpString = signedUp.ToString("MMMM d, yyyy");
-			string lastLoggedInString = lastLoggedIn.ToString("MMMM d, yyyy");
+			string signedUpString = signedUp.Value.ToString("MMMM d, yyyy");
+			string lastLoggedInString = lastLoggedIn.Value.ToString("MMMM d, yyyy");
 
-			int signedUpTimestamp = (int) (signedUp - new DateTime(1970, 1, 1)).TotalSeconds;
-			int lastLoggedInTimestamp = (int) (lastLoggedIn - new DateTime(1970, 1, 1)).TotalSeconds;
+			int signedUpTimestamp = (int) (signedUp.Value - new DateTime(1970, 1, 1)).TotalSeconds;
+			int lastLoggedInTimestamp = (int) (lastLoggedIn.Value - new DateTime(1970, 1, 1)).TotalSeconds;
 
-			return new User(id, type, username, avatarUrl, signedUpString, signedUpTimestamp, lastLoggedInString, lastLoggedInTimestamp, status,
+			return new User(id.Value, type.Value, username, avatarUrl, signedUpString, signedUpTimestamp, lastLoggedInString, lastLoggedInTimestamp, status.Value,
 				displayName, userWebsite, userDescription);
 		}
 

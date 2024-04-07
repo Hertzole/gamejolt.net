@@ -10,9 +10,9 @@ namespace Hertzole.GameJolt
 {
 	public sealed class GameJoltManager : MonoBehaviour
 	{
-		private bool isMainInstance;
+		internal bool isMainInstance;
 
-		private static GameJoltManager instance;
+		internal static GameJoltManager instance;
 
 		private void Awake()
 		{
@@ -186,7 +186,7 @@ namespace Hertzole.GameJolt
 		}
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-		private static void Initialize()
+		internal static void Initialize()
 		{
 			if (instance == null && FindAnyObjectByType<GameJoltManager>() == null)
 			{
