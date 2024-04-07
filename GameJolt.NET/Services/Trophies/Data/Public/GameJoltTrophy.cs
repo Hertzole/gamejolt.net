@@ -1,9 +1,11 @@
-﻿namespace Hertzole.GameJolt
+﻿using System;
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     A Game Jolt trophy.
 	/// </summary>
-	public readonly struct GameJoltTrophy
+	public readonly struct GameJoltTrophy : IEquatable<GameJoltTrophy>
 	{
 		/// <summary>
 		///     The ID of the trophy.
@@ -38,6 +40,43 @@
 			Difficulty = difficulty;
 			ImageUrl = imageUrl;
 			HasAchieved = hasAchieved;
+		}
+
+		public bool Equals(GameJoltTrophy other)
+		{
+			return Id == other.Id && Difficulty == other.Difficulty && HasAchieved == other.HasAchieved &&
+			       EqualityHelper.StringEquals(Title, other.Title) &&
+			       EqualityHelper.StringEquals(Description, other.Description) &&
+			       EqualityHelper.StringEquals(ImageUrl, other.ImageUrl);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is GameJoltTrophy other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = Id;
+				hashCode = (hashCode * 397) ^ (int) Difficulty;
+				hashCode = (hashCode * 397) ^ HasAchieved.GetHashCode();
+				hashCode = (hashCode * 397) ^ (Title != null ? Title.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (Description != null ? Description.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (ImageUrl != null ? ImageUrl.GetHashCode() : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GameJoltTrophy left, GameJoltTrophy right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GameJoltTrophy left, GameJoltTrophy right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }
