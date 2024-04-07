@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Hertzole.GameJolt
 {
@@ -78,7 +79,7 @@ namespace Hertzole.GameJolt
 			{
 				return;
 			}
-			
+
 			// No need to do anything if the API isn't initialized.
 			if (!GameJoltAPI.IsInitialized)
 			{
@@ -188,7 +189,7 @@ namespace Hertzole.GameJolt
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 		internal static void Initialize()
 		{
-			if (instance == null && FindAnyObjectByType<GameJoltManager>() == null)
+			if (instance == null && FindObject<GameJoltManager>() == null)
 			{
 				new GameObject("GameJolt").AddComponent<GameJoltManager>();
 			}
@@ -201,6 +202,15 @@ namespace Hertzole.GameJolt
 				await GameJoltAPI.Sessions.PingAsync(GameJoltSettings.PingStatus, cancellationToken);
 				await Task.Delay(TimeSpan.FromSeconds(GameJoltSettings.PingInterval), cancellationToken);
 			}
+		}
+
+		private static T FindObject<T>() where T : Object
+		{
+#if UNITY_2023_1_OR_NEWER // FindAnyObjectByType only exists in some random versions, but seems to exist in 2023.1 and up.
+			return FindAnyObjectByType<T>();
+#else
+			return FindObjectOfType<T>();
+#endif
 		}
 
 		// There's no built-in destroy cancellation token pre Unity 2022.2, so we make our own.
