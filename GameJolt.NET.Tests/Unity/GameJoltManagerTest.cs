@@ -12,6 +12,7 @@ using UnityEngine.TestTools;
 namespace GameJolt.NET.Tests.Unity
 {
 	[SkipInitialization]
+	[SingleThreaded]
 	public class GameJoltManagerTest : BaseTest
 	{
 		private GameJoltManager? currentManager;

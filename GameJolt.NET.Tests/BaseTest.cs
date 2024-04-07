@@ -138,7 +138,7 @@ namespace GameJolt.NET.Tests
 					return FromResult(serializer.Serialize(new AuthResponse(true, null)));
 				}
 
-				if (arg.Contains("sessions/close") || arg.Contains("sessions/open"))
+				if (arg.Contains("sessions/close") || arg.Contains("sessions/open") || arg.Contains("sessions/ping") || arg.Contains("sessions/check"))
 				{
 					return FromResult(serializer.Serialize(new SessionResponse(true, null)));
 				}
