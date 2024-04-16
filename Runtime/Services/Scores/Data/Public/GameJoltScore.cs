@@ -112,5 +112,10 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(GameJoltScore)} ({nameof(Sort)}: {Sort}, {nameof(Score)}: {Score}, {nameof(ExtraData)}: {ExtraData}, {nameof(Username)}: {Username}, {nameof(UserId)}: {UserId}, {nameof(GuestName)}: {GuestName}, {nameof(Stored)}: {Stored})";
+		}
 	}
 }

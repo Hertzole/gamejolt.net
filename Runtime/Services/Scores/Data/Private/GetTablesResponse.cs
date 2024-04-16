@@ -77,8 +77,7 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return
-				$"{nameof(success)}: {success}, {nameof(message)}: {message}, {nameof(tables)}: {(tables == null ? "" : tables.ToCommaSeparatedString())}";
+			return $"{nameof(GetTablesResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(tables)}: {tables.ToCommaSeparatedString()})";
 		}
 	}
 }
