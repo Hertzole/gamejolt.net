@@ -8,6 +8,9 @@ on:
       - "GameJolt.NET.Tests/**"
       - "Unity/**"
       - "ci/**"
+    branches: ["master", "develop"]
+  pull_request:
+    types: ['opened', 'edited', 'reopened', 'synchronize']
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -53,6 +56,7 @@ jobs:
   sonarcloud:
     name: SonarScan
     needs: [unity-test, net_test]
+    if: github.event_name != 'pull_request' # SonarCloud doesn't need to scan PRs
     uses: ./.github/workflows/sonarcloud.yml
     secrets:
       unity_license: ${{ secrets.UNITY_LICENSE }}
