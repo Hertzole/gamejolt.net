@@ -30,6 +30,19 @@ namespace Hertzole.GameJolt
 			this.users = users;
 		}
 
+		/// <summary>
+		///     Invoked when a session is opened.
+		/// </summary>
+		public static event Action? OnSessionOpened;
+		/// <summary>
+		///     Invoked when a session is closed.
+		/// </summary>
+		public static event Action? OnSessionClosed;
+		/// <summary>
+		///     Invoked when a session is pinged.
+		/// </summary>
+		public static event Action? OnSessionPinged;
+
 		private const string ENDPOINT = "sessions/";
 		internal const string OPEN_ENDPOINT = ENDPOINT + "open/";
 		internal const string PING_ENDPOINT = ENDPOINT + "ping/";
@@ -78,6 +91,7 @@ namespace Hertzole.GameJolt
 				Debug.Assert(response.Success, "Response was successful but success was false.");
 
 				IsSessionOpen = true;
+				OnSessionOpened?.Invoke();
 				return GameJoltResult.Success();
 			}
 		}
@@ -121,6 +135,7 @@ namespace Hertzole.GameJolt
 				Debug.Assert(response.Success, "Response was successful but success was false.");
 
 				IsSessionOpen = false;
+				OnSessionClosed?.Invoke();
 				return GameJoltResult.Success();
 			}
 		}
@@ -166,6 +181,7 @@ namespace Hertzole.GameJolt
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
 
+				OnSessionPinged?.Invoke();
 				return GameJoltResult.Success();
 			}
 		}
