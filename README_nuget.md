@@ -44,8 +44,7 @@ You should also shut down the API when you're done with it. This is done by call
 GameJoltAPI.Shutdown();
 ```
 
-> [!IMPORTANT]
-> Sessions are not handled automatically for you in the base API. You need to open and close them manually. See [sessions](#sessions)
+**IMPORTANT! Sessions are not handled automatically for you in the base API. You need to open and close them manually. See [sessions](#sessions)**
 
 ### Authenticate
 
@@ -333,34 +332,6 @@ GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(id
 ```
 
 ## 📦 Installation
-
-### Unity
-
-#### OpenUPM (Recommended)
-
-The minimum Unity version for GameJolt.NET is 2021.3.
-
-You can install the package through [OpenUPM](https://openupm.com/) by using the [OpenUPM CLI](https://github.com/openupm/openupm-cli#openupm-cli).
-
-```bash
-openupm add se.hertzole.gamejolt.net
-```
-
-If you don't have the CLI installed, you can follow these steps:
-
-1. Open Edit/Project Settings/Package Manager
-2. Add a new Scoped Registry (or edit the existing OpenUPM entry)   
-     Name: `package.openupm.com`  
-     URL: `https://package.openupm.com`  
-     Scope: `se.hertzole.gamejolt.net`
-3. Click `Save` (or `Apply`)
-4. Open Window/Package Manager
-5. Click `+`
-6. Select `Add package by name...` or `Add package from git URL...`
-7. Paste `se.hertzole.gamejolt.net` into name 
-8. Click `Add`
-
-### .NET Project
 
 You can install the package through NuGet. GameJolt.NET supports .NET Standard 2.0/2.1 and .NET 5.0+.
 
