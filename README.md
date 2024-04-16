@@ -370,6 +370,15 @@ If you don't have the CLI installed, you can follow these steps:
 7. Paste `se.hertzole.gamejolt.net` into name 
 8. Click `Add`
 
+#### Unity Package Manager
+
+You can install the package through the Unity Package Manager.
+
+1. Open `Window/Package Manager`
+2. Click the `+` in the top left corner
+3. Select `Add package from git URL...`
+4. Paste `https://github.com/Hertzole/gamejolt.net.git#develop`
+
 ### .NET Project
 
 You can install the package through NuGet. GameJolt.NET supports .NET Standard 2.0/2.1 and .NET 5.0+.
