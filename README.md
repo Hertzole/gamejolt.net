@@ -370,6 +370,15 @@ If you don't have the CLI installed, you can follow these steps:
 7. Paste `se.hertzole.gamejolt.net` into name 
 8. Click `Add`
 
+#### Unity Package Manager
+
+You can install the package through the Unity Package Manager.
+
+1. Open `Window/Package Manager`
+2. Click the `+` in the top left corner
+3. Select `Add package from git URL...`
+4. Paste `https://github.com/Hertzole/gamejolt.net.git#develop`
+
 ### .NET Project
 
 You can install the package through NuGet. GameJolt.NET supports .NET Standard 2.0/2.1 and .NET 5.0+.
@@ -377,6 +386,13 @@ You can install the package through NuGet. GameJolt.NET supports .NET Standard 2
 ```bash
 dotnet add package GameJolt.Net
 ```
+
+## 🎮 Unity Integration
+
+GameJolt.NET has a Unity integration that takes care of most of the background work for you, like handling sessions and authentication. It also has a page in the project settings to help you customize the behavior of the integration.
+
+![Unity Project Settings](https://github.com/Hertzole/gamejolt.net/assets/5569364/0c172e5f-956d-43c7-8563-024264bff521)
+
 
 ## 💻 Development
 
@@ -416,7 +432,8 @@ Contributions, issues and feature requests are welcome!
 
 Please make sure your pull requests are made to the `develop` branch and that you have tested your changes. If you're adding a new feature, please also add tests for it.
 
-Your code should follow the [C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions). Your commits should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard.
+Your code should follow th![Unity_2024-04-16_16-21-01](https://github.com/Hertzole/gamejolt.net/assets/5569364/5876a665-b7c9-47e4-ad7e-50ea7dd4fe6a)
+e [C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions). Your commits should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard.
 
 ## 📃 License
 
