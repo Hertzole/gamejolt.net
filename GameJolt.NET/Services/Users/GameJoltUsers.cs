@@ -207,7 +207,7 @@ namespace Hertzole.GameJolt
 
 				if (response.Users == null)
 				{
-					return GameJoltResult<GameJoltUser>.Error(new GameJoltInvalidUserException(GameJoltInvalidUserException.NULL_USER_MESSAGE));
+					return GameJoltResult<GameJoltUser>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
 
 				if (response.Users.Length == 0)
@@ -244,7 +244,7 @@ namespace Hertzole.GameJolt
 
 				if (response.Users == null)
 				{
-					return GameJoltResult<GameJoltUser>.Error(new GameJoltInvalidUserException(GameJoltInvalidUserException.NULL_USER_MESSAGE));
+					return GameJoltResult<GameJoltUser>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
 				
 				if (response.Users.Length == 0)
@@ -287,7 +287,7 @@ namespace Hertzole.GameJolt
 
 				if (response.Users == null)
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException(GameJoltInvalidUserException.NULL_USER_MESSAGE));
+					return GameJoltResult<GameJoltUser[]>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
 				
 				if (response.Users.Length == 0)
@@ -336,7 +336,7 @@ namespace Hertzole.GameJolt
 
 				if (response.Users == null)
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException(GameJoltInvalidUserException.NULL_USER_MESSAGE));
+					return GameJoltResult<GameJoltUser[]>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
 				
 				if (response.Users.Length == 0)
