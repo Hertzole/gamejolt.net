@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Reflection;
 using GameJolt.NET.Tests.Attributes;
 using NUnit.Framework;

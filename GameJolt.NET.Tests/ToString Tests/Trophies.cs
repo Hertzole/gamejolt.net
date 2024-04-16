@@ -1,4 +1,6 @@
-﻿using GameJolt.NET.Tests.Enums;
+﻿#nullable enable
+
+using GameJolt.NET.Tests.Enums;
 using GameJolt.NET.Tests.Extensions;
 using Hertzole.GameJolt;
 using NUnit.Framework;
