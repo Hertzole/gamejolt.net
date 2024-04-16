@@ -82,5 +82,10 @@ namespace Hertzole.GameJolt
 		{
 			return new GameJoltTrophy(id, title, description, difficulty, imageUrl, achieved);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(TrophyInternal)} ({nameof(id)}: {id}, {nameof(title)}: {title}, {nameof(description)}: {description}, {nameof(difficulty)}: {difficulty}, {nameof(imageUrl)}: {imageUrl}, {nameof(achieved)}: {achieved})";
+		}
 	}
 }
