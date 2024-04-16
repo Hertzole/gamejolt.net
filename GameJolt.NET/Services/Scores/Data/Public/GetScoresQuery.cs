@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -158,6 +159,55 @@ namespace Hertzole.GameJolt
 		public async Task<GameJoltResult<GameJoltScore[]>> GetAsync(CancellationToken cancellationToken = default)
 		{
 			return await scores!.GetScoresAsync(this, cancellationToken);
+		}
+
+		public override string ToString()
+		{
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GetScoresQuery) + " (" + nameof(limit) + ": ");
+				builder.Append(limit);
+
+				if (tableId.HasValue)
+				{
+					builder.Append(", " + nameof(tableId) + ": ");
+					builder.Append(tableId.Value);
+				}
+				
+				if(!string.IsNullOrEmpty(username))
+				{
+					builder.Append(", " + nameof(username) + ": ");
+					builder.Append(username);
+				}
+				
+				if(!string.IsNullOrEmpty(userToken))
+				{
+					builder.Append(", " + nameof(userToken) + ": ");
+					builder.Append(userToken);
+				}
+				
+				if(!string.IsNullOrEmpty(guest))
+				{
+					builder.Append(", " + nameof(guest) + ": ");
+					builder.Append(guest);
+				}
+				
+				if(betterThan.HasValue)
+				{
+					builder.Append(", " + nameof(betterThan) + ": ");
+					builder.Append(betterThan.Value);
+				}
+				
+				if(worseThan.HasValue)
+				{
+					builder.Append(", " + nameof(worseThan) + ": ");
+					builder.Append(worseThan.Value);
+				}
+				
+				builder.Append(")");
+				
+				return builder.ToString();
+			}
 		}
 	}
 }
