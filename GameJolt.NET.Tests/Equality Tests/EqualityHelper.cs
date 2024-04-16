@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Hertzole.GameJolt;
 using NUnit.Framework;
 

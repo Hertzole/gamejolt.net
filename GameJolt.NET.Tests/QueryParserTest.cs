@@ -1,4 +1,6 @@
-﻿using Hertzole.GameJolt;
+﻿#nullable enable
+
+using Hertzole.GameJolt;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests

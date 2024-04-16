@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿#nullable enable
+
+using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;

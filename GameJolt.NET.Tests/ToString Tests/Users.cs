@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using GameJolt.NET.Tests.Enums;
 using GameJolt.NET.Tests.Extensions;
 using Hertzole.GameJolt;
