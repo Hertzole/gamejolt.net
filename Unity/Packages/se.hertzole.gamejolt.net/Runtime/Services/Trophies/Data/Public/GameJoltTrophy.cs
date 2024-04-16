@@ -78,5 +78,10 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(GameJoltTrophy)} ({nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Description)}: {Description}, {nameof(Difficulty)}: {Difficulty}, {nameof(ImageUrl)}: {ImageUrl}, {nameof(HasAchieved)}: {HasAchieved})";
+		}
 	}
 }

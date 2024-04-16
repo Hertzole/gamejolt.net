@@ -1,12 +1,11 @@
-﻿using System;
-#if NET6_0_OR_GREATER
+﻿#if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
-
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
 #endif
+using System;
 
 namespace Hertzole.GameJolt
 {
@@ -44,6 +43,11 @@ namespace Hertzole.GameJolt
 		public static bool operator !=(DataKey left, DataKey right)
 		{
 			return !left.Equals(right);
+		}
+
+		public override string ToString()
+		{
+			return $"{nameof(DataKey)} ({nameof(key)}: {key})";
 		}
 	}
 }

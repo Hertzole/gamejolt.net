@@ -62,5 +62,10 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(FetchTrophiesResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(trophies)}: {trophies.ToCommaSeparatedString()})";
+		}
 	}
 }
