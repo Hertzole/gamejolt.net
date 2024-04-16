@@ -69,5 +69,10 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(UsersFetchResponse)} (Success: {Success}, Message: {Message}, Users: {Users.ToCommaSeparatedString()})";
+		}
 	}
 }
