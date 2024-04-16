@@ -432,8 +432,7 @@ Contributions, issues and feature requests are welcome!
 
 Please make sure your pull requests are made to the `develop` branch and that you have tested your changes. If you're adding a new feature, please also add tests for it.
 
-Your code should follow th![Unity_2024-04-16_16-21-01](https://github.com/Hertzole/gamejolt.net/assets/5569364/5876a665-b7c9-47e4-ad7e-50ea7dd4fe6a)
-e [C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions). Your commits should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard.
+Your code should follow the [C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions). Your commits should follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard.
 
 ## 📃 License
 
