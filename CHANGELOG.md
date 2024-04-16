@@ -1,3 +1,36 @@
+# [1.1.0](https://github.com/Hertzole/gamejolt.net/compare/v1.0.3...v1.1.0) (2024-04-16)
+
+
+### Bug Fixes
+
+* don't use ConfigureAwait as it doesn't work in Unity ([3ef3ba4](https://github.com/Hertzole/gamejolt.net/commit/3ef3ba4e4ccc79da4d24b74f9546288eddbf1aa0))
+* GameJoltManager destroy cancellation token pre Unity 2022.2 ([c23c4d7](https://github.com/Hertzole/gamejolt.net/commit/c23c4d76b2b3677acdc9f43ce5cc9aaf4cb117ff))
+* **GameJoltManager:** trying to close sessions and shutdown when not initialized ([8c04239](https://github.com/Hertzole/gamejolt.net/commit/8c0423999e27862c407cdc0fd4669c342e9b208d))
+* missing Auto Close Sessions in GameJoltSettings editor ([1d8a66c](https://github.com/Hertzole/gamejolt.net/commit/1d8a66cac683f69f9ea31b7910116e570c4d496a))
+* not being able to build .NET project ([1641124](https://github.com/Hertzole/gamejolt.net/commit/16411243dd0fe9e0dd874cc89abc56e2ed5f49dc))
+* ToCommaSeparatedString throwing exception if array is null ([9c02d11](https://github.com/Hertzole/gamejolt.net/commit/9c02d11a48fa8869e0696b4d89b773906e37f253))
+* **Unity:** File.ReadAllTextAsync not being available pre .NET Standard 2.1 ([c78207b](https://github.com/Hertzole/gamejolt.net/commit/c78207b49104e10b2b910519ec58f097955d1172))
+* **Unity:** FindAnyObjectByType is not always available ([507aea6](https://github.com/Hertzole/gamejolt.net/commit/507aea6b8d0600e3e075ccc3f77a995ad7d9584c))
+* **Unity:** integration, not intergration ([b28766c](https://github.com/Hertzole/gamejolt.net/commit/b28766c02e8243c4b5e0180339f1c80e7d4a6108))
+* **Unity:** missing IMGUI dependency ([f49e992](https://github.com/Hertzole/gamejolt.net/commit/f49e9923c74d452fa7a648406609d6c1c44508d6))
+* **Unity:** no editor assembly ([98651a5](https://github.com/Hertzole/gamejolt.net/commit/98651a54cfb494937475789dbbf5f1d02a77216a))
+* **Unity:** turn off automatic initialization ([fc41c09](https://github.com/Hertzole/gamejolt.net/commit/fc41c09e48bce5a68dc5bf245090cfd84d571e8d))
+
+
+### Features
+
+* GameJoltManager for Unity ([8b6b95b](https://github.com/Hertzole/gamejolt.net/commit/8b6b95bf0f9b6c9d24c9465fcc768a317581019b))
+* OnInitialized, OnShutdown, and OnShutdownComplete events ([095a1f4](https://github.com/Hertzole/gamejolt.net/commit/095a1f46e961cb8dbcd6fde2b8c2fd3b666f8a6e))
+* override ToString in all types ([#2](https://github.com/Hertzole/gamejolt.net/issues/2)) ([32b4dee](https://github.com/Hertzole/gamejolt.net/commit/32b4dee8eb8115e1b1d9cba407fd13b7f5cdb088))
+* session open/close/ping events ([b78423a](https://github.com/Hertzole/gamejolt.net/commit/b78423a977d27959296ccae473da1e9b0744ed3f))
+* **Unity:** auto ping interval ([619317d](https://github.com/Hertzole/gamejolt.net/commit/619317da2d0544bdb6e40fe56bd697368c6e877d))
+* **Unity:** clarify auto sign in options in editor ([1defee1](https://github.com/Hertzole/gamejolt.net/commit/1defee144fc3eae523376e63914bdd6e9bbe930b))
+
+
+### Performance Improvements
+
+* use Unity's Awaitable in 2023.1+ when calling the web ([2ca142f](https://github.com/Hertzole/gamejolt.net/commit/2ca142fb0a999f6d8b8ba72fec377196576d55ec))
+
 ## [1.0.3](https://github.com/Hertzole/gamejolt.net/compare/v1.0.2...v1.0.3) (2024-01-30)
 
 
