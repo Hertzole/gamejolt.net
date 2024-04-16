@@ -112,7 +112,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value.Length, Is.EqualTo(1));
+			Assert.That(result.Value!.Length, Is.EqualTo(1));
 			Assert.That(result.Value[0].Id, Is.EqualTo(table.id));
 			Assert.That(result.Value[0].Name, Is.EqualTo(table.name));
 			Assert.That(result.Value[0].Description, Is.EqualTo(table.description));
@@ -145,7 +145,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value.Length, Is.EqualTo(1));
+			Assert.That(result.Value!.Length, Is.EqualTo(1));
 			Assert.That(result.Value[0].Score, Is.EqualTo(score.score));
 			Assert.That(result.Value[0].Sort, Is.EqualTo(score.sort));
 			Assert.That(result.Value[0].ExtraData, Is.EqualTo(score.extraData));
@@ -159,7 +159,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value.Length, Is.EqualTo(1));
+			Assert.That(result.Value!.Length, Is.EqualTo(1));
 			Assert.That(result.Value[0].Score, Is.EqualTo(score.score));
 			Assert.That(result.Value[0].Sort, Is.EqualTo(score.sort));
 			Assert.That(result.Value[0].ExtraData, Is.EqualTo(score.extraData));
