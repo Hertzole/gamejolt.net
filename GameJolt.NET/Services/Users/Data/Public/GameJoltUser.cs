@@ -124,5 +124,43 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		public override string ToString()
+		{
+			using (StringBuilderPool.Rent(out var sb))
+			{
+				sb.Append(nameof(GameJoltUser) + " (" + nameof(Id) + ": ");
+				sb.Append(Id);
+				sb.Append(", " + nameof(Type) + ": ");
+				sb.Append(Type);
+				sb.Append(", " + nameof(Username) + ": ");
+				sb.Append(Username);
+				sb.Append(", " + nameof(AvatarUrl) + ": ");
+				sb.Append(AvatarUrl);
+				sb.Append(", " + nameof(SignedUp) + ": ");
+				sb.Append(SignedUp);
+				sb.Append(", " + nameof(LastLoggedIn) + ": ");
+				sb.Append(LastLoggedIn);
+				sb.Append(", " + nameof(OnlineNow) + ": ");
+				sb.Append(OnlineNow);
+				sb.Append(", " + nameof(Status) + ": ");
+				sb.Append(Status);
+				sb.Append(", " + nameof(DisplayName) + ": ");
+				sb.Append(DisplayName);
+				 
+				if (!string.IsNullOrEmpty(UserWebsite))
+				{
+					sb.Append(", " + nameof(UserWebsite) + ": ");
+					sb.Append(UserWebsite);
+				}
+				
+				sb.Append(", " + nameof(UserDescription) + ": ");
+				sb.Append(UserDescription);
+				
+				sb.Append(")");
+                
+				return sb.ToString();
+			}
+		}
 	}
 }

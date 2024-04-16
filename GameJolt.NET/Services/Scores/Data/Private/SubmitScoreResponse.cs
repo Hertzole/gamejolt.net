@@ -53,5 +53,10 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(SubmitScoreResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message})";
+		}
 	}
 }

@@ -72,5 +72,10 @@ namespace Hertzole.GameJolt
 		{
 			return new GameJoltTable(id, name, description, isPrimary);
 		}
+
+		public override string ToString()
+		{
+			return $"{nameof(TableInternal)} ({nameof(id)}: {id}, {nameof(name)}: {name}, {nameof(description)}: {description}, {nameof(isPrimary)}: {isPrimary})";
+		}
 	}
 }
