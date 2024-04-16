@@ -17,7 +17,7 @@ namespace Hertzole.GameJolt
 	internal readonly struct FetchTrophiesResponse : IResponse, IEquatable<FetchTrophiesResponse>
 	{
 		[JsonName("trophies")]
-		public readonly TrophyInternal[] trophies;
+		public readonly TrophyInternal[]? trophies;
 
 		[JsonName("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
@@ -26,7 +26,7 @@ namespace Hertzole.GameJolt
 		public string? Message { get; }
 
 		[JsonConstructor]
-		public FetchTrophiesResponse(bool success, string? message, TrophyInternal[] trophies)
+		public FetchTrophiesResponse(bool success, string? message, TrophyInternal[]? trophies)
 		{
 			this.trophies = trophies;
 			Success = success;
@@ -48,7 +48,7 @@ namespace Hertzole.GameJolt
 			unchecked
 			{
 				int hashCode = EqualityHelper.ResponseHashCode(0, this);
-				hashCode = (hashCode * 397) ^ trophies.GetHashCode();
+				hashCode = (hashCode * 397) ^ (trophies != null ? trophies.GetHashCode() : 0);
 				return hashCode;
 			}
 		}

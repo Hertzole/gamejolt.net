@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Text;
 using GameJolt.NET.Tests.Enums;
 using GameJolt.NET.Tests.Extensions;

@@ -167,6 +167,11 @@ namespace Hertzole.GameJolt
 					return GameJoltResult<GameJoltTrophy[]>.Error(exception!);
 				}
 
+				if (response.trophies == null)
+				{
+					return GameJoltResult<GameJoltTrophy[]>.Error(new NullReferenceException("Trophies array was null. This is a bug!"));
+				}
+
 				GameJoltTrophy[] trophies = response.trophies.Length > 0 ? new GameJoltTrophy[response.trophies.Length] : Array.Empty<GameJoltTrophy>();
 
 				for (int i = 0; i < trophies.Length; i++)
