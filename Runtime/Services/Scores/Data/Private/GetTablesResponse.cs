@@ -24,7 +24,7 @@ namespace Hertzole.GameJolt
 		[JsonName("message")]
 		public readonly string? message;
 		[JsonName("tables")]
-		public readonly TableInternal[] tables;
+		public readonly TableInternal[]? tables;
 
 		[JsonIgnore]
 		public bool Success
@@ -38,7 +38,7 @@ namespace Hertzole.GameJolt
 		}
 
 		[JsonConstructor]
-		public GetTablesResponse(bool success, string? message, TableInternal[] tables)
+		public GetTablesResponse(bool success, string? message, TableInternal[]? tables)
 		{
 			this.success = success;
 			this.message = message;
@@ -60,7 +60,7 @@ namespace Hertzole.GameJolt
 			unchecked
 			{
 				int hashCode = EqualityHelper.ResponseHashCode(0, this);
-				hashCode = (hashCode * 397) ^ tables.GetHashCode();
+				hashCode = (hashCode * 397) ^ (tables != null ? tables.GetHashCode() : 0);
 				return hashCode;
 			}
 		}

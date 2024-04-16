@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Bogus;
 using GameJolt.NET.Tests.Enums;
 

@@ -24,7 +24,7 @@ namespace Hertzole.GameJolt
 		[JsonName("message")]
 		public readonly string? message;
 		[JsonName("scores")]
-		public readonly ScoreInternal[] scores;
+		public readonly ScoreInternal[]? scores;
 
 		[JsonIgnore]
 		public bool Success
@@ -38,7 +38,7 @@ namespace Hertzole.GameJolt
 		}
 
 		[JsonConstructor]
-		public GetScoresResponse(bool success, string? message, ScoreInternal[] scores)
+		public GetScoresResponse(bool success, string? message, ScoreInternal[]? scores)
 		{
 			this.success = success;
 			this.message = message;
@@ -60,7 +60,7 @@ namespace Hertzole.GameJolt
 			unchecked
 			{
 				int hashCode = EqualityHelper.ResponseHashCode(0, this);
-				hashCode = (hashCode * 397) ^ scores.GetHashCode();
+				hashCode = (hashCode * 397) ^ (scores != null ? scores.GetHashCode() : 0);
 				return hashCode;
 			}
 		}
