@@ -191,32 +191,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
 		public async Task<GameJoltResult<GameJoltUser>> GetUserAsync(string username, CancellationToken cancellationToken = default)
 		{
-			using (StringBuilderPool.Rent(out StringBuilder builder))
-			{
-				builder.Append(ENDPOINT);
-				builder.Append("?username=");
-				builder.Append(username);
-
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
-
-				if (response.TryGetException(out Exception? exception))
-				{
-					return GameJoltResult<GameJoltUser>.Error(exception!);
-				}
-
-				if (response.Users == null)
-				{
-					return GameJoltResult<GameJoltUser>.Error(new NullReferenceException("Users array is null. This is a bug!"));
-				}
-
-				if (response.Users.Length == 0)
-				{
-					return GameJoltResult<GameJoltUser>.Error(new GameJoltInvalidUserException());
-				}
-
-				return GameJoltResult<GameJoltUser>.Success(response.Users[0].ToPublicUser());
-			}
+			return await GetUserAsync(username, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -228,11 +203,26 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
 		public async Task<GameJoltResult<GameJoltUser>> GetUserAsync(int userId, CancellationToken cancellationToken = default)
 		{
+			return await GetUserAsync(null, userId, cancellationToken);
+		}
+
+		private async Task<GameJoltResult<GameJoltUser>> GetUserAsync(string? username, int? userId, CancellationToken cancellationToken)
+		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(ENDPOINT);
-				builder.Append("?user_id=");
-				builder.Append(userId);
+				
+				if (username != null)
+				{
+					builder.Append("?username=");
+					builder.Append(username);
+				}
+
+				if (userId != null)
+				{
+					builder.Append("?user_id=");
+					builder.Append(userId.Value);
+				}
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
@@ -246,7 +236,7 @@ namespace Hertzole.GameJolt
 				{
 					return GameJoltResult<GameJoltUser>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
-				
+
 				if (response.Users.Length == 0)
 				{
 					return GameJoltResult<GameJoltUser>.Error(new GameJoltInvalidUserException());
@@ -271,38 +261,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<GameJoltUser[]>.Error(new ArgumentNullException(nameof(usernames)));
 			}
 
-			using (StringBuilderPool.Rent(out StringBuilder builder))
-			{
-				builder.Append(ENDPOINT);
-				builder.Append("?username=");
-				builder.Append(usernames.ToCommaSeparatedString());
-
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
-
-				if (response.TryGetException(out Exception? exception))
-				{
-					return GameJoltResult<GameJoltUser[]>.Error(exception!);
-				}
-
-				if (response.Users == null)
-				{
-					return GameJoltResult<GameJoltUser[]>.Error(new NullReferenceException("Users array is null. This is a bug!"));
-				}
-				
-				if (response.Users.Length == 0)
-				{
-					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException());
-				}
-
-				GameJoltUser[] users = new GameJoltUser[response.Users.Length];
-				for (int i = 0; i < response.Users.Length; i++)
-				{
-					users[i] = response.Users[i].ToPublicUser();
-				}
-
-				return GameJoltResult<GameJoltUser[]>.Success(users);
-			}
+			return await GetUsersInternalAsync(usernames, null, cancellationToken);
 		}
 
 		/// <summary>
@@ -320,11 +279,28 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<GameJoltUser[]>.Error(new ArgumentNullException(nameof(userIds)));
 			}
 
+			return await GetUsersInternalAsync(null, userIds, cancellationToken);
+		}
+
+		private async Task<GameJoltResult<GameJoltUser[]>> GetUsersInternalAsync(IEnumerable<string>? usernames,
+			IEnumerable<int>? userIds,
+			CancellationToken cancellationToken)
+		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(ENDPOINT);
-				builder.Append("?user_id=");
-				builder.Append(userIds.ToCommaSeparatedString());
+
+				if (usernames != null)
+				{
+					builder.Append("?username=");
+					builder.Append(usernames.ToCommaSeparatedString());
+				}
+
+				if (userIds != null)
+				{
+					builder.Append("?user_id=");
+					builder.Append(userIds.ToCommaSeparatedString());
+				}
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				UsersFetchResponse response = serializer.Deserialize<UsersFetchResponse>(json);
@@ -338,7 +314,7 @@ namespace Hertzole.GameJolt
 				{
 					return GameJoltResult<GameJoltUser[]>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
-				
+
 				if (response.Users.Length == 0)
 				{
 					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException());
