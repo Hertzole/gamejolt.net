@@ -1,8 +1,14 @@
-﻿using System;
+﻿#if NET6_0_OR_GREATER
+using BaseConverter = Hertzole.GameJolt.Serialization.System.GameJoltEnumConverter<Hertzole.GameJolt.TrophyDifficulty>;
+#else
+using BaseConverter = Hertzole.GameJolt.Serialization.Newtonsoft.GameJoltEnumConverter<Hertzole.GameJolt.TrophyDifficulty>;
+#endif
 
-namespace Hertzole.GameJolt
+using System;
+
+namespace Hertzole.GameJolt.Serialization.Shared
 {
-	internal sealed class GameJoltTrophyDifficultyConverter : GameJoltEnumConverter<TrophyDifficulty>
+	internal sealed class GameJoltTrophyDifficultyConverter : BaseConverter
 	{
 		public static readonly GameJoltTrophyDifficultyConverter Instance = new GameJoltTrophyDifficultyConverter();
 

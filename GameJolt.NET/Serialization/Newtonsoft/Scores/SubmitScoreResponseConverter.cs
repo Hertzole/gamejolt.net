@@ -1,7 +1,7 @@
 ﻿#if !NET6_0_OR_GREATER
 #nullable enable
 
-namespace Hertzole.GameJolt
+namespace Hertzole.GameJolt.Serialization.Newtonsoft
 {
 	internal sealed class SubmitScoreResponseConverter : ResponseConverter<SubmitScoreResponse>
 	{

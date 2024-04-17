@@ -1,8 +1,14 @@
-﻿using System;
+﻿#if NET6_0_OR_GREATER
+using BaseConverter = Hertzole.GameJolt.Serialization.System.GameJoltEnumConverter<Hertzole.GameJolt.UserType>;
+#else
+using BaseConverter = Hertzole.GameJolt.Serialization.Newtonsoft.GameJoltEnumConverter<Hertzole.GameJolt.UserType>;
+#endif
 
-namespace Hertzole.GameJolt
+using System;
+
+namespace Hertzole.GameJolt.Serialization.Shared
 {
-	internal sealed class GameJoltUserTypeConverter : GameJoltEnumConverter<UserType>
+	internal sealed class GameJoltUserTypeConverter : BaseConverter
 	{
 		public static readonly GameJoltUserTypeConverter Instance = new GameJoltUserTypeConverter();
 

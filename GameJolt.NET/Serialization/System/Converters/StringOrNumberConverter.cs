@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Hertzole.GameJolt
+namespace Hertzole.GameJolt.Serialization.System
 {
 	internal sealed class StringOrNumberConverter : JsonConverter<string>
 	{

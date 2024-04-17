@@ -3,7 +3,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Hertzole.GameJolt
+namespace Hertzole.GameJolt.Serialization.Newtonsoft
 {
 	internal abstract class ResponseConverter<T> : JsonConverter<T> where T : struct, IResponse
 	{
