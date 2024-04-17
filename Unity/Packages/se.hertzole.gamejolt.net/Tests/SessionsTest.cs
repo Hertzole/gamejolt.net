@@ -28,11 +28,23 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
+			bool invokedOpenEvent = false;
+
+			GameJoltAPI.Sessions.OnSessionOpened += OnSessionOpened;
+
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
+			Assert.That(invokedOpenEvent, Is.True);
+			
+			GameJoltAPI.Sessions.OnSessionOpened -= OnSessionOpened;
+
+			void OnSessionOpened()
+			{
+				invokedOpenEvent = true;
+			}
 		}
 
 		[Test]
@@ -54,11 +66,15 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
+			bool invokedOpenEvent = false;
+			
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
+			
+			GameJoltAPI.Sessions.OnSessionOpened += OnSessionOpened;
 
 			GameJoltResult result2 = await GameJoltAPI.Sessions.OpenAsync();
 
@@ -66,6 +82,14 @@ namespace GameJolt.NET.Tests
 			Assert.That(result2.Exception is GameJoltSessionException, Is.True);
 			Assert.That(result2.Exception!.Message, Is.EqualTo(GameJoltSessions.SESSION_ALREADY_OPEN));
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
+			Assert.That(invokedOpenEvent, Is.False);
+			
+			GameJoltAPI.Sessions.OnSessionOpened -= OnSessionOpened;
+			
+			void OnSessionOpened()
+			{
+				invokedOpenEvent = true;
+			}
 		}
 
 		[Test]
@@ -85,11 +109,23 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
+			bool invokedOpenEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionOpened += OnSessionOpened;
+
 			GameJoltResult result = await GameJoltAPI.Sessions.OpenAsync();
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
+			Assert.That(invokedOpenEvent, Is.False);
+			
+			GameJoltAPI.Sessions.OnSessionOpened -= OnSessionOpened;
+			
+			void OnSessionOpened()
+			{
+				invokedOpenEvent = true;
+			}
 		}
 
 		[Test]
@@ -114,11 +150,23 @@ namespace GameJolt.NET.Tests
 			await GameJoltAPI.Sessions.OpenAsync();
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
 
+			bool invokedCloseEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionClosed += OnSessionClosed;
+            
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
+			Assert.That(invokedCloseEvent, Is.True);
+			
+			GameJoltAPI.Sessions.OnSessionClosed -= OnSessionClosed;
+			
+			void OnSessionClosed()
+			{
+				invokedCloseEvent = true;
+			}
 		}
 
 		[Test]
@@ -137,12 +185,24 @@ namespace GameJolt.NET.Tests
 
 				return FromResult("");
 			});
+			
+			bool invokedCloseEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionClosed += OnSessionClosed;
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
+			Assert.That(invokedCloseEvent, Is.False);
+			
+			GameJoltAPI.Sessions.OnSessionClosed -= OnSessionClosed;
+			
+			void OnSessionClosed()
+			{
+				invokedCloseEvent = true;
+			}
 		}
 
 		[Test]
@@ -163,6 +223,10 @@ namespace GameJolt.NET.Tests
 
 				return FromResult("");
 			});
+			
+			bool invokedCloseEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionClosed += OnSessionClosed;
 
 			GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
 
@@ -170,6 +234,14 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception is GameJoltSessionException, Is.True);
 			Assert.That(result.Exception!.Message, Is.EqualTo(GameJoltSessions.CANT_CLOSE_SESSION));
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
+			Assert.That(invokedCloseEvent, Is.False);
+			
+			GameJoltAPI.Sessions.OnSessionClosed -= OnSessionClosed;
+			
+			void OnSessionClosed()
+			{
+				invokedCloseEvent = true;
+			}
 		}
 
 		[Test]
@@ -195,12 +267,24 @@ namespace GameJolt.NET.Tests
 
 			await GameJoltAPI.Sessions.OpenAsync();
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
+			
+			bool invokedPingEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionPinged += OnSessionPinged;
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(status);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.True);
+			Assert.That(invokedPingEvent, Is.True);
+			
+			GameJoltAPI.Sessions.OnSessionPinged -= OnSessionPinged;
+			
+			void OnSessionPinged()
+			{
+				invokedPingEvent = true;
+			}
 		}
 
 		[Test]
@@ -219,12 +303,24 @@ namespace GameJolt.NET.Tests
 
 				return FromResult("");
 			});
+			
+			bool invokedPingEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionPinged += OnSessionPinged;
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(SessionStatus.Active);
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception is GameJoltAuthorizedException, Is.True);
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
+			Assert.That(invokedPingEvent, Is.False);
+			
+			GameJoltAPI.Sessions.OnSessionPinged -= OnSessionPinged;
+			
+			void OnSessionPinged()
+			{
+				invokedPingEvent = true;
+			}
 		}
 
 		[Test]
@@ -245,6 +341,10 @@ namespace GameJolt.NET.Tests
 
 				return FromResult("");
 			});
+			
+			bool invokedPingEvent = false;
+			
+			GameJoltAPI.Sessions.OnSessionPinged += OnSessionPinged;
 
 			GameJoltResult result = await GameJoltAPI.Sessions.PingAsync(SessionStatus.Active);
 
@@ -252,6 +352,14 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception is GameJoltSessionException, Is.True);
 			Assert.That(result.Exception!.Message, Is.EqualTo(GameJoltSessions.CANT_PING_SESSION));
 			Assert.That(GameJoltAPI.Sessions.IsSessionOpen, Is.False);
+			Assert.That(invokedPingEvent, Is.False);
+			
+			GameJoltAPI.Sessions.OnSessionPinged -= OnSessionPinged;
+			
+			void OnSessionPinged()
+			{
+				invokedPingEvent = true;
+			}
 		}
 
 		[Test]
