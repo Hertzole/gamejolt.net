@@ -63,9 +63,13 @@ jobs:
           name: coverage-report
           path: Coverage/report
 
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: Coverage/report
+
       - name: Deploy GitHub Pages site
         uses: actions/deploy-pages@v4.0.5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifact_name: coverage-report
             
