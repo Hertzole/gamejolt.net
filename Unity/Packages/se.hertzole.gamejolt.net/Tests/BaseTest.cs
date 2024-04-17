@@ -135,12 +135,12 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/auth"))
 				{
-					return FromResult(serializer.Serialize(new AuthResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				if (arg.Contains("sessions/close") || arg.Contains("sessions/open") || arg.Contains("sessions/ping") || arg.Contains("sessions/check"))
 				{
-					return FromResult(serializer.Serialize(new SessionResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				return FromResult("");

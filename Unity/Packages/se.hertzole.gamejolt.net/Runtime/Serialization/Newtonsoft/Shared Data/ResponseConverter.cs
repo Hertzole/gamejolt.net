@@ -37,7 +37,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 			writer.WriteEndObject();
 		}
 
-		protected virtual void WriteResponseJson(JsonWriter writer, T value, JsonSerializer serializer) { }
+		protected abstract void WriteResponseJson(JsonWriter writer, T value, JsonSerializer serializer);
 
 		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
@@ -78,12 +78,24 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 			return CreateResponse(success, message, existingData);
 		}
 
-		protected virtual T ReadResponseJson(JsonReader reader, JsonSerializer serializer)
-		{
-			return default;
-		}
+		protected abstract T ReadResponseJson(JsonReader reader, JsonSerializer serializer);
 
 		protected abstract T CreateResponse(bool success, string? message, T existingData);
+	}
+	
+	internal sealed class ResponseConverter : ResponseConverter<Response>
+	{
+		protected override void WriteResponseJson(JsonWriter writer, Response value, JsonSerializer serializer) { }
+
+		protected override Response ReadResponseJson(JsonReader reader, JsonSerializer serializer)
+		{
+			throw new NotSupportedException("This method should not be called. This probably means that the response has extra data that is not being handled.");
+		}
+
+		protected override Response CreateResponse(bool success, string? message, Response existingData)
+		{
+			return new Response(success, message);
+		}
 	}
 }
 #endif

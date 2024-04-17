@@ -20,7 +20,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new SubmitScoreResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -43,7 +43,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new SubmitScoreResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				return FromResult("");

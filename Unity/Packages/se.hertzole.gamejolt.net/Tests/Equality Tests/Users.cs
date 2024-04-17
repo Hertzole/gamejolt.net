@@ -7,15 +7,6 @@ namespace GameJolt.NET.Tests.Equality
 	public sealed class Users : EqualityTest
 	{
 		[Test]
-		public void AuthResponse()
-		{
-			TestEquality((a, b) => a == b, (a, b) => a != b,
-				new AuthResponse(true, "message"),
-				new AuthResponse(false, "message"),
-				new AuthResponse(true, "message2"));
-		}
-
-		[Test]
 		public void User()
 		{
 			TestEquality((a, b) => a == b, (a, b) => a != b,

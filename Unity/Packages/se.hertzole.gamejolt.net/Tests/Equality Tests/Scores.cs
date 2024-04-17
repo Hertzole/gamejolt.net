@@ -60,15 +60,6 @@ namespace GameJolt.NET.Tests.Equality
 		}
 
 		[Test]
-		public void SubmitScoreResponse()
-		{
-			TestEquality((a, b) => a == b, (a, b) => a != b,
-				new SubmitScoreResponse(true, "message"),
-				new SubmitScoreResponse(false, "message"),
-				new SubmitScoreResponse(true, "message2"));
-		}
-
-		[Test]
 		public void TableInternal()
 		{
 			TestEquality((a, b) => a == b, (a, b) => a != b,

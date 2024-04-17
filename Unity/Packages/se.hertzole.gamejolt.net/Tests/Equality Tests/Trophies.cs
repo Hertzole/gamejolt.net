@@ -30,15 +30,6 @@ namespace GameJolt.NET.Tests.Equality
 		}
 
 		[Test]
-		public void TrophyResponse()
-		{
-			TestEquality((a, b) => a == b, (a, b) => a != b,
-				new TrophyResponse(true, "message"),
-				new TrophyResponse(false, "message"),
-				new TrophyResponse(true, "message2"));
-		}
-
-		[Test]
 		public void GameJoltTrophy()
 		{
 			TestEquality((a, b) => a == b, (a, b) => a != b,
