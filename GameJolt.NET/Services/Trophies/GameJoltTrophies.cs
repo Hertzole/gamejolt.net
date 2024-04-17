@@ -209,7 +209,7 @@ namespace Hertzole.GameJolt
 				builder.Append(trophyId);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
+				Response response = serializer.Deserialize<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
@@ -246,7 +246,7 @@ namespace Hertzole.GameJolt
 				builder.Append(trophyId);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				TrophyResponse response = serializer.Deserialize<TrophyResponse>(json);
+				Response response = serializer.Deserialize<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{

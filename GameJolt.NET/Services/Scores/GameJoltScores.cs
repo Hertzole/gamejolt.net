@@ -126,7 +126,7 @@ namespace Hertzole.GameJolt
 				}
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				SubmitScoreResponse response = serializer.Deserialize<SubmitScoreResponse>(json);
+				Response response = serializer.Deserialize<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
