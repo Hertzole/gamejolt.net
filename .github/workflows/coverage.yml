@@ -42,10 +42,13 @@ jobs:
           path: Coverage/unity/
           pattern: unity-*-coverage
 
+      - name: What do we have here
+        run: ls -R Coverage
+
       - name: Generate report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
         with:
-          reports: "Coverage/**.xml"
+          reports: "Coverage/net/*/*.xml;Coverage/unity/*/*.xml"
           targetdir: "Coverage/report"
           reporttypes: "HtmlInline_AzurePipelines;Cobertura;Badges"
 
