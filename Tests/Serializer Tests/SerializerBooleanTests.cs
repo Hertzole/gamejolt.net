@@ -10,18 +10,14 @@ namespace GameJolt.NET.Tests
 {
 	[TestFixture(typeof(GetDataResponse))]
 	[TestFixture(typeof(GetKeysResponse))]
-	[TestFixture(typeof(StoreDataResponse))]
+	[TestFixture(typeof(Response))]
 	[TestFixture(typeof(UpdateDataResponse))]
 	[TestFixture(typeof(FetchFriendsResponse))]
 	[TestFixture(typeof(GetScoreRankResponse))]
 	[TestFixture(typeof(GetScoresResponse))]
 	[TestFixture(typeof(GetTablesResponse))]
-	[TestFixture(typeof(SubmitScoreResponse))]
-	[TestFixture(typeof(SessionResponse))]
 	[TestFixture(typeof(FetchTimeResponse))]
 	[TestFixture(typeof(FetchTrophiesResponse))]
-	[TestFixture(typeof(TrophyResponse))]
-	[TestFixture(typeof(AuthResponse))]
 	[TestFixture(typeof(UsersFetchResponse))]
 	internal class SerializerBooleanTests<T> where T : IResponse
 	{

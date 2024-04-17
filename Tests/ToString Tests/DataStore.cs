@@ -43,15 +43,6 @@ namespace GameJolt.NET.Tests.ToString
 		}
 
 		[Test]
-		public void StoreDataResponse()
-		{
-			bool success = faker.Random.Bool();
-			string message = faker.Random.Utf16String();
-
-			Assert.That(new StoreDataResponse(success, message).ToString(), Is.EqualTo($"StoreDataResponse (Success: {success}, Message: {message})"));
-		}
-
-		[Test]
 		public void UpdateDataResponse()
 		{
 			string data = faker.Random.Utf16String();

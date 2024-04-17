@@ -33,15 +33,6 @@ namespace GameJolt.NET.Tests.Equality
 				new GetKeysResponse(true, "message", new DataKey[] { new DataKey("key") }),
 				new GetKeysResponse(true, "message", new DataKey[] { new DataKey("key"), new DataKey("key2") }));
 		}
-
-		[Test]
-		public void StoreDataResponse()
-		{
-			TestEquality((a, b) => a == b, (a, b) => a != b,
-				new StoreDataResponse(true, "message"),
-				new StoreDataResponse(false, "message"),
-				new StoreDataResponse(true, "message2"));
-		}
 		
 		[Test]
 		public void UpdateDataResponse()
