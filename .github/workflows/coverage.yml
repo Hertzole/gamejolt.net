@@ -1,0 +1,56 @@
+name: Code coverage report
+on:
+  workflow_call:
+    secrets:
+      access_token:
+        required: true
+    inputs:
+      net_test_reports:
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  generate:
+    name: Generate coverage report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            5
+            6
+            7
+            8
+
+      - name: Get .NET test reports
+        if: ${{ inputs.net_test_reports != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: "${{ inputs.net_test_reports }}"
+          path: Coverage/net/
+
+      - name: Get Unity coverage reports
+        uses: actions/download-artifact@v4
+        with:
+          path: Coverage/unity/
+          pattern: unity-*-coverage
+
+      - name: Generate report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
+        with:
+          reports: "Coverage/**.xml"
+          targetdir: "Coverage/report"
+          reporttypes: "HtmlInline_AzurePipelines;Cobertura;Badges"
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: Coverage/report

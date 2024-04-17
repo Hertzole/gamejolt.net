@@ -53,6 +53,16 @@ jobs:
       unity_version: ${{ matrix.unity-version }}
       test_results_name: "Test Results - Unity ${{ matrix.unity-version }}"
 
+  coverage:
+    name: SonarScan
+    needs: [unity-test, net_test]
+    if: github.event_name != 'pull_request' # Coverage shouldn't be generated for PRs
+    uses: ./.github/workflows/coverage.yml
+    secrets:
+      access_token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      net_test_reports: ${{ needs.net_test.outputs.test_results }}
+
   sonarcloud:
     name: SonarScan
     needs: [unity-test, net_test]
