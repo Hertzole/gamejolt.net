@@ -15,6 +15,7 @@ using Hertzole.GameJolt.Serialization.Newtonsoft;
 
 namespace Hertzole.GameJolt
 {
+	[Obsolete("Use Response instead.", true)]
 	internal readonly struct SubmitScoreResponse : IResponse, IEquatable<SubmitScoreResponse>
 	{
 		[JsonName("success")]

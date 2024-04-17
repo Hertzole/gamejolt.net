@@ -15,6 +15,7 @@ using System;
 
 namespace Hertzole.GameJolt
 {
+	[Obsolete("Use Response instead.", true)]
 	internal readonly struct StoreDataResponse : IResponse, IEquatable<StoreDataResponse>
 	{
 		[JsonName("success")]

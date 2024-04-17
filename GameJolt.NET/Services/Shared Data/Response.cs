@@ -1,22 +1,19 @@
 ﻿#nullable enable
 
-using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
+using System;
 
 namespace Hertzole.GameJolt
 {
-	[Obsolete("Use Response instead.", true)]
-	internal readonly struct AuthResponse : IResponse, IEquatable<AuthResponse>
+	internal readonly struct Response : IResponse, IEquatable<Response>
 	{
 		/// <summary>
 		///     Whether the request succeeded or failed.
@@ -24,7 +21,6 @@ namespace Hertzole.GameJolt
 		[JsonName("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public bool Success { get; }
-
 		/// <summary>
 		///     If the request was not successful, this will contain the error message.
 		/// </summary>
@@ -32,20 +28,20 @@ namespace Hertzole.GameJolt
 		public string? Message { get; }
 
 		[JsonConstructor]
-		public AuthResponse(bool success, string? message)
+		public Response(bool success, string? message)
 		{
 			Success = success;
 			Message = message;
 		}
 
-		public bool Equals(AuthResponse other)
+		public bool Equals(Response other)
 		{
 			return EqualityHelper.ResponseEquals(this, other);
 		}
 
 		public override bool Equals(object? obj)
 		{
-			return obj is AuthResponse other && Equals(other);
+			return obj is Response other && Equals(other);
 		}
 
 		public override int GetHashCode()
@@ -53,19 +49,19 @@ namespace Hertzole.GameJolt
 			return EqualityHelper.ResponseHashCode(0, this);
 		}
 
-		public static bool operator ==(AuthResponse left, AuthResponse right)
+		public static bool operator ==(Response left, Response right)
 		{
 			return left.Equals(right);
 		}
 
-		public static bool operator !=(AuthResponse left, AuthResponse right)
+		public static bool operator !=(Response left, Response right)
 		{
 			return !left.Equals(right);
 		}
 
 		public override string ToString()
 		{
-			return $"{nameof(AuthResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message})";
+			return $"{nameof(Response)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message})";
 		}
 	}
 }
