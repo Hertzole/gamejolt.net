@@ -33,15 +33,15 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Invoked when a session is opened.
 		/// </summary>
-		public static event Action? OnSessionOpened;
+		public event Action? OnSessionOpened;
 		/// <summary>
 		///     Invoked when a session is closed.
 		/// </summary>
-		public static event Action? OnSessionClosed;
+		public event Action? OnSessionClosed;
 		/// <summary>
 		///     Invoked when a session is pinged.
 		/// </summary>
-		public static event Action? OnSessionPinged;
+		public event Action? OnSessionPinged;
 
 		private const string ENDPOINT = "sessions/";
 		internal const string OPEN_ENDPOINT = ENDPOINT + "open/";
