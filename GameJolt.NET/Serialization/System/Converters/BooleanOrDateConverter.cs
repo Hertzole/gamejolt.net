@@ -18,7 +18,16 @@ namespace Hertzole.GameJolt
 				case JsonTokenType.False:
 					return false;
 				case JsonTokenType.Number:
-					return reader.GetInt32() != 0;
+					long number = reader.GetInt64();
+					switch (number)
+					{
+						case 0:
+							return false;
+						case 1:
+							return true;
+						default:
+							throw new JsonException($"Can't convert to BooleanOrDate from {number}");
+					}
 				case JsonTokenType.String:
 					string? value = reader.GetString();
 					if (string.IsNullOrEmpty(value))
