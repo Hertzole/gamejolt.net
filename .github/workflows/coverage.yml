@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-badges
-          path: Coverage/report/badge*.xml
+          path: Coverage/report/badge*.svg
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
