@@ -24,7 +24,9 @@ namespace GameJolt.NET.Tests
 			new object[] { "\"FALSE\"", false },
 			new object[] { "\"1\"", true },
 			new object[] { "\"0\"", false },
-			new object[] { "\"9 months ago\"", true }
+			new object[] { "\"9 months ago\"", true },
+			new object[] { 0, false },
+			new object[] { 1, true }
 		};
 
 		[Test]
@@ -49,6 +51,13 @@ namespace GameJolt.NET.Tests
 		{
 			Assert.Throws<JsonException>(() =>
 				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":null}]}}"));
+		}
+
+		[Test]
+		public void InvalidInteger_ThrowsException()
+		{
+			Assert.Throws<JsonException>(() =>
+				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":2}]}}"));
 		}
 	}
 }

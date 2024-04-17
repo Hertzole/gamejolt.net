@@ -1,9 +1,10 @@
 ﻿#if !NET6_0_OR_GREATER
 #nullable enable
 using System;
+using Hertzole.GameJolt.Serialization.Shared;
 using Newtonsoft.Json;
 
-namespace Hertzole.GameJolt
+namespace Hertzole.GameJolt.Serialization.Newtonsoft
 {
 	internal sealed class UserConverter : JsonConverter<User>
 	{

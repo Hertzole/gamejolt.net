@@ -373,9 +373,7 @@ namespace GameJolt.NET.Tests
 		}
 		
 		[Test]
-		[TestCase(true)]
-		[TestCase(false)]
-		public async Task GetTrophies_Achieved_ValidUrl(bool achieved)
+		public async Task GetTrophies_Achieved_ValidUrl([Values] bool achieved)
 		{
 			await AuthenticateAsync();
 			

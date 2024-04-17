@@ -5,7 +5,7 @@ using System;
 using System.Globalization;
 using Newtonsoft.Json;
 
-namespace Hertzole.GameJolt
+namespace Hertzole.GameJolt.Serialization.Newtonsoft
 {
 	internal abstract class GameJoltEnumConverter<T> : JsonConverter<T> where T : struct, Enum
 	{

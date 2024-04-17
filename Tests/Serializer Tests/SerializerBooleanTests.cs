@@ -48,12 +48,14 @@ namespace GameJolt.NET.Tests
 			new object[] { "\"Yes\"", true },
 			new object[] { "\"No\"", false },
 			new object[] { "\"yEs\"", true },
-			new object[] { "\"nO\"", false }
+			new object[] { "\"nO\"", false },
+			new object[] { 0, false },
+			new object[] { 1, true }
 		};
 
 		[Test]
 		[TestCaseSource(nameof(testCases))]
-		public void CanDeserialize(string boolean, bool expected)
+		public void CanDeserialize(object boolean, bool expected)
 		{
 			T response = GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": " + boolean + "}}");
 
@@ -76,6 +78,12 @@ namespace GameJolt.NET.Tests
 		public void InvalidToken_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": []}}"));
+		}
+		
+		[Test]
+		public void InvalidNumber_ThrowsException()
+		{
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": 2}}"));
 		}
 	}
 }
