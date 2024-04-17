@@ -59,3 +59,9 @@ jobs:
         with:
           name: coverage-report
           path: Coverage/report
+
+      - name: Deploy GitHub Pages site
+        uses: actions/deploy-pages@v4.0.5
+        with:
+          artifact_name: coverage-report
+            
