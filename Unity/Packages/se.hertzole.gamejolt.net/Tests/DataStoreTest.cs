@@ -231,9 +231,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Prepend)]
-		[TestCase(StringOperation.Append)]
-		public async Task UpdateGlobal_String_Success(StringOperation operation)
+		public async Task UpdateGlobal_String_Success([Values] StringOperation operation)
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -274,13 +272,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(NumericOperation.Add)]
-		[TestCase(NumericOperation.Subtract)]
-		[TestCase(NumericOperation.Multiply)]
-		[TestCase(NumericOperation.Divide)]
-		[TestCase(NumericOperation.Append)]
-		[TestCase(NumericOperation.Prepend)]
-		public async Task UpdateGlobal_Int_Success(NumericOperation operation)
+		public async Task UpdateGlobal_Int_Success([Values] NumericOperation operation)
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -344,9 +336,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Prepend)]
-		[TestCase(StringOperation.Append)]
-		public async Task UpdateUser_Authenticated_String_Success(StringOperation operation)
+		public async Task UpdateUser_Authenticated_String_Success([Values] StringOperation operation)
 		{
 			await AuthenticateAsync();
 
@@ -389,13 +379,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(NumericOperation.Add)]
-		[TestCase(NumericOperation.Subtract)]
-		[TestCase(NumericOperation.Multiply)]
-		[TestCase(NumericOperation.Divide)]
-		[TestCase(NumericOperation.Append)]
-		[TestCase(NumericOperation.Prepend)]
-		public async Task UpdateUser_Authenticated_Int_Success(NumericOperation operation)
+		public async Task UpdateUser_Authenticated_Int_Success([Values] NumericOperation operation)
 		{
 			await AuthenticateAsync();
 
@@ -461,9 +445,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Prepend)]
-		[TestCase(StringOperation.Append)]
-		public async Task UpdateUser_NotAuthenticated_String_Fail(StringOperation operation)
+		public async Task UpdateUser_NotAuthenticated_String_Fail([Values] StringOperation operation)
 		{
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", "1", operation);
 
@@ -473,13 +455,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(NumericOperation.Add)]
-		[TestCase(NumericOperation.Subtract)]
-		[TestCase(NumericOperation.Multiply)]
-		[TestCase(NumericOperation.Divide)]
-		[TestCase(NumericOperation.Append)]
-		[TestCase(NumericOperation.Prepend)]
-		public async Task UpdateUser_NotAuthenticated_Int_Fail(NumericOperation operation)
+		public async Task UpdateUser_NotAuthenticated_Int_Fail([Values] NumericOperation operation)
 		{
 			GameJoltResult<int> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", 1, operation);
 
@@ -786,9 +762,7 @@ namespace GameJolt.NET.Tests
 		}
 		
 		[Test]
-		[TestCase(true)]
-		[TestCase(false)]
-		public async Task Set_Bool_ValidUrl(bool value)
+		public async Task Set_Bool_ValidUrl([Values] bool value)
 		{
 			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", value),
 				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={value.ToString().ToLowerInvariant()}")); });
@@ -833,9 +807,7 @@ namespace GameJolt.NET.Tests
 		}
 		
 		[Test]
-		[TestCase(true)]
-		[TestCase(false)]
-		public async Task SetAsCurrentUser_Bool_ValidUrl(bool value)
+		public async Task SetAsCurrentUser_Bool_ValidUrl([Values] bool value)
 		{
 			await AuthenticateAsync();
 
@@ -866,9 +838,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Prepend)]
-		[TestCase(StringOperation.Append)]
-		public async Task UpdateAsync_String_ValidUrl(StringOperation operation)
+		public async Task UpdateAsync_String_ValidUrl([Values] StringOperation operation)
 		{
 			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsync("Key", "Value", operation), url =>
 			{
@@ -878,13 +848,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(NumericOperation.Add)]
-		[TestCase(NumericOperation.Subtract)]
-		[TestCase(NumericOperation.Multiply)]
-		[TestCase(NumericOperation.Divide)]
-		[TestCase(NumericOperation.Append)]
-		[TestCase(NumericOperation.Prepend)]
-		public async Task UpdateAsync_Int_ValidUrl(NumericOperation operation)
+		public async Task UpdateAsync_Int_ValidUrl([Values] NumericOperation operation)
 		{
 			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsync("Key", 1, operation), url =>
 			{
@@ -894,9 +858,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(StringOperation.Prepend)]
-		[TestCase(StringOperation.Append)]
-		public async Task UpdateAsyncAsCurrentUser_String_ValidUrl(StringOperation operation)
+		public async Task UpdateAsyncAsCurrentUser_String_ValidUrl([Values] StringOperation operation)
 		{
 			await AuthenticateAsync();
 
@@ -908,13 +870,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(NumericOperation.Add)]
-		[TestCase(NumericOperation.Subtract)]
-		[TestCase(NumericOperation.Multiply)]
-		[TestCase(NumericOperation.Divide)]
-		[TestCase(NumericOperation.Append)]
-		[TestCase(NumericOperation.Prepend)]
-		public async Task UpdateAsyncAsCurrentUser_Int_ValidUrl(NumericOperation operation)
+		public async Task UpdateAsyncAsCurrentUser_Int_ValidUrl([Values] NumericOperation operation)
 		{
 			await AuthenticateAsync();
 

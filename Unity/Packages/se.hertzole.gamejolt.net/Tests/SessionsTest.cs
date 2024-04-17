@@ -245,9 +245,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		[TestCase(SessionStatus.Active)]
-		[TestCase(SessionStatus.Idle)]
-		public async Task Ping_Authenticated_Success(SessionStatus status)
+		public async Task Ping_Authenticated_Success([Values] SessionStatus status)
 		{
 			await AuthenticateAsync();
 
@@ -468,9 +466,7 @@ namespace GameJolt.NET.Tests
 		}
 		
 		[Test]
-		[TestCase(SessionStatus.Active)]
-		[TestCase(SessionStatus.Idle)]
-		public async Task Ping_ValidUrl(SessionStatus status)
+		public async Task Ping_ValidUrl([Values] SessionStatus status)
 		{
 			await AuthenticateAsync();
 
