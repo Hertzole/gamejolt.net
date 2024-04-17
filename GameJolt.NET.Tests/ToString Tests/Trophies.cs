@@ -43,17 +43,6 @@ namespace GameJolt.NET.Tests.ToString
 		}
 
 		[Test]
-		public void TrophyResponse([Values] bool nullMessage)
-		{
-			bool success = faker.Random.Bool();
-			string? message = nullMessage ? null : faker.Lorem.Sentence();
-
-			TrophyResponse response = new TrophyResponse(success, message);
-
-			Assert.That(response.ToString(), Is.EqualTo($"{nameof(TrophyResponse)} (Success: {success}, Message: {message})"));
-		}
-
-		[Test]
 		public void GameJoltTrophy()
 		{
 			int id = faker.Random.Int();

@@ -210,7 +210,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -231,7 +231,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(false, "Not authenticated.")));
+					return FromResult(serializer.Serialize(new Response(false, "Not authenticated.")));
 				}
 
 				return FromResult("");
@@ -255,7 +255,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.Serialize(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
 				}
 
 				return FromResult("");
@@ -279,7 +279,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -300,7 +300,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(false, "Not authenticated.")));
+					return FromResult(serializer.Serialize(new Response(false, "Not authenticated.")));
 				}
 
 				return FromResult("");
@@ -324,7 +324,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.Serialize(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
 				}
 
 				return FromResult("");
@@ -348,7 +348,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new TrophyResponse(false, GameJoltLockedTrophyException.MESSAGE)));
+					return FromResult(serializer.Serialize(new Response(false, GameJoltLockedTrophyException.MESSAGE)));
 				}
 
 				return FromResult("");

@@ -11,17 +11,6 @@ namespace GameJolt.NET.Tests.ToString
 	public sealed class Users : BaseToStringTest
 	{
 		[Test]
-		public void AuthResponse([Values] bool nullMessage)
-		{
-			bool success = faker.Random.Bool();
-			string? message = nullMessage ? null : faker.Lorem.Sentence();
-
-			AuthResponse response = new AuthResponse(success, message);
-
-			Assert.That(response.ToString(), Is.EqualTo($"AuthResponse (Success: {success}, Message: {message})"));
-		}
-
-		[Test]
 		public void User([Values] bool nullUserWebsite)
 		{
 			int id = faker.Random.Int();

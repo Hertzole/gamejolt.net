@@ -337,7 +337,7 @@ namespace GameJolt.NET.Tests.Unity
 				if (arg.Contains("sessions/ping") || arg.Contains("sessions/open"))
 				{
 					pinged = true;
-					return FromResult(serializer.Serialize(new SessionResponse(true, null)));
+					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
 				return FromResult("");

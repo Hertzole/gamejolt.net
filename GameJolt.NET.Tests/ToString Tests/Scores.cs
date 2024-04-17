@@ -74,17 +74,6 @@ namespace GameJolt.NET.Tests.ToString
 		}
 
 		[Test]
-		public void SubmitScoreResponse()
-		{
-			bool success = faker.Random.Bool();
-			string message = faker.Lorem.Sentence();
-
-			SubmitScoreResponse response = new SubmitScoreResponse(success, message);
-
-			Assert.That(response.ToString(), Is.EqualTo($"{nameof(SubmitScoreResponse)} (Success: {success}, Message: {message})"));
-		}
-
-		[Test]
 		public void TableInternal()
 		{
 			int id = faker.Random.Int();
