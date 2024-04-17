@@ -15,7 +15,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -31,7 +31,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -47,7 +47,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -63,7 +63,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -81,7 +81,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -99,7 +99,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -117,7 +117,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -135,7 +135,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -191,7 +191,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -209,7 +209,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new StoreDataResponse(true, null));
+				string json = serializer.Serialize(new Response(true, null));
 
 				return FromResult(json);
 			});

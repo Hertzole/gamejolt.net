@@ -14,7 +14,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Authenticate_ValidToken_Success()
 		{
-			string authJson = serializer.Serialize(new AuthResponse(true, null));
+			string authJson = serializer.Serialize(new Response(true, null));
 			string userJson =
 				serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
@@ -44,7 +44,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Authenticate_InvalidToken_Failure()
 		{
-			string authJson = serializer.Serialize(new AuthResponse(false, GameJoltAuthenticationException.MESSAGE));
+			string authJson = serializer.Serialize(new Response(false, GameJoltAuthenticationException.MESSAGE));
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
@@ -57,7 +57,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Authenticate_InvokesAuthenticateEvent_Success()
 		{
-			string authJson = serializer.Serialize(new AuthResponse(true, null));
+			string authJson = serializer.Serialize(new Response(true, null));
 			string userJson =
 				serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
@@ -91,7 +91,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Authenticate_DoesNotInvokeAuthenticateEvent_Failure()
 		{
-			string authJson = serializer.Serialize(new AuthResponse(false, GameJoltAuthenticationException.MESSAGE));
+			string authJson = serializer.Serialize(new Response(false, GameJoltAuthenticationException.MESSAGE));
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			bool invoked = false;
@@ -110,7 +110,7 @@ namespace GameJolt.NET.Tests
 		[TestCase("https://gamejolt.net/game/bla/bla/bla?gjapi_username=test&gjapi_token=test")]
 		public async Task Authenticate_Url_Success(string url)
 		{
-			string authJson = serializer.Serialize(new AuthResponse(true, null));
+			string authJson = serializer.Serialize(new Response(true, null));
 			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -141,7 +141,7 @@ namespace GameJolt.NET.Tests
 		[TestCase("https://gamejolt.net/game/bla/bla/bla?gjapi_username=test&gjapi_token=test")]
 		public async Task Authenticate_Url_Failure(string url)
 		{
-			string authJson = serializer.Serialize(new AuthResponse(false, GameJoltAuthenticationException.MESSAGE));
+			string authJson = serializer.Serialize(new Response(false, GameJoltAuthenticationException.MESSAGE));
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(url);
@@ -154,7 +154,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Authenticate_CredentialsFile_Success()
 		{
-			string authJson = serializer.Serialize(new AuthResponse(true, null));
+			string authJson = serializer.Serialize(new Response(true, null));
 			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
