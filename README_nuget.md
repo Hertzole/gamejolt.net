@@ -2,6 +2,14 @@
 
 ### A modern C# wrapper around the GameJolt Game API for .NET and Unity
 
+[![GameJolt version](https://img.shields.io/badge/Game_Jolt_API-v1.2-%23CCFF00?style=flat&logo=gamejolt)](https://gamejolt.com/game-api)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=hertzole_gamejolt-net)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=bugs)](https://sonarcloud.io/summary/new_code?id=hertzole_gamejolt-net)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=hertzole_gamejolt-net)
+[![Code coverage](https://raw.githubusercontent.com/Hertzole/gamejolt.net/develop/docs/badge_linecoverage.svg)](https://hertzole.github.io/gamejolt.net)  
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor_me-GitHub-%23EA4AAA?style=flat&logo=githubsponsors)](https://github.com/sponsors/Hertzole)
+[![Sponsor on Ko-fi](https://img.shields.io/badge/Support_me-Ko--fi-%23FF5E5B?style=flat&logo=ko-fi)](https://ko-fi.com/Hertzole)
+
 ## 🔨 Getting Started
 
 ### Result Pattern
