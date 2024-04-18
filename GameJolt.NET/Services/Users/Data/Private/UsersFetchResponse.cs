@@ -54,7 +54,7 @@ namespace Hertzole.GameJolt
 			unchecked
 			{
 				int hashCode = EqualityHelper.ResponseHashCode(0, this);
-				hashCode = (hashCode * 397) ^ (Users != null ? Users.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ Users.GetHashCode();
 				return hashCode;
 			}
 		}

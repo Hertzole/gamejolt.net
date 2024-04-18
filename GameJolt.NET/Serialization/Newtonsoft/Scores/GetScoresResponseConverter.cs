@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected override GetScoresResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			ScoreInternal[] scores = Array.Empty<ScoreInternal>();
+			ScoreInternal[]? scores = null;
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -26,7 +26,16 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				if (propertyName.Equals("scores", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					scores = serializer.Deserialize<ScoreInternal[]>(reader)! ?? Array.Empty<ScoreInternal>();
+					
+					if (reader.TokenType == JsonToken.Null)
+					{
+						scores = Array.Empty<ScoreInternal>();
+					}
+					else
+					{
+						scores = serializer.Deserialize<ScoreInternal[]>(reader);
+					}
+					
 					break;
 				}
 

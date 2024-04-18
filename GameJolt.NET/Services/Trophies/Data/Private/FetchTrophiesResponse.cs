@@ -3,13 +3,11 @@
 using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -18,7 +16,7 @@ namespace Hertzole.GameJolt
 	internal readonly struct FetchTrophiesResponse : IResponse, IEquatable<FetchTrophiesResponse>
 	{
 		[JsonName("trophies")]
-		public readonly TrophyInternal[]? trophies;
+		public readonly TrophyInternal[] trophies;
 
 		[JsonName("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
@@ -29,7 +27,7 @@ namespace Hertzole.GameJolt
 		[JsonConstructor]
 		public FetchTrophiesResponse(bool success, string? message, TrophyInternal[]? trophies)
 		{
-			this.trophies = trophies;
+			this.trophies = trophies ?? Array.Empty<TrophyInternal>();
 			Success = success;
 			Message = message;
 		}
@@ -49,7 +47,7 @@ namespace Hertzole.GameJolt
 			unchecked
 			{
 				int hashCode = EqualityHelper.ResponseHashCode(0, this);
-				hashCode = (hashCode * 397) ^ (trophies != null ? trophies.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ trophies.GetHashCode();
 				return hashCode;
 			}
 		}
