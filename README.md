@@ -9,7 +9,7 @@
 <a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=sqale_rating" alt="Sonarcloud maintainability"></a>
 <a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=bugs" alt="Sonarcloud bugs"></a>
 <a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=code_smells" alt="Sonarcloud code smells"></a>
-<a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=coverage" alt="Sonarcloud code coverage"></a>
+<a href="https://hertzole.github.io/gamejolt.net"><img src="https://raw.githubusercontent.com/Hertzole/gamejolt.net/develop/docs/badge_linecoverage.svg" alt="Code coverage"></a>
 </div>
 
 ## 🔨 Getting Started
