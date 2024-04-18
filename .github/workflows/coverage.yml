@@ -62,12 +62,23 @@ jobs:
         with:
           name: coverage-report
           path: Coverage/report
-      
-      - name: Upload badges
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-badges
-          path: Coverage/report/badge*.svg
+
+      - name: Move badges
+        run: |
+          mkdir -p ./docs/
+          mv Coverage/report/badge_branchcoverage.svg ./docs/
+          mv Coverage/report/badge_linecoverage.svg ./docs/
+          mv Coverage/report/badge_methodcoverage.svg ./docs/
+
+      - name: Commit badges
+        continue-on-error: true
+        run: |
+          git config --global --add safe.directory /__w/gamejolt.net/gamejolt.net
+          git config --global user.name 'github-bot'
+          git config --global user.email 'github-bot@users.noreply.github.com'
+          git add ./docs/
+          git commit -am "docs: update coverage badges from '${{ github.event.head_commit.message }}'"
+          git push -f -u origin ${{ github.ref }}
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3.0.1
