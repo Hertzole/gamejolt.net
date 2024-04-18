@@ -232,11 +232,6 @@ namespace Hertzole.GameJolt
 					return GameJoltResult<GameJoltUser>.Error(exception!);
 				}
 
-				if (response.Users == null)
-				{
-					return GameJoltResult<GameJoltUser>.Error(new NullReferenceException("Users array is null. This is a bug!"));
-				}
-
 				if (response.Users.Length == 0)
 				{
 					return GameJoltResult<GameJoltUser>.Error(new GameJoltInvalidUserException());
@@ -308,11 +303,6 @@ namespace Hertzole.GameJolt
 				if (response.TryGetException(out Exception? exception))
 				{
 					return GameJoltResult<GameJoltUser[]>.Error(exception!);
-				}
-
-				if (response.Users == null)
-				{
-					return GameJoltResult<GameJoltUser[]>.Error(new NullReferenceException("Users array is null. This is a bug!"));
 				}
 
 				if (response.Users.Length == 0)

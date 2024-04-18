@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected override UsersFetchResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			User[] users = Array.Empty<User>();
+			User[]? users = null;
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -26,7 +26,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				if (propertyName.Equals("users", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					users = serializer.Deserialize<User[]>(reader)! ?? Array.Empty<User>();
+					if (reader.TokenType == JsonToken.Null)
+					{
+						users = Array.Empty<User>();
+					}
+					else
+					{
+						users = serializer.Deserialize<User[]>(reader);
+					}
 					break;
 				}
 
