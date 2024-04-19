@@ -26,7 +26,9 @@ namespace GameJolt.NET.Tests
 			GetRandomInt(true, true),
 			GetRandomInt(true, false),
 			GetRandomInt(false, true),
-			GetRandomInt(false, false)
+			GetRandomInt(false, false),
+			new object[] { "1.1", 1 },
+			new object[] { "\"1.1\"", 1 },
 		};
 
 		[Test]
@@ -47,6 +49,17 @@ namespace GameJolt.NET.Tests
 		public void InvalidToken_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("true") + "}"));
+		}
+		
+		[Test]
+		public void EmptyString_ThrowsException()
+		{
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("\"\"") + "}"));
+		}
+		
+		public void NullString_ThrowsException()
+		{
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("") + "}"));
 		}
 
 		private static string GetTypeJson(string value)
