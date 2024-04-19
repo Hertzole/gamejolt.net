@@ -49,7 +49,8 @@ namespace Hertzole.GameJolt
 
 		private static readonly JsonSerializerSettings settings = new JsonSerializerSettings
 		{
-			Converters = converters
+			Converters = converters,
+			StringEscapeHandling = StringEscapeHandling.EscapeHtml
 		};
 
 		public string Serialize<T>(T value)

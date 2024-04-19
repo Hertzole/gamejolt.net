@@ -25,11 +25,15 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 			writer.WritePropertyName("success");
 			writer.WriteValue(value.Success);
+			writer.WritePropertyName("message");
 
 			if (!string.IsNullOrEmpty(value.Message))
 			{
-				writer.WritePropertyName("message");
 				writer.WriteValue(value.Message);
+			}
+			else
+			{
+				writer.WriteNull();
 			}
 
 			WriteResponseJson(writer, value, serializer);
@@ -42,7 +46,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			bool success = false;
-			string? message = string.Empty;
+			string? message = null;
 			T existingData = default;
 
 			reader.Read();
@@ -58,7 +62,15 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				}
 				else if (propertyName.Equals("message", StringComparison.OrdinalIgnoreCase))
 				{
-					message = reader.ReadAsString();
+					reader.Read();
+					if(reader.TokenType == JsonToken.Null)
+					{
+						message = null;
+					}
+					else
+					{
+						message = (string) reader.Value!;
+					}
 				}
 				else
 				{
