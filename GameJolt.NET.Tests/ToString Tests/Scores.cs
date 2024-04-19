@@ -26,7 +26,7 @@ namespace GameJolt.NET.Tests.ToString
 		[Test]
 		public void GetScoresResponse([Values] ArrayInitialization arrayInitialization)
 		{
-			ScoreInternal[]? scores = CreateArray(arrayInitialization, f => new ScoreInternal(f.Random.Int(), f.Random.Utf16String(), f.Lorem.Sentence(),
+			ScoreInternal[]? scores = arrayInitialization.CreateArray(f => new ScoreInternal(f.Random.Int(), f.Random.Utf16String(), f.Lorem.Sentence(),
 				f.Internet.UserName(),
 				f.Random.Int(), f.Internet.UserName(), f.Random.Utf16String(), f.Random.Long()));
 
@@ -42,8 +42,7 @@ namespace GameJolt.NET.Tests.ToString
 		[Test]
 		public void GetTablesResponse([Values] ArrayInitialization arrayInitialization)
 		{
-			TableInternal[]? tables = CreateArray(arrayInitialization,
-				f => new TableInternal(f.Random.Int(), f.Internet.UserName(), f.Lorem.Sentence(), f.Random.Bool()));
+			TableInternal[]? tables = arrayInitialization.CreateArray(f => new TableInternal(f.Random.Int(), f.Internet.UserName(), f.Lorem.Sentence(), f.Random.Bool()));
 
 			bool success = faker.Random.Bool();
 			string message = faker.Lorem.Sentence();

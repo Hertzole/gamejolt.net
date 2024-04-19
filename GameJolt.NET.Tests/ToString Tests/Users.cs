@@ -37,8 +37,7 @@ namespace GameJolt.NET.Tests.ToString
 		[Test]
 		public void UsersFetchResponse([Values] ArrayInitialization arrayInitialization, [Values] bool nullMessage)
 		{
-			User[]? users = CreateArray(arrayInitialization,
-				f => new User(f.Random.Int(), f.PickRandom<UserType>(), f.Internet.UserName(), f.Internet.Avatar(), f.Random.String(), f.Random.Long(),
+			User[]? users = arrayInitialization.CreateArray(f => new User(f.Random.Int(), f.PickRandom<UserType>(), f.Internet.UserName(), f.Internet.Avatar(), f.Random.String(), f.Random.Long(),
 					f.Random.String(), f.Random.Long(), f.PickRandom<UserStatus>(), f.Company.CompanyName(), f.Internet.Url(), f.Lorem.Sentence()));
 
 			bool success = faker.Random.Bool();
