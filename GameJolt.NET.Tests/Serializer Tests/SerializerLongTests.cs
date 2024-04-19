@@ -22,7 +22,9 @@ namespace GameJolt.NET.Tests
 			GetRandomLong(true, true),
 			GetRandomLong(true, false),
 			GetRandomLong(false, true),
-			GetRandomLong(false, false)
+			GetRandomLong(false, false),
+			new object[] { "1.1", 1 },
+			new object[] { "\"1.1\"", 1 },
 		};
 
 		[Test]
