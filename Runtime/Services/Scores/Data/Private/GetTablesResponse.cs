@@ -3,15 +3,11 @@
 using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
-using JsonIgnore = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
-using JsonIgnore = Newtonsoft.Json.JsonIgnoreAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -25,7 +21,7 @@ namespace Hertzole.GameJolt
 		[JsonName("message")]
 		public readonly string? message;
 		[JsonName("tables")]
-		public readonly TableInternal[]? tables;
+		public readonly TableInternal[] tables;
 
 		[JsonIgnore]
 		public bool Success
@@ -43,7 +39,7 @@ namespace Hertzole.GameJolt
 		{
 			this.success = success;
 			this.message = message;
-			this.tables = tables;
+			this.tables = tables ?? Array.Empty<TableInternal>();
 		}
 
 		public bool Equals(GetTablesResponse other)
@@ -61,7 +57,7 @@ namespace Hertzole.GameJolt
 			unchecked
 			{
 				int hashCode = EqualityHelper.ResponseHashCode(0, this);
-				hashCode = (hashCode * 397) ^ (tables != null ? tables.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ tables.GetHashCode();
 				return hashCode;
 			}
 		}

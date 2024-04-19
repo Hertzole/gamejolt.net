@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected override FetchFriendsResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			FriendId[] friends = Array.Empty<FriendId>();
+			FriendId[]? friends = null;
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -26,7 +26,16 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				if (propertyName.Equals("friends", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					friends = serializer.Deserialize<FriendId[]>(reader) ?? Array.Empty<FriendId>();
+					
+					if (reader.TokenType == JsonToken.Null)
+					{
+						friends = Array.Empty<FriendId>();
+					}
+					else
+					{
+						friends = serializer.Deserialize<FriendId[]>(reader);
+					}
+					
 					break;
 				}
 

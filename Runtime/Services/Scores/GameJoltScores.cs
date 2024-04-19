@@ -191,11 +191,6 @@ namespace Hertzole.GameJolt
 
 				Debug.Assert(response.success, "Response was successful but success was false.");
 
-				if (response.tables == null)
-				{
-					return GameJoltResult<GameJoltTable[]>.Error(new NullReferenceException("Tables array was null. This is a bug!"));
-				}
-
 				GameJoltTable[] tables = new GameJoltTable[response.tables.Length];
 
 				for (int i = 0; i < response.tables.Length; i++)
@@ -264,11 +259,6 @@ namespace Hertzole.GameJolt
 				}
 
 				Debug.Assert(response.success, "Response was successful but success was false.");
-
-				if (response.scores == null)
-				{
-					return GameJoltResult<GameJoltScore[]>.Error(new NullReferenceException("Scores array was null. This is a bug!"));
-				}
 
 				GameJoltScore[] scores = new GameJoltScore[response.scores.Length];
 
