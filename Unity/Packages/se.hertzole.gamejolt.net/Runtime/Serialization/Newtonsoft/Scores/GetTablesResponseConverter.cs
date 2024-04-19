@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected override GetTablesResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			TableInternal[] tables = Array.Empty<TableInternal>();
+			TableInternal[]? tables = null;
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -26,7 +26,16 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				if (propertyName.Equals("tables", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					tables = serializer.Deserialize<TableInternal[]>(reader)! ?? Array.Empty<TableInternal>();
+					
+					if (reader.TokenType == JsonToken.Null)
+					{
+						tables = Array.Empty<TableInternal>();
+					}
+					else
+					{
+						tables = serializer.Deserialize<TableInternal[]>(reader);
+					}
+					
 					break;
 				}
 

@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected override GetKeysResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			DataKey[] keys = Array.Empty<DataKey>();
+			DataKey[]? keys = null;
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -27,7 +27,15 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				{
 					reader.Read();
 
-					keys = serializer.Deserialize<DataKey[]>(reader) ?? Array.Empty<DataKey>();
+					if (reader.TokenType == JsonToken.Null)
+					{
+						keys = Array.Empty<DataKey>();
+					}
+					else
+					{
+						keys = serializer.Deserialize<DataKey[]>(reader);
+					}
+
 					break;
 				}
 
