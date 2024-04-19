@@ -11,16 +11,6 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 	{
 		public static readonly StringOrNumberConverter Instance = new StringOrNumberConverter();
 
-		public override bool CanRead
-		{
-			get { return true; }
-		}
-
-		public override bool CanWrite
-		{
-			get { return true; }
-		}
-
 		public override void WriteJson(JsonWriter writer, string? value, JsonSerializer serializer)
 		{
 			writer.WriteValue(value);
@@ -28,26 +18,30 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		public override string? ReadJson(JsonReader reader, Type objectType, string? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
+			reader.Read();
+
 			if (reader.TokenType == JsonToken.Integer)
 			{
-				return reader.ReadAsInt32()!.Value.ToString(CultureInfo.InvariantCulture);
+				long lValue = (long) reader.Value!;
+				return lValue.ToString(CultureInfo.InvariantCulture);
 			}
 
 			if (reader.TokenType == JsonToken.Float)
 			{
-				return reader.ReadAsDouble()!.Value.ToString(CultureInfo.InvariantCulture);
+				double dValue = (double) reader.Value!;
+				return dValue.ToString(CultureInfo.InvariantCulture);
 			}
 
-			string? stringValue = reader.ReadAsString();
+			string? stringValue = reader.Value as string;
 
 			if (string.IsNullOrEmpty(stringValue))
 			{
 				return string.Empty;
 			}
 
-			if (int.TryParse(stringValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
+			if (long.TryParse(stringValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out long longValue))
 			{
-				return intValue.ToString(CultureInfo.InvariantCulture);
+				return longValue.ToString(CultureInfo.InvariantCulture);
 			}
 
 			if (double.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))

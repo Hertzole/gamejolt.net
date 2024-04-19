@@ -14,7 +14,7 @@ namespace Hertzole.GameJolt.Serialization.System
 		{
 			if (reader.TokenType == JsonTokenType.Number)
 			{
-				return reader.TryGetInt32(out int value)
+				return reader.TryGetInt64(out long value)
 					? value.ToString(CultureInfo.InvariantCulture)
 					: reader.GetDouble().ToString(CultureInfo.InvariantCulture);
 			}
