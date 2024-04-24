@@ -33,58 +33,53 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			UsersFetchResponse response = new UsersFetchResponse(success, message, users);
 			string json = Serialize(response);
 			
-			StringBuilder sb = new StringBuilder();
-
-			sb.Append("{\"success\":");
-			sb.Append(success.ToString().ToLower());
-			sb.Append(",\"message\":");
-			sb.Append(message == null ? "null" : $"\"{message}\"");
-			sb.Append(",\"users\":");
-			if (users == null || users.Length == 0)
+			string expected = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append("[]");
-			}
-			else
-			{
-				sb.Append("[");
-				for (int i = 0; i < users.Length; i++)
+				sb.Append(",\"users\":");
+				if (users == null || users.Length == 0)
 				{
-					sb.Append("{\"id\":");
-					sb.Append(users[i].id);
-					sb.Append(",\"type\":\"");
-					sb.Append(users[i].type);
-					sb.Append("\",\"username\":\"");
-					sb.Append(users[i].username.ReplaceWithUnicode());
-					sb.Append("\",\"avatar_url\":\"");
-					sb.Append(users[i].avatarUrl);
-					sb.Append("\",\"signed_up\":\"");
-					sb.Append(users[i].signedUp);
-					sb.Append("\",\"signed_up_timestamp\":");
-					sb.Append(users[i].signedUpTimestamp);
-					sb.Append(",\"last_logged_in\":\"");
-					sb.Append(users[i].lastLoggedIn);
-					sb.Append("\",\"last_logged_in_timestamp\":");
-					sb.Append(users[i].lastLoggedInTimestamp);
-					sb.Append(",\"status\":\"");
-					sb.Append(users[i].status);
-					sb.Append("\",\"developer_name\":\"");
-					sb.Append(users[i].displayName.ReplaceWithUnicode()); // Replace single quotes with the unicode character for single quotes.
-					sb.Append("\",\"developer_website\":");
-					sb.Append(users[i].userWebsite == null ? "null" : $"\"{users[i].userWebsite!.ReplaceWithUnicode()}\"");
-					sb.Append(",\"developer_description\":\"");
-					sb.Append(users[i].userDescription.ReplaceWithUnicode());
-					sb.Append("\"}");
-					if (i < users.Length - 1)
-					{
-						sb.Append(",");
-					}
+					sb.Append("[]");
 				}
-				sb.Append("]");
-			}
+				else
+				{
+					sb.Append("[");
+					for (int i = 0; i < users.Length; i++)
+					{
+						sb.Append("{\"id\":");
+						sb.Append(users[i].id);
+						sb.Append(",\"type\":\"");
+						sb.Append(users[i].type);
+						sb.Append("\",\"username\":\"");
+						sb.Append(users[i].username.ReplaceWithUnicode());
+						sb.Append("\",\"avatar_url\":\"");
+						sb.Append(users[i].avatarUrl);
+						sb.Append("\",\"signed_up\":\"");
+						sb.Append(users[i].signedUp);
+						sb.Append("\",\"signed_up_timestamp\":");
+						sb.Append(users[i].signedUpTimestamp);
+						sb.Append(",\"last_logged_in\":\"");
+						sb.Append(users[i].lastLoggedIn);
+						sb.Append("\",\"last_logged_in_timestamp\":");
+						sb.Append(users[i].lastLoggedInTimestamp);
+						sb.Append(",\"status\":\"");
+						sb.Append(users[i].status);
+						sb.Append("\",\"developer_name\":\"");
+						sb.Append(users[i].displayName.ReplaceWithUnicode()); // Replace single quotes with the unicode character for single quotes.
+						sb.Append("\",\"developer_website\":");
+						sb.Append(users[i].userWebsite == null ? "null" : $"\"{users[i].userWebsite!.ReplaceWithUnicode()}\"");
+						sb.Append(",\"developer_description\":\"");
+						sb.Append(users[i].userDescription.ReplaceWithUnicode());
+						sb.Append("\"}");
+						if (i < users.Length - 1)
+						{
+							sb.Append(",");
+						}
+					}
+					sb.Append("]");
+				}
+			});
 			
-			sb.Append("}");
-			
-			Assert.That(json, Is.EqualTo(sb.ToString()));
+			Assert.That(json, Is.EqualTo(expected));
 		}
 		
 		[Test]
