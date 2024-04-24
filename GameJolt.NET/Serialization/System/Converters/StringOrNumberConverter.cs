@@ -10,7 +10,7 @@ namespace Hertzole.GameJolt.Serialization.System
 {
 	internal sealed class StringOrNumberConverter : JsonConverter<string>
 	{
-		public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			if (reader.TokenType == JsonTokenType.Number)
 			{
@@ -36,7 +36,7 @@ namespace Hertzole.GameJolt.Serialization.System
 				return doubleValue.ToString(CultureInfo.InvariantCulture);
 			}
 
-			return reader.GetString();
+			return stringValue;
 		}
 
 		public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)

@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 			writer.WriteValue(value);
 		}
 
-		public override string? ReadJson(JsonReader reader, Type objectType, string? existingValue, bool hasExistingValue, JsonSerializer serializer)
+		public override string ReadJson(JsonReader reader, Type objectType, string? existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			reader.Read();
 
@@ -49,7 +49,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				return doubleValue.ToString(CultureInfo.InvariantCulture);
 			}
 
-			return reader.Value as string;
+			return stringValue;
 		}
 	}
 }
