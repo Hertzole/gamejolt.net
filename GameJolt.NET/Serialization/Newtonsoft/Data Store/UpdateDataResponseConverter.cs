@@ -20,12 +20,19 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
+				if (reader.TokenType != JsonToken.PropertyName)
+				{
+					reader.Skip();
+					reader.Read();
+					continue;
+				}
+				
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
 				if (propertyName.Equals("data", StringComparison.OrdinalIgnoreCase))
 				{
-					data = StringOrNumberConverter.Instance.ReadJson(reader, typeof(string), string.Empty, false, serializer) ?? string.Empty;
+					data = StringOrNumberConverter.Instance.ReadJson(reader, typeof(string), string.Empty, false, serializer);
 					break;
 				}
 
@@ -33,7 +40,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				reader.Read();
 			}
 
-			return new UpdateDataResponse(false, null, data!);
+			return new UpdateDataResponse(false, null, data);
 		}
 
 		protected override UpdateDataResponse CreateResponse(bool success, string? message, UpdateDataResponse existingData)
