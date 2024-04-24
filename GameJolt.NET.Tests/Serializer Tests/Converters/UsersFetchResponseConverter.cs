@@ -35,7 +35,6 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			
 			StringBuilder sb = new StringBuilder();
 
-			sb.Append("{\"response\":");
 			sb.Append("{\"success\":");
 			sb.Append(success.ToString().ToLower());
 			sb.Append(",\"message\":");
@@ -83,7 +82,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 				sb.Append("]");
 			}
 			
-			sb.Append("}}");
+			sb.Append("}");
 			
 			Assert.That(json, Is.EqualTo(sb.ToString()));
 		}
@@ -117,7 +116,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			string? message = nullMessage ? null : faker.Lorem.Sentence();
 			UsersFetchResponse expected = new UsersFetchResponse(success, message, null);
 			
-			string json = $"{{\"response\":{{\"success\":{success.ToString().ToLower()},\"message\":{(nullMessage ? "null" : "\"" + message + "\"") },\"extra\":{{}},\"users\":[]}}}}";
+			string json = $"{{\"success\":{success.ToString().ToLower()},\"message\":{(nullMessage ? "null" : "\"" + message + "\"") },\"extra\":{{}},\"users\":[]}}";
 			UsersFetchResponse response = Deserialize<UsersFetchResponse>(json);
 			
 			Assert.That(response.Success, Is.EqualTo(success));
