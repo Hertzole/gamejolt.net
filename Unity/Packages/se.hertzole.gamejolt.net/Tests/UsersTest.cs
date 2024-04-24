@@ -1,16 +1,28 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace GameJolt.NET.Tests
 {
 	public class UsersTest : BaseTest
 	{
+		private const string CREDENTIALS_NORMAL = @"0.2.1
+test
+test
+";
+
+		private const string CREDENTIALS_LONG = @"0.2.1
+test
+test
+filler
+strings
+";
+
 		[Test]
 		public async Task Authenticate_ValidToken_Success()
 		{
@@ -152,7 +164,19 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		public async Task Authenticate_CredentialsFile_Success()
+		public async Task Authenticate_InvalidUrl_Failure()
+		{
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync("https://google.com");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
+		}
+
+		[Test]
+		[TestCase(CREDENTIALS_NORMAL)]
+		[TestCase(CREDENTIALS_LONG)]
+		public async Task Authenticate_CredentialsFile_Success(string credentials)
 		{
 			string authJson = serializer.Serialize(new Response(true, null));
 			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
@@ -174,15 +198,20 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
-			const string credentials = @"0.2.1
-test
-test
-";
-
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(credentials);
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
+		}
+
+		[Test]
+		public async Task Authenticate_CredentialsFile_InvalidFile_Failure()
+		{
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync("invalid");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
 		}
 
 		[Test]
@@ -394,48 +423,146 @@ test
 		}
 
 		[Test]
+		public async Task Fetch_Usernames_NullArgument()
+		{
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync((IEnumerable<string>) null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
+		}
+
+		[Test]
+		public async Task Fetch_Ids_NullArgument()
+		{
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync((IEnumerable<int>) null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
+		}
+
+		[Test]
+		[TestCase("Username")]
+		[TestCase(12345)]
+		public async Task FetchUser_ReturnsNullUser(object argument)
+		{
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, null));
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("username=") || arg.Contains("user_id="))
+				{
+					return FromResult(userJson);
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult<GameJoltUser> result;
+			switch (argument)
+			{
+				case string username:
+					result = await GameJoltAPI.Users.GetUserAsync(username);
+					break;
+				case int id:
+					result = await GameJoltAPI.Users.GetUserAsync(id);
+					break;
+				default:
+					throw new ArgumentException("Invalid argument type.");
+			}
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
+		}
+
+		[Test]
+		public async Task FetchUsers_Usernames_ReturnsNullUser()
+		{
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, null));
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("username=") || arg.Contains("user_id="))
+				{
+					return FromResult(userJson);
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(new[] { "Username1", "Username2" });
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
+		}
+
+		[Test]
+		public async Task FetchUsers_Ids_ReturnsNullUser()
+		{
+			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, null));
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("username=") || arg.Contains("user_id="))
+				{
+					return FromResult(userJson);
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(new[] { 12345, 56789 });
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
+		}
+
+		[Test]
 		public async Task Authenticate_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.AuthenticateAsync("Username", "Token"), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.AUTH_ENDPOINT + "?username=Username&user_token=Token"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Users.AuthenticateAsync("Username", "Token"),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.AUTH_ENDPOINT + "?username=Username&user_token=Token"));
+				});
 		}
 
 		[Test]
 		public async Task Fetch_Username_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.GetUserAsync("Username"), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUserAsync("Username"),
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username")); });
 		}
-		
+
 		[Test]
 		public async Task Fetch_Id_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.GetUserAsync(0), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUserAsync(0),
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0")); });
 		}
-		
+
 		[Test]
 		public async Task Fetch_Usernames_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(new[] { "Username", "Username2" }), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username,Username2"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(new[] { "Username", "Username2" }),
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?username=Username,Username2")); });
 		}
-		
+
 		[Test]
 		public async Task Fetch_Ids_ValidUrl()
 		{
-			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(new[] { 0, 1 }), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0,1"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(new[] { 0, 1 }),
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0,1")); });
 		}
 	}
 }

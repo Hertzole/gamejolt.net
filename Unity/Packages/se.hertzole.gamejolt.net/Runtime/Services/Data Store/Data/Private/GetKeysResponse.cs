@@ -2,13 +2,11 @@
 
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
 using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 using System;
@@ -26,9 +24,9 @@ namespace Hertzole.GameJolt
 		public string? Message { get; }
 
 		[JsonConstructor]
-		public GetKeysResponse(bool success, string? message, DataKey[] keys)
+		public GetKeysResponse(bool success, string? message, DataKey[]? keys)
 		{
-			this.keys = keys;
+			this.keys = keys ?? Array.Empty<DataKey>();
 			Success = success;
 			Message = message;
 		}

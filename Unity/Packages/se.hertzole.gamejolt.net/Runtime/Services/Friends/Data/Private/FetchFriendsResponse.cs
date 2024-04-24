@@ -26,9 +26,9 @@ namespace Hertzole.GameJolt
 		public string? Message { get; }
 
 		[JsonConstructor]
-		public FetchFriendsResponse(bool success, string? message, FriendId[] friends)
+		public FetchFriendsResponse(bool success, string? message, FriendId[]? friends)
 		{
-			this.friends = friends;
+			this.friends = friends ?? Array.Empty<FriendId>();
 			Success = success;
 			Message = message;
 		}

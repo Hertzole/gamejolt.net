@@ -4,7 +4,7 @@
         <LangVersion>9</LangVersion>
         <Nullable>disable</Nullable>
         <RootNamespace>GameJolt</RootNamespace>
-        <AssemblyVersion>1.1.0</AssemblyVersion>
+        <AssemblyVersion>1.1.1</AssemblyVersion>
         <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <Configurations>Debug;Release;Unity;Unity 2023</Configurations>
         <Platforms>AnyCPU</Platforms>

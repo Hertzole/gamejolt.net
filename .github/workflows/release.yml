@@ -1,14 +1,11 @@
 name: Release Workflow
 
 on:
-  push:
-    branches: [master]
-    paths:
-      - ".github/workflows/**"
-      - "GameJolt.NET/**"
-      - "GameJolt.NET.Tests/**"
-      - "Unity/**"
-      - "ci/**"
+  workflow_run:
+    workflows: ["Test and Sync Unity Project"]
+    branches: ["master"]
+    types:
+      - completed
 
 jobs:
   release:

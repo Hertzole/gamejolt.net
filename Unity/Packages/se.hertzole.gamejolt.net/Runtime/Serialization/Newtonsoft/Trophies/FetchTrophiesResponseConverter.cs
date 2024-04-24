@@ -16,7 +16,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected override FetchTrophiesResponse ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			TrophyInternal[] trophies = Array.Empty<TrophyInternal>();
+			TrophyInternal[]? trophies = null;
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
@@ -26,7 +26,16 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				if (propertyName.Equals("trophies", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					trophies = serializer.Deserialize<TrophyInternal[]>(reader)!;
+					
+					if (reader.TokenType == JsonToken.Null)
+					{
+						trophies = Array.Empty<TrophyInternal>();
+					}
+					else
+					{
+						trophies = serializer.Deserialize<TrophyInternal[]>(reader);
+					}
+					
 					break;
 				}
 
