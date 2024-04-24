@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.1.1) (2024-04-24)
+
+
+### Bug Fixes
+
+* nullability issues ([#3](https://github.com/Hertzole/gamejolt.net/issues/3)) ([54c7ba4](https://github.com/Hertzole/gamejolt.net/commit/54c7ba492798d4f87d6fe4917c57190b2c8e9725))
+* session events being static ([f2a7284](https://github.com/Hertzole/gamejolt.net/commit/f2a728444bdf634fa2f072b53ae2e991c1186cc0))
+* system json boolean converters not throwing exception with invalid number ([3e2f54b](https://github.com/Hertzole/gamejolt.net/commit/3e2f54b93969063ba44f185e85e620e61f0d8627))
+
 # [1.1.0](https://github.com/Hertzole/gamejolt.net/compare/v1.0.3...v1.1.0) (2024-04-16)
 
 
