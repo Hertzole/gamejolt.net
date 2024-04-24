@@ -10,7 +10,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void InvalidResponseType_ThrowsException()
 		{
-			Assert.Throws<NotSupportedException>(() => GameJoltAPI.serializer.Deserialize<Response>("{ \"success\": true, \"message\": \"Success!\", \"notsupported\": 1 }"));
+			Assert.Throws<NotSupportedException>(() => GameJoltAPI.serializer.DeserializeResponse<Response>("{ \"success\": true, \"message\": \"Success!\", \"notsupported\": 1 }"));
 		}
 	}
 }

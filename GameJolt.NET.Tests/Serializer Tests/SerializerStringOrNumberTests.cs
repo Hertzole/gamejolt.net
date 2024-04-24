@@ -32,7 +32,7 @@ namespace GameJolt.NET.Tests
 		[TestCaseSource(nameof(testCases))]
 		public void CanDeserialize(object value, object expected)
 		{
-			UpdateDataResponse response = GameJoltAPI.serializer.Deserialize<UpdateDataResponse>("{\"response\":{\"success\":true,\"data\":" + value + "}}");
+			UpdateDataResponse response = GameJoltAPI.serializer.DeserializeResponse<UpdateDataResponse>("{\"response\":{\"success\":true,\"data\":" + value + "}}");
 			if (expected is IFormattable formattable)
 			{
 				Assert.That(response.data, Is.EqualTo(formattable.ToString(null, CultureInfo.InvariantCulture)));
@@ -46,7 +46,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void EmptyString_Success()
 		{
-			UpdateDataResponse response = GameJoltAPI.serializer.Deserialize<UpdateDataResponse>("{\"response\":{\"success\":true,\"data\":\"\"}}");
+			UpdateDataResponse response = GameJoltAPI.serializer.DeserializeResponse<UpdateDataResponse>("{\"response\":{\"success\":true,\"data\":\"\"}}");
 			Assert.That(response.data, Is.EqualTo(string.Empty));
 		}
 

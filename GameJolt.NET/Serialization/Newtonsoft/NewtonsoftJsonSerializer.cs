@@ -53,12 +53,12 @@ namespace Hertzole.GameJolt
 			StringEscapeHandling = StringEscapeHandling.EscapeHtml
 		};
 
-		public string Serialize<T>(T value)
+		public string SerializeResponse<T>(T value)
 		{
 			return JsonConvert.SerializeObject(new GameJoltResponse<T>(value), typeof(GameJoltResponse<T>), settings);
 		}
 
-		public T Deserialize<T>(string value)
+		public T DeserializeResponse<T>(string value)
 		{
 			return JsonConvert.DeserializeObject<GameJoltResponse<T>>(value, settings).response;
 		}

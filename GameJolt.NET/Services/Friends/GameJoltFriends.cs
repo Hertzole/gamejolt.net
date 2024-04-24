@@ -48,7 +48,7 @@ namespace Hertzole.GameJolt
 				sb.Append(users.myToken);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
-				FetchFriendsResponse response = serializer.Deserialize<FetchFriendsResponse>(json);
+				FetchFriendsResponse response = serializer.DeserializeResponse<FetchFriendsResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{

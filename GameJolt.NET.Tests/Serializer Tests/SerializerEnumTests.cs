@@ -86,7 +86,7 @@ namespace GameJolt.NET.Tests
 		[TestCaseSource(nameof(userStatusTestCases))]
 		public void CanDeserializeUserStatus(string value, UserStatus expected)
 		{
-			User response = GameJoltAPI.serializer.Deserialize<User>("{\"response\":{\"status\":" + value + "}}");
+			User response = GameJoltAPI.serializer.DeserializeResponse<User>("{\"response\":{\"status\":" + value + "}}");
 
 			Assert.That(response.status, Is.EqualTo(expected));
 		}
@@ -94,25 +94,25 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void UserStatus_InvalidString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<User>("{\"response\":{\"status\":\"invalid\"}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<User>("{\"response\":{\"status\":\"invalid\"}}"));
 		}
 
 		[Test]
 		public void UserStatus_InvalidToken_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<User>("{\"response\":{\"status\":true}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<User>("{\"response\":{\"status\":true}}"));
 		}
 
 		[Test]
 		public void UserStatus_InvalidNumber_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<User>("{\"response\":{\"status\":11}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<User>("{\"response\":{\"status\":11}}"));
 		}
 
 		[Test]
 		public void UserStatus_EmptyString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<User>("{\"response\":{\"status\":\"\"}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<User>("{\"response\":{\"status\":\"\"}}"));
 		}
 
 		[Test]
@@ -120,7 +120,7 @@ namespace GameJolt.NET.Tests
 		public void CanDeserializeTrophyDifficulty(string value, TrophyDifficulty expected)
 		{
 			FetchTrophiesResponse response =
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":" + value + "}]}}");
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":" + value + "}]}}");
 
 			Assert.That(response.trophies[0].difficulty, Is.EqualTo(expected));
 		}
@@ -129,34 +129,34 @@ namespace GameJolt.NET.Tests
 		public void TrophyDifficulty_InvalidString_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() =>
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":\"invalid\"}]}}"));
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":\"invalid\"}]}}"));
 		}
 
 		[Test]
 		public void TrophyDifficulty_InvalidToken_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() =>
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":true}]}}"));
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":true}]}}"));
 		}
 
 		[Test]
 		public void TrophyDifficulty_InvalidNumber_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":4}]}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":4}]}}"));
 		}
 
 		[Test]
 		public void TrophyDifficulty_EmptyString_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() =>
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":\"\"}]}}"));
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\":{\"trophies\":[{\"difficulty\":\"\"}]}}"));
 		}
 
 		[Test]
 		[TestCaseSource(nameof(userTypeTestCases))]
 		public void CanDeserializeUserType(string value, UserType expected)
 		{
-			UsersFetchResponse response = GameJoltAPI.serializer.Deserialize<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":" + value + "}]}}");
+			UsersFetchResponse response = GameJoltAPI.serializer.DeserializeResponse<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":" + value + "}]}}");
 
 			Assert.That(response.Users[0].type, Is.EqualTo(expected));
 		}
@@ -164,25 +164,25 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void UserType_InvalidString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":\"invalid\"}]}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":\"invalid\"}]}}"));
 		}
 
 		[Test]
 		public void UserType_InvalidToken_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":true}]}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":true}]}}"));
 		}
 
 		[Test]
 		public void UserType_InvalidNumber_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":4}]}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":4}]}}"));
 		}
 
 		[Test]
 		public void UserType_EmptyString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":\"\"}]}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<UsersFetchResponse>("{\"response\":{\"users\":[{\"type\":\"\"}]}}"));
 		}
 	}
 }

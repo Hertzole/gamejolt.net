@@ -14,7 +14,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(_ =>
 			{
-				return FromResult(serializer.Serialize(new FetchFriendsResponse(true, null, new[]
+				return FromResult(serializer.SerializeResponse(new FetchFriendsResponse(true, null, new[]
 				{
 					new FriendId(0),
 					new FriendId(1)
@@ -36,7 +36,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(_ =>
 			{
-				return FromResult(serializer.Serialize(new FetchFriendsResponse(false, null, new[]
+				return FromResult(serializer.SerializeResponse(new FetchFriendsResponse(false, null, new[]
 				{
 					new FriendId(0),
 					new FriendId(1)

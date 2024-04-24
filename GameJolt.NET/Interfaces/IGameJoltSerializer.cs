@@ -2,8 +2,8 @@
 {
 	internal interface IGameJoltSerializer
 	{
-		string Serialize<T>(T value);
+		string SerializeResponse<T>(T value);
 
-		T Deserialize<T>(string value);
+		T DeserializeResponse<T>(string value);
 	}
 }

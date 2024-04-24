@@ -126,7 +126,7 @@ namespace Hertzole.GameJolt
 				}
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				Response response = serializer.Deserialize<Response>(json);
+				Response response = serializer.DeserializeResponse<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
@@ -157,7 +157,7 @@ namespace Hertzole.GameJolt
 				builder.Append(tableId);
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				GetScoreRankResponse response = serializer.Deserialize<GetScoreRankResponse>(json);
+				GetScoreRankResponse response = serializer.DeserializeResponse<GetScoreRankResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
@@ -182,7 +182,7 @@ namespace Hertzole.GameJolt
 				builder.Append(GET_TABLES_ENDPOINT);
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				GetTablesResponse response = serializer.Deserialize<GetTablesResponse>(json);
+				GetTablesResponse response = serializer.DeserializeResponse<GetTablesResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
@@ -251,7 +251,7 @@ namespace Hertzole.GameJolt
 				}
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				GetScoresResponse response = serializer.Deserialize<GetScoresResponse>(json);
+				GetScoresResponse response = serializer.DeserializeResponse<GetScoresResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{

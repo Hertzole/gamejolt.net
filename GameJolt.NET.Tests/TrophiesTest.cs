@@ -23,7 +23,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
 				return FromResult("");
@@ -51,7 +51,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(false, "Not authenticated.", Array.Empty<TrophyInternal>())));
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(false, "Not authenticated.", Array.Empty<TrophyInternal>())));
 				}
 
 				return FromResult("");
@@ -78,7 +78,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
 				return FromResult("");
@@ -110,7 +110,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
 				return FromResult("");
@@ -143,7 +143,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy1, trophy2 })));
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, new[] { trophy1, trophy2 })));
 				}
 
 				return FromResult("");
@@ -182,7 +182,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("trophies/?"))
 				{
-					return FromResult(serializer.Serialize(new FetchTrophiesResponse(true, null, new[] { trophy })));
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, new[] { trophy })));
 				}
 
 				return FromResult("");
@@ -210,7 +210,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(true, null)));
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -231,7 +231,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(false, "Not authenticated.")));
+					return FromResult(serializer.SerializeResponse(new Response(false, "Not authenticated.")));
 				}
 
 				return FromResult("");
@@ -255,7 +255,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
 				}
 
 				return FromResult("");
@@ -279,7 +279,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(true, null)));
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -300,7 +300,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(false, "Not authenticated.")));
+					return FromResult(serializer.SerializeResponse(new Response(false, "Not authenticated.")));
 				}
 
 				return FromResult("");
@@ -324,7 +324,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
 				}
 
 				return FromResult("");
@@ -348,7 +348,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(false, GameJoltLockedTrophyException.MESSAGE)));
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltLockedTrophyException.MESSAGE)));
 				}
 
 				return FromResult("");

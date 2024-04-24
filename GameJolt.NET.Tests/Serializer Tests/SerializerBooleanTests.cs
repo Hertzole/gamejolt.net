@@ -53,7 +53,7 @@ namespace GameJolt.NET.Tests
 		[TestCaseSource(nameof(testCases))]
 		public void CanDeserialize(object boolean, bool expected)
 		{
-			T response = GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": " + boolean + "}}");
+			T response = GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\": {\"success\": " + boolean + "}}");
 
 			Assert.That(response.Success, Is.EqualTo(expected));
 		}
@@ -61,25 +61,25 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void EmptyString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": \"\"}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\": {\"success\": \"\"}}"));
 		}
 
 		[Test]
 		public void InvalidString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": \"test\"}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\": {\"success\": \"test\"}}"));
 		}
 
 		[Test]
 		public void InvalidToken_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": []}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\": {\"success\": []}}"));
 		}
 		
 		[Test]
 		public void InvalidNumber_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\": {\"success\": 2}}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\": {\"success\": 2}}"));
 		}
 	}
 }

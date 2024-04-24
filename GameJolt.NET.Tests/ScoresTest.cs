@@ -20,7 +20,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(true, null)));
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -43,7 +43,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new Response(true, null)));
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
 				}
 
 				return FromResult("");
@@ -74,7 +74,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.GET_RANK_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new GetScoreRankResponse(true, null, 0)));
+					return FromResult(serializer.SerializeResponse(new GetScoreRankResponse(true, null, 0)));
 				}
 
 				return FromResult("");
@@ -98,7 +98,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.GET_TABLES_ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new GetTablesResponse(true, null, new TableInternal[1]
+					return FromResult(serializer.SerializeResponse(new GetTablesResponse(true, null, new TableInternal[1]
 					{
 						table
 					})));
@@ -130,7 +130,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltScores.ENDPOINT))
 				{
-					return FromResult(serializer.Serialize(new GetScoresResponse(true, null, new ScoreInternal[1]
+					return FromResult(serializer.SerializeResponse(new GetScoresResponse(true, null, new ScoreInternal[1]
 					{
 						score
 					})));

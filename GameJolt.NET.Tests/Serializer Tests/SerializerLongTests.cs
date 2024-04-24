@@ -31,20 +31,20 @@ namespace GameJolt.NET.Tests
 		[TestCaseSource(nameof(testCases))]
 		public void CanDeserialize(string value, long expected)
 		{
-			T response = GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson(value) + "}");
+			T response = GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson(value) + "}");
 			AssertType(response, expected);
 		}
 
 		[Test]
 		public void InvalidString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("\"invalid\"") + "}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("\"invalid\"") + "}"));
 		}
 
 		[Test]
 		public void InvalidToken_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("true") + "}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("true") + "}"));
 		}
 
 		private static string GetTypeJson(string value)

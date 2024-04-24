@@ -9,12 +9,12 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 		protected string Serialize<T>(T data)
 		{
-			return GameJoltAPI.serializer.Serialize(data);
+			return GameJoltAPI.serializer.SerializeResponse(data);
 		}
 		
 		protected T Deserialize<T>(string json)
 		{
-			return GameJoltAPI.serializer.Deserialize<T>(json);
+			return GameJoltAPI.serializer.DeserializeResponse<T>(json);
 		}
 	}
 }
