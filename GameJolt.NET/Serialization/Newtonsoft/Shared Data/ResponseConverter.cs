@@ -45,6 +45,8 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
+			bool hasReadResponse = false;
+			
 			bool success = false;
 			string? message = null;
 			T existingData = default;
@@ -72,9 +74,10 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 						message = (string) reader.Value!;
 					}
 				}
-				else
+				else if (!hasReadResponse)
 				{
 					existingData = ReadResponseJson(reader, serializer);
+					hasReadResponse = true;
 
 					// If the token type is end object, we're done.
 					if (reader.TokenType == JsonToken.EndObject)
