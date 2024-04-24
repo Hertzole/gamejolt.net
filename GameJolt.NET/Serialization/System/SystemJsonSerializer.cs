@@ -41,14 +41,24 @@ namespace Hertzole.GameJolt
 			return o;
 		}
 
-		public string Serialize<T>(T value)
+		public string SerializeResponse<T>(T value)
 		{
 			return JsonSerializer.Serialize(new GameJoltResponse<T>(value), options);
 		}
 
-		public T Deserialize<T>(string value)
+		public string Serialize<T>(T value)
+		{
+			return JsonSerializer.Serialize(value, options);
+		}
+
+		public T DeserializeResponse<T>(string value)
 		{
 			return JsonSerializer.Deserialize<GameJoltResponse<T>>(value, options).response;
+		}
+
+		public T Deserialize<T>(string value)
+		{
+			return JsonSerializer.Deserialize<T>(value, options);
 		}
 	}
 }
