@@ -160,7 +160,7 @@ namespace Hertzole.GameJolt
 				}
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				FetchTrophiesResponse response = serializer.Deserialize<FetchTrophiesResponse>(json);
+				FetchTrophiesResponse response = serializer.DeserializeResponse<FetchTrophiesResponse>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
@@ -204,7 +204,7 @@ namespace Hertzole.GameJolt
 				builder.Append(trophyId);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				Response response = serializer.Deserialize<Response>(json);
+				Response response = serializer.DeserializeResponse<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
@@ -241,7 +241,7 @@ namespace Hertzole.GameJolt
 				builder.Append(trophyId);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				Response response = serializer.Deserialize<Response>(json);
+				Response response = serializer.DeserializeResponse<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{

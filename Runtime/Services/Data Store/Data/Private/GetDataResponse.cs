@@ -26,9 +26,9 @@ namespace Hertzole.GameJolt
 		public string? Message { get; }
 
 		[JsonConstructor]
-		public GetDataResponse(bool success, string? message, string data)
+		public GetDataResponse(bool success, string? message, string? data)
 		{
-			this.data = data;
+			this.data = data ?? string.Empty;
 			Success = success;
 			Message = message;
 		}

@@ -12,7 +12,7 @@ namespace GameJolt.NET.Tests.ToString
 		[Test]
 		public void FetchTrophiesResponse([Values] ArrayInitialization arrayInitialization, [Values] bool nullMessage)
 		{
-			TrophyInternal[]? trophies = CreateArray(arrayInitialization, f => new TrophyInternal(f.Random.Int(), f.Lorem.Sentence(), f.Lorem.Sentences(),
+			TrophyInternal[]? trophies = arrayInitialization.CreateArray(f => new TrophyInternal(f.Random.Int(), f.Lorem.Sentence(), f.Lorem.Sentences(),
 				f.PickRandom<TrophyDifficulty>(), f.Internet.Avatar(),
 				f.Random.Bool()));
 

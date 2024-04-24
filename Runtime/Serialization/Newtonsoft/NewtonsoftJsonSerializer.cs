@@ -49,17 +49,28 @@ namespace Hertzole.GameJolt
 
 		private static readonly JsonSerializerSettings settings = new JsonSerializerSettings
 		{
-			Converters = converters
+			Converters = converters,
+			StringEscapeHandling = StringEscapeHandling.EscapeHtml
 		};
 
-		public string Serialize<T>(T value)
+		public string SerializeResponse<T>(T value)
 		{
 			return JsonConvert.SerializeObject(new GameJoltResponse<T>(value), typeof(GameJoltResponse<T>), settings);
 		}
 
-		public T Deserialize<T>(string value)
+		public string Serialize<T>(T value)
+		{
+			return JsonConvert.SerializeObject(value, typeof(T), settings);
+		}
+
+		public T DeserializeResponse<T>(string value)
 		{
 			return JsonConvert.DeserializeObject<GameJoltResponse<T>>(value, settings).response;
+		}
+
+		public T Deserialize<T>(string value)
+		{
+			return JsonConvert.DeserializeObject<T>(value, settings);
 		}
 	}
 }

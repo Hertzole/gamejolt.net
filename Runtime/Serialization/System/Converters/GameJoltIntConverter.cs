@@ -13,11 +13,22 @@ namespace Hertzole.GameJolt.Serialization.System
 			switch (reader.TokenType)
 			{
 				case JsonTokenType.Number:
-					return reader.GetInt32();
+					if (reader.TryGetInt64(out long longValue))
+					{
+						return (int) longValue;
+					}
+					
+					return Convert.ToInt32(reader.GetDouble());
+
 				case JsonTokenType.String:
 					if (int.TryParse(reader.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
 					{
 						return result;
+					}
+					
+					if (double.TryParse(reader.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))
+					{
+						return Convert.ToInt32(doubleValue);
 					}
 
 					throw new JsonException("Could not parse string to int.");

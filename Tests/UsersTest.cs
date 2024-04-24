@@ -26,9 +26,9 @@ strings
 		[Test]
 		public async Task Authenticate_ValidToken_Success()
 		{
-			string authJson = serializer.Serialize(new Response(true, null));
+			string authJson = serializer.SerializeResponse(new Response(true, null));
 			string userJson =
-				serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
+				serializer.SerializeResponse(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -56,7 +56,7 @@ strings
 		[Test]
 		public async Task Authenticate_InvalidToken_Failure()
 		{
-			string authJson = serializer.Serialize(new Response(false, GameJoltAuthenticationException.MESSAGE));
+			string authJson = serializer.SerializeResponse(new Response(false, GameJoltAuthenticationException.MESSAGE));
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateAsync("test", "test");
@@ -69,9 +69,9 @@ strings
 		[Test]
 		public async Task Authenticate_InvokesAuthenticateEvent_Success()
 		{
-			string authJson = serializer.Serialize(new Response(true, null));
+			string authJson = serializer.SerializeResponse(new Response(true, null));
 			string userJson =
-				serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
+				serializer.SerializeResponse(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -103,7 +103,7 @@ strings
 		[Test]
 		public async Task Authenticate_DoesNotInvokeAuthenticateEvent_Failure()
 		{
-			string authJson = serializer.Serialize(new Response(false, GameJoltAuthenticationException.MESSAGE));
+			string authJson = serializer.SerializeResponse(new Response(false, GameJoltAuthenticationException.MESSAGE));
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			bool invoked = false;
@@ -122,8 +122,8 @@ strings
 		[TestCase("https://gamejolt.net/game/bla/bla/bla?gjapi_username=test&gjapi_token=test")]
 		public async Task Authenticate_Url_Success(string url)
 		{
-			string authJson = serializer.Serialize(new Response(true, null));
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
+			string authJson = serializer.SerializeResponse(new Response(true, null));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -153,7 +153,7 @@ strings
 		[TestCase("https://gamejolt.net/game/bla/bla/bla?gjapi_username=test&gjapi_token=test")]
 		public async Task Authenticate_Url_Failure(string url)
 		{
-			string authJson = serializer.Serialize(new Response(false, GameJoltAuthenticationException.MESSAGE));
+			string authJson = serializer.SerializeResponse(new Response(false, GameJoltAuthenticationException.MESSAGE));
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(FromResult(authJson));
 
 			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync(url);
@@ -178,8 +178,8 @@ strings
 		[TestCase(CREDENTIALS_LONG)]
 		public async Task Authenticate_CredentialsFile_Success(string credentials)
 		{
-			string authJson = serializer.Serialize(new Response(true, null));
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User()));
+			string authJson = serializer.SerializeResponse(new Response(true, null));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, DummyData.User()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -219,7 +219,7 @@ strings
 		{
 			User user = DummyData.User();
 
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, user));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, user));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -245,7 +245,7 @@ strings
 		{
 			User user = DummyData.User();
 
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, user));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, user));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -269,7 +269,7 @@ strings
 		[Test]
 		public async Task Fetch_InvalidUsername_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -293,7 +293,7 @@ strings
 		[Test]
 		public async Task Fetch_InvalidId_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -320,7 +320,7 @@ strings
 			User user1 = DummyData.User();
 			User user2 = DummyData.User();
 
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { user1, user2 }));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, new[] { user1, user2 }));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -350,7 +350,7 @@ strings
 			User user1 = DummyData.User();
 			User user2 = DummyData.User();
 
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, new[] { user1, user2 }));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, new[] { user1, user2 }));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -377,7 +377,7 @@ strings
 		[Test]
 		public async Task Fetch_Usernames_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -401,7 +401,7 @@ strings
 		[Test]
 		public async Task Fetch_Ids_Failure()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(false, GameJoltInvalidUserException.MESSAGE, Array.Empty<User>()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -447,7 +447,7 @@ strings
 		[TestCase(12345)]
 		public async Task FetchUser_ReturnsNullUser(object argument)
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, null));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -482,7 +482,7 @@ strings
 		[Test]
 		public async Task FetchUsers_Usernames_ReturnsNullUser()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, null));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -506,7 +506,7 @@ strings
 		[Test]
 		public async Task FetchUsers_Ids_ReturnsNullUser()
 		{
-			string userJson = serializer.Serialize(new UsersFetchResponse(true, null, null));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{

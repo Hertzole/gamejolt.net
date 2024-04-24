@@ -13,11 +13,21 @@ namespace Hertzole.GameJolt.Serialization.System
 			switch (reader.TokenType)
 			{
 				case JsonTokenType.Number:
-					return reader.GetInt64();
+					if (reader.TryGetInt64(out long longValue))
+					{
+						return longValue;
+					}
+					
+					return Convert.ToInt64(reader.GetDouble());
 				case JsonTokenType.String:
 					if (long.TryParse(reader.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long result))
 					{
 						return result;
+					}
+					
+					if (double.TryParse(reader.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))
+					{
+						return Convert.ToInt64(doubleValue);
 					}
 
 					throw new JsonException("Could not parse string to long.");

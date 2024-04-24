@@ -26,27 +26,40 @@ namespace GameJolt.NET.Tests
 			GetRandomInt(true, true),
 			GetRandomInt(true, false),
 			GetRandomInt(false, true),
-			GetRandomInt(false, false)
+			GetRandomInt(false, false),
+			new object[] { "1.1", 1 },
+			new object[] { "\"1.1\"", 1 },
 		};
 
 		[Test]
 		[TestCaseSource(nameof(testCases))]
 		public void CanDeserialize(string value, int expected)
 		{
-			T response = GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson(value) + "}");
+			T response = GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson(value) + "}");
 			AssertType(response, expected);
 		}
 
 		[Test]
 		public void InvalidString_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("\"invalid\"") + "}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("\"invalid\"") + "}"));
 		}
 
 		[Test]
 		public void InvalidToken_ThrowsException()
 		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.Deserialize<T>("{\"response\":" + GetTypeJson("true") + "}"));
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("true") + "}"));
+		}
+		
+		[Test]
+		public void EmptyString_ThrowsException()
+		{
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("\"\"") + "}"));
+		}
+		
+		public void NullString_ThrowsException()
+		{
+			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("") + "}"));
 		}
 
 		private static string GetTypeJson(string value)
