@@ -130,17 +130,17 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains("users/?"))
 				{
-					return FromResult(serializer.Serialize(new UsersFetchResponse(true, null, DummyData.User(username: Username))));
+					return FromResult(serializer.SerializeResponse(new UsersFetchResponse(true, null, DummyData.User(username: Username))));
 				}
 
 				if (arg.Contains("users/auth"))
 				{
-					return FromResult(serializer.Serialize(new Response(true, null)));
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
 				}
 
 				if (arg.Contains("sessions/close") || arg.Contains("sessions/open") || arg.Contains("sessions/ping") || arg.Contains("sessions/check"))
 				{
-					return FromResult(serializer.Serialize(new Response(true, null)));
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
 				}
 
 				return FromResult("");

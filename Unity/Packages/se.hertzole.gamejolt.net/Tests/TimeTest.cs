@@ -14,7 +14,7 @@ namespace GameJolt.NET.Tests
 			DateTime time = DummyData.faker.Date.Recent().ToUniversalTime();
 
 			GameJoltAPI.webClient.GetStringAsync("", default)
-			           .ReturnsForAnyArgs(_ => FromResult(serializer.Serialize(new FetchTimeResponse(true, null, time))));
+			           .ReturnsForAnyArgs(_ => FromResult(serializer.SerializeResponse(new FetchTimeResponse(true, null, time))));
 
 			GameJoltResult<DateTime> result = await GameJoltAPI.Time.GetTimeAsync();
 

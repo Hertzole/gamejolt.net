@@ -11,16 +11,6 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 	{
 		public static readonly GameJoltLongConverter Instance = new GameJoltLongConverter();
 
-		public override bool CanRead
-		{
-			get { return true; }
-		}
-
-		public override bool CanWrite
-		{
-			get { return true; }
-		}
-
 		public override void WriteJson(JsonWriter writer, long value, JsonSerializer serializer)
 		{
 			writer.WriteValue(value);
@@ -33,8 +23,9 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 			switch (reader.TokenType)
 			{
 				case JsonToken.Integer:
-				case JsonToken.Float:
 					return (long) reader.Value!;
+				case JsonToken.Float:
+					return Convert.ToInt64((double) reader.Value!);
 			}
 
 			string? stringValue = reader.Value as string;

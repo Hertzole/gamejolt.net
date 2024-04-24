@@ -15,7 +15,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -31,7 +31,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -47,7 +47,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -63,7 +63,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -81,7 +81,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -99,7 +99,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -117,7 +117,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -135,7 +135,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -191,7 +191,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -209,7 +209,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new Response(true, null));
+				string json = serializer.SerializeResponse(new Response(true, null));
 
 				return FromResult(json);
 			});
@@ -248,7 +248,7 @@ namespace GameJolt.NET.Tests
 						throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
 				}
 
-				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
+				string json = serializer.SerializeResponse(new UpdateDataResponse(true, null, result));
 
 				return FromResult(json);
 			});
@@ -302,7 +302,7 @@ namespace GameJolt.NET.Tests
 						break;
 				}
 
-				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
+				string json = serializer.SerializeResponse(new UpdateDataResponse(true, null, result));
 
 				return FromResult(json);
 			});
@@ -355,7 +355,7 @@ namespace GameJolt.NET.Tests
 						throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
 				}
 
-				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
+				string json = serializer.SerializeResponse(new UpdateDataResponse(true, null, result));
 
 				return FromResult(json);
 			});
@@ -411,7 +411,7 @@ namespace GameJolt.NET.Tests
 						break;
 				}
 
-				string json = serializer.Serialize(new UpdateDataResponse(true, null, result));
+				string json = serializer.SerializeResponse(new UpdateDataResponse(true, null, result));
 
 				return FromResult(json);
 			});
@@ -469,7 +469,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, "value"));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "value"));
 
 				return FromResult(json);
 			});
@@ -486,7 +486,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, "1"));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "1"));
 
 				return FromResult(json);
 			});
@@ -505,7 +505,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
 
 				return FromResult(json);
 			});
@@ -522,7 +522,7 @@ namespace GameJolt.NET.Tests
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, "true"));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "true"));
 
 				return FromResult(json);
 			});
@@ -541,7 +541,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, "value"));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "value"));
 
 				return FromResult(json);
 			});
@@ -560,7 +560,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, "1"));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "1"));
 
 				return FromResult(json);
 			});
@@ -581,7 +581,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
 
 				return FromResult(json);
 			});
@@ -600,7 +600,7 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
-				string json = serializer.Serialize(new GetDataResponse(true, null, "true"));
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "true"));
 
 				return FromResult(json);
 			});
@@ -670,7 +670,7 @@ namespace GameJolt.NET.Tests
 					Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}"));
 				}
 
-				string json = serializer.Serialize(new GetKeysResponse(true, null, new[]
+				string json = serializer.SerializeResponse(new GetKeysResponse(true, null, new[]
 				{
 					new DataKey("key1"),
 					new DataKey("key2")
@@ -709,7 +709,7 @@ namespace GameJolt.NET.Tests
 					Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT + $"?pattern={pattern}&username="));
 				}
 
-				string json = serializer.Serialize(new GetKeysResponse(true, null, new[]
+				string json = serializer.SerializeResponse(new GetKeysResponse(true, null, new[]
 				{
 					new DataKey("key1"),
 					new DataKey("key2")

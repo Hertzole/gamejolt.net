@@ -34,7 +34,7 @@ namespace GameJolt.NET.Tests
 		public void CanDeserialize(object input, bool expected)
 		{
 			FetchTrophiesResponse response =
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":" + input + "}]}}");
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":" + input + "}]}}");
 
 			Assert.That(response.trophies[0].achieved, Is.EqualTo(expected));
 		}
@@ -43,21 +43,21 @@ namespace GameJolt.NET.Tests
 		public void EmptyString_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() =>
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":\"\"}]}}"));
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":\"\"}]}}"));
 		}
 
 		[Test]
 		public void InvalidToken_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() =>
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":null}]}}"));
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":null}]}}"));
 		}
 
 		[Test]
 		public void InvalidInteger_ThrowsException()
 		{
 			Assert.Throws<JsonException>(() =>
-				GameJoltAPI.serializer.Deserialize<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":2}]}}"));
+				GameJoltAPI.serializer.DeserializeResponse<FetchTrophiesResponse>("{\"response\": {\"trophies\": [{\"achieved\":2}]}}"));
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿#if NET6_0_OR_GREATER
+﻿#nullable enable
+
+#if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
 #else
@@ -15,9 +17,9 @@ namespace Hertzole.GameJolt
 		public readonly string key;
 
 		[JsonConstructor]
-		public DataKey(string key)
+		public DataKey(string? key)
 		{
-			this.key = key;
+			this.key = key ?? string.Empty;
 		}
 
 		public bool Equals(DataKey other)
@@ -25,7 +27,7 @@ namespace Hertzole.GameJolt
 			return EqualityHelper.StringEquals(key, other.key);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return obj is DataKey other && Equals(other);
 		}
