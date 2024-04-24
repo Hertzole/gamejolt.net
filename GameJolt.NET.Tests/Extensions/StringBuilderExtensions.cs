@@ -7,10 +7,10 @@ namespace GameJolt.NET.Tests.Extensions
 {
 	public static class StringBuilderExtensions
 	{
-		public static void AppendJsonPropertyName(this StringBuilder sb, string name)
+		public static void AppendJsonPropertyName(this StringBuilder sb, string name, bool randomCapitalize = false)
 		{
 			sb.Append("\"");
-			sb.Append(name);
+			sb.Append(randomCapitalize ? name.RandomCapitalize() : name);
 			sb.Append("\":");
 		}
 
