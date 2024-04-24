@@ -1,4 +1,5 @@
 ﻿#if NET6_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -24,6 +25,7 @@ namespace Hertzole.GameJolt
 		[JsonSerializable(typeof(GameJoltResponse<TableInternal>))]
 		[JsonSerializable(typeof(GameJoltResponse<TrophyInternal>))]
 		[JsonSerializable(typeof(GameJoltResponse<User>))]
+		[ExcludeFromCodeCoverage]
 		public sealed partial class JsonContext : JsonSerializerContext { }
 
 		private static JsonSerializerOptions CreateOptions()
