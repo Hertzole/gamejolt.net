@@ -14,35 +14,19 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 			writer.WritePropertyName("sort");
 			GameJoltIntConverter.Instance.WriteJson(writer, value.sort, serializer);
 			writer.WritePropertyName("score");
-			writer.WriteValue(value.score);
-			if (!string.IsNullOrEmpty(value.extraData))
-			{
-				writer.WritePropertyName("extra_data");
-				writer.WriteValue(value.extraData);
-			}
-
-			if (!string.IsNullOrEmpty(value.username))
-			{
-				writer.WritePropertyName("user");
-				writer.WriteValue(value.username);
-			}
-
-			if (value.userId != 0)
-			{
-				writer.WritePropertyName("user_id");
-				GameJoltIntConverter.Instance.WriteJson(writer, value.userId, serializer);
-			}
-
-			if (!string.IsNullOrEmpty(value.guestName))
-			{
-				writer.WritePropertyName("guest");
-				writer.WriteValue(value.guestName);
-			}
-
+			serializer.Serialize(writer, value.score);
+			writer.WritePropertyName("extra_data");
+			serializer.Serialize(writer, value.extraData);
+			writer.WritePropertyName("user");
+			serializer.Serialize(writer, value.username);
+			writer.WritePropertyName("user_id");
+			GameJoltIntConverter.Instance.WriteJson(writer, value.userId, serializer);
+			writer.WritePropertyName("guest");
+			serializer.Serialize(writer, value.guestName);
 			writer.WritePropertyName("stored_timestamp");
 			GameJoltLongConverter.Instance.WriteJson(writer, value.storedTimestamp, serializer);
 			writer.WritePropertyName("stored");
-			writer.WriteValue(value.stored);
+			serializer.Serialize(writer, value.stored);
 
 			writer.WriteEndObject();
 		}
@@ -68,6 +52,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
+				// Skip unknown types.
+				if (reader.TokenType != JsonToken.PropertyName)
+				{
+					reader.Skip();
+					reader.Read();
+					continue;
+				}
+				
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
@@ -102,10 +94,6 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				else if (propertyName.Equals("stored", StringComparison.OrdinalIgnoreCase))
 				{
 					stored = reader.ReadAsString() ?? string.Empty;
-				}
-				else
-				{
-					throw new JsonSerializationException($"Unknown property: {propertyName}");
 				}
 
 				// Read the next property name.
