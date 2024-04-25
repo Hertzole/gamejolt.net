@@ -5,7 +5,8 @@
 		public static string ReplaceWithUnicode(this string str)
 		{
 			string result = str;
-			result = result.Replace("'", "\\u0027");
+			result = result.Replace("'", "\\u0027"); // Replace ' with unicode
+			result = result.Replace("+", "\\u002B"); // Replace + with unicode 
 
 			return result;
 		}
