@@ -48,7 +48,7 @@ namespace Hertzole.GameJolt
 
 		[JsonConstructor]
 		public FetchTimeResponse(long timestamp,
-			string timezone,
+			string? timezone,
 			int year,
 			int month,
 			int day,
@@ -59,7 +59,7 @@ namespace Hertzole.GameJolt
 			string? message)
 		{
 			this.timestamp = timestamp;
-			this.timezone = timezone;
+			this.timezone = timezone ?? string.Empty;
 			this.year = year;
 			this.month = month;
 			this.day = day;
@@ -73,7 +73,7 @@ namespace Hertzole.GameJolt
 		public FetchTimeResponse(bool success, string? message, DateTime time)
 		{
 			timestamp = DateTimeHelper.ToUnixTimestamp(time);
-			timezone = "";
+			timezone = string.Empty;
 			year = time.Year;
 			month = time.Month;
 			day = time.Day;

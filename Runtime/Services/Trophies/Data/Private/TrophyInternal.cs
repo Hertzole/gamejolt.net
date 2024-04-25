@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Hertzole.GameJolt.Serialization.Shared;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
@@ -33,13 +35,13 @@ namespace Hertzole.GameJolt
 		public readonly bool achieved;
 
 		[JsonConstructor]
-		public TrophyInternal(int id, string title, string description, TrophyDifficulty difficulty, string imageUrl, bool achieved)
+		public TrophyInternal(int id, string? title, string? description, TrophyDifficulty difficulty, string? imageUrl, bool achieved)
 		{
 			this.id = id;
-			this.title = title;
-			this.description = description;
+			this.title = title ?? string.Empty;
+			this.description = description ?? string.Empty;
 			this.difficulty = difficulty;
-			this.imageUrl = imageUrl;
+			this.imageUrl = imageUrl ?? string.Empty;
 			this.achieved = achieved;
 		}
 
@@ -51,7 +53,7 @@ namespace Hertzole.GameJolt
 			       EqualityHelper.StringEquals(imageUrl, other.imageUrl);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return obj is TrophyInternal other && Equals(other);
 		}
