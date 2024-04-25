@@ -52,7 +52,12 @@ namespace GameJolt.NET.Tests.Extensions
 					break;
 				default:
 				case StringInitialization.Normal:
-					builder.AppendStringValue(value);
+					if (string.IsNullOrEmpty(value))
+					{
+						throw new ArgumentNullException(nameof(value));
+					}
+					
+					builder.AppendStringValue(value!);
 					break;
 			}
 		}

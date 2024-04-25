@@ -14,10 +14,19 @@ namespace GameJolt.NET.Tests.Extensions
 			sb.Append("\":");
 		}
 
-		public static void AppendStringValue(this StringBuilder sb, string value)
+		public static void AppendStringValue(this StringBuilder sb, string? value, bool writeNull = false)
 		{
+			if(value == null && writeNull)
+			{
+				sb.Append("null");
+				return;
+			}
+			
 			sb.Append("\"");
-			sb.Append(value);
+			if (value != null)
+			{
+				sb.Append(value);
+			}
 			sb.Append("\"");
 		}
 

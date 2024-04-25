@@ -38,6 +38,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
+				// Skip unknown types.
+				if (reader.TokenType != JsonToken.PropertyName)
+				{
+					reader.Skip();
+					reader.Read();
+					continue;
+				}
+				
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
@@ -47,19 +55,15 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				}
 				else if (propertyName.Equals("name", StringComparison.OrdinalIgnoreCase))
 				{
-					name = reader.ReadAsString()!;
+					name = reader.ReadAsString() ?? string.Empty;
 				}
 				else if (propertyName.Equals("description", StringComparison.OrdinalIgnoreCase))
 				{
-					description = reader.ReadAsString()!;
+					description = reader.ReadAsString()! ?? string.Empty;
 				}
 				else if (propertyName.Equals("primary", StringComparison.OrdinalIgnoreCase))
 				{
 					isPrimary = GameJoltBooleanConverter.Instance.ReadJson(reader, typeof(bool), false, false, serializer);
-				}
-				else
-				{
-					throw new JsonSerializationException($"Unknown property: {propertyName}");
 				}
 
 				// Read the next property name.
