@@ -32,6 +32,8 @@ jobs:
 
       - name: Create UPM package
         run: |
+          git fetch
+          git pull
           git branch -d upm &> /dev/null || echo upm branch not found
           git subtree split -P "$PKG_ROOT" -b upm
           if [[ -d "Assets/Samples" ]]; then
