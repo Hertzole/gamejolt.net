@@ -25,7 +25,7 @@ namespace GameJolt.NET.Tests.Extensions
 			sb.Append("\"");
 			if (value != null)
 			{
-				sb.Append(value);
+				sb.Append(value.ReplaceWithUnicode());
 			}
 			sb.Append("\"");
 		}
