@@ -49,6 +49,13 @@ jobs:
       - name: What do we have here
         run: ls -R Coverage
 
+      # The test results have a different path than what report generator can read.
+      # We need to remove the github/workspace/ path.
+      - name: Fix paths
+        run: |
+          chmod +x ./ci/fix_paths.sh
+          ./ci/fix_paths.sh
+
       - name: Generate report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
         with:
