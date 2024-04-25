@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
@@ -36,15 +38,15 @@ namespace Hertzole.GameJolt
 		public readonly string stored;
 
 		[JsonConstructor]
-		public ScoreInternal(int sort, string score, string extraData, string username, int userId, string guestName, string stored, long storedTimestamp)
+		public ScoreInternal(int sort, string? score, string? extraData, string? username, int userId, string? guestName, string? stored, long storedTimestamp)
 		{
 			this.sort = sort;
-			this.score = score;
-			this.extraData = extraData;
-			this.username = username;
+			this.score = score ?? string.Empty;
+			this.extraData = extraData ?? string.Empty;
+			this.username = username ?? string.Empty;
 			this.userId = userId;
-			this.guestName = guestName;
-			this.stored = stored;
+			this.guestName = guestName ?? string.Empty;
+			this.stored = stored ?? string.Empty;
 			this.storedTimestamp = storedTimestamp;
 		}
 
@@ -58,7 +60,7 @@ namespace Hertzole.GameJolt
 			       EqualityHelper.StringEquals(stored, other.stored);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return obj is ScoreInternal other && Equals(other);
 		}
