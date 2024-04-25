@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
@@ -27,11 +29,11 @@ namespace Hertzole.GameJolt
 		public readonly bool isPrimary;
 
 		[JsonConstructor]
-		public TableInternal(int id, string name, string description, bool isPrimary)
+		public TableInternal(int id, string? name, string? description, bool isPrimary)
 		{
 			this.id = id;
-			this.name = name;
-			this.description = description;
+			this.name = name ?? string.Empty;
+			this.description = description ?? string.Empty;
 			this.isPrimary = isPrimary;
 		}
 
@@ -42,7 +44,7 @@ namespace Hertzole.GameJolt
 			       EqualityHelper.StringEquals(description, other.description);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			return obj is TableInternal other && Equals(other);
 		}
