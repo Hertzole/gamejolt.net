@@ -80,10 +80,6 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				{
 					achieved = BooleanOrDateConverter.Instance.ReadJson(reader, typeof(bool), false, false, serializer);
 				}
-				else
-				{
-					reader.Skip();
-				}
 
 				// Read the next property name.
 				reader.Read();

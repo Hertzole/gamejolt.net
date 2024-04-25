@@ -84,10 +84,6 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				{
 					second = GameJoltIntConverter.Instance.ReadJson(reader, typeof(int), 0, false, serializer)!;
 				}
-				else
-				{
-					reader.Skip();
-				}
 
 				// Read the next property name.
 				reader.Read();
