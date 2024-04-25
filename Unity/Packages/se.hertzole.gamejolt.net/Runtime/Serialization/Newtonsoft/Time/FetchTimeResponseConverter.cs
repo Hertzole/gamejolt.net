@@ -41,6 +41,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 			while (reader.TokenType != JsonToken.EndObject)
 			{
+				// Skip unknown types.
+				if (reader.TokenType != JsonToken.PropertyName)
+				{
+					reader.Skip();
+					reader.Read();
+					continue;
+				}
+                
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
@@ -75,10 +83,6 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				else if (propertyName.Equals("second", StringComparison.OrdinalIgnoreCase))
 				{
 					second = GameJoltIntConverter.Instance.ReadJson(reader, typeof(int), 0, false, serializer)!;
-				}
-				else
-				{
-					reader.Skip();
 				}
 
 				// Read the next property name.

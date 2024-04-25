@@ -44,36 +44,36 @@ namespace Hertzole.GameJolt
 		[JsonName("developer_name")]
 		public readonly string displayName;
 		[JsonName("developer_website")]
-		public readonly string? userWebsite;
+		public readonly string userWebsite;
 		[JsonName("developer_description")]
 		public readonly string userDescription;
 
 		[JsonConstructor]
 		public User(int id,
 			UserType type,
-			string username,
-			string avatarUrl,
-			string signedUp,
+			string? username,
+			string? avatarUrl,
+			string? signedUp,
 			long signedUpTimestamp,
-			string lastLoggedIn,
+			string? lastLoggedIn,
 			long lastLoggedInTimestamp,
 			UserStatus status,
-			string displayName,
+			string? displayName,
 			string? userWebsite,
-			string userDescription)
+			string? userDescription)
 		{
 			this.id = id;
 			this.type = type;
-			this.username = username;
-			this.avatarUrl = avatarUrl;
-			this.signedUp = signedUp;
+			this.username = username ?? string.Empty;
+			this.avatarUrl = avatarUrl ?? string.Empty;
+			this.signedUp = signedUp ?? string.Empty;
 			this.signedUpTimestamp = signedUpTimestamp;
-			this.lastLoggedIn = lastLoggedIn;
+			this.lastLoggedIn = lastLoggedIn ?? string.Empty;
 			this.lastLoggedInTimestamp = lastLoggedInTimestamp;
 			this.status = status;
-			this.displayName = displayName;
-			this.userWebsite = userWebsite;
-			this.userDescription = userDescription;
+			this.displayName = displayName ?? string.Empty;
+			this.userWebsite = userWebsite ?? string.Empty;
+			this.userDescription = userDescription ?? string.Empty;
 		}
 
 		public bool Equals(User other)
