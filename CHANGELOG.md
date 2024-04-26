@@ -1,3 +1,26 @@
+## [1.1.1](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.1.1) (2024-04-26)
+
+
+### Bug Fixes
+
+* data store converters skip unknown properties ([273ecd8](https://github.com/Hertzole/gamejolt.net/commit/273ecd8340d86e99d02fc791f9cdb6e3247ef82a))
+* data store responses can no longer have null data ([9aee9ae](https://github.com/Hertzole/gamejolt.net/commit/9aee9ae2283e12b8852cd0a904a2dbbddabf058e))
+* friend converters skip unknown properties ([5be3fc2](https://github.com/Hertzole/gamejolt.net/commit/5be3fc2cc65956b70d6a35676f32b6e461f2a86d))
+* int converter not being able to handle doubles ([915e147](https://github.com/Hertzole/gamejolt.net/commit/915e1474d131d2043416d648c4708247ffdda401))
+* long converter not being able to handle doubles ([bb3f2f9](https://github.com/Hertzole/gamejolt.net/commit/bb3f2f949167df3176bee9a4a6fcaf711bb9fb9e))
+* nullability issues ([#3](https://github.com/Hertzole/gamejolt.net/issues/3)) ([54c7ba4](https://github.com/Hertzole/gamejolt.net/commit/54c7ba492798d4f87d6fe4917c57190b2c8e9725))
+* response converter handling nulls better ([812f516](https://github.com/Hertzole/gamejolt.net/commit/812f516d11be9d1847a42dbc858a70ac4c0cb75f))
+* response converter not reading properly if unknown data is present ([af70b51](https://github.com/Hertzole/gamejolt.net/commit/af70b518e44e5806dc58abcb6dbbfd081ac23b2e))
+* score converters skip unknown properties ([ec88014](https://github.com/Hertzole/gamejolt.net/commit/ec8801452484bb5a1bb9327fa27c5984c76dbaae))
+* session events being static ([f2a7284](https://github.com/Hertzole/gamejolt.net/commit/f2a728444bdf634fa2f072b53ae2e991c1186cc0))
+* StringOrNumberConverter being able to return null response ([7234c71](https://github.com/Hertzole/gamejolt.net/commit/7234c71dbbdbf212e7013663c8561e13a378d6d9))
+* StringOrNumberConverter handling numbers better ([6c16d51](https://github.com/Hertzole/gamejolt.net/commit/6c16d5101b4ee8a9f2ec013789e0c1e29ac00e81))
+* StringOrNumberConverter nullability warning ([506863c](https://github.com/Hertzole/gamejolt.net/commit/506863c59f359e479a26df6d7c99c4b5fc411741))
+* system json boolean converters not throwing exception with invalid number ([3e2f54b](https://github.com/Hertzole/gamejolt.net/commit/3e2f54b93969063ba44f185e85e620e61f0d8627))
+* time converters skip unknown properties ([108af87](https://github.com/Hertzole/gamejolt.net/commit/108af87dede40d7b425257e3f9053af257dbba77))
+* trophies converters skip unknown properties ([2aeeaad](https://github.com/Hertzole/gamejolt.net/commit/2aeeaad5f10669e25d8136b3717774964b30ab29))
+* user converters skip unknown properties ([d398007](https://github.com/Hertzole/gamejolt.net/commit/d39800720c00b9a553ce96edb591a6829971bae2))
+
 ## [1.1.1](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.1.1) (2024-04-24)
 
 
