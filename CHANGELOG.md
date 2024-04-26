@@ -20,12 +20,7 @@
 * time converters skip unknown properties ([108af87](https://github.com/Hertzole/gamejolt.net/commit/108af87dede40d7b425257e3f9053af257dbba77))
 * trophies converters skip unknown properties ([2aeeaad](https://github.com/Hertzole/gamejolt.net/commit/2aeeaad5f10669e25d8136b3717774964b30ab29))
 * user converters skip unknown properties ([d398007](https://github.com/Hertzole/gamejolt.net/commit/d39800720c00b9a553ce96edb591a6829971bae2))
-
-
-### Features
-
-* new release ([a7c9568](https://github.com/Hertzole/gamejolt.net/commit/a7c95685ea37d7e4603ba6437f48c20ae5c3c495))
-* release ([7f10725](https://github.com/Hertzole/gamejolt.net/commit/7f10725bd16b8da11e6290552a6ccfe9f24a10a3))
+* credentials split is the same on UNIX systems ([a7c9568](https://github.com/Hertzole/gamejolt.net/commit/a7c95685ea37d7e4603ba6437f48c20ae5c3c495))
 
 ## [1.1.2](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.1.2) (2024-04-26)
 
