@@ -1,4 +1,4 @@
-## [1.1.1](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.1.1) (2024-04-26)
+## [1.1.2](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.1.2) (2024-04-26)
 
 
 ### Bug Fixes
