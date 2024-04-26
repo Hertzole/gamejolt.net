@@ -49,7 +49,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				return doubleValue.ToString(CultureInfo.InvariantCulture);
 			}
 
-			return stringValue;
+			return stringValue!;
 		}
 	}
 }
