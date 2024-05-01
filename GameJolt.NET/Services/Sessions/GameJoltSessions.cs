@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,10 +76,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(OPEN_ENDPOINT);
-				builder.Append("?username=");
-				builder.Append(users.myUsername);
-				builder.Append("&user_token=");
-				builder.Append(users.myToken);
+				AppendUser(builder, users.myUsername!, users.myToken!);
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
@@ -119,10 +117,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(CLOSE_ENDPOINT);
-				builder.Append("?username=");
-				builder.Append(users.myUsername);
-				builder.Append("&user_token=");
-				builder.Append(users.myToken);
+				AppendUser(builder, users.myUsername!, users.myToken!);
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
@@ -163,10 +158,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(PING_ENDPOINT);
-				builder.Append("?username=");
-				builder.Append(users.myUsername);
-				builder.Append("&user_token=");
-				builder.Append(users.myToken);
+				AppendUser(builder, users.myUsername!, users.myToken!);
 				builder.Append("&status=");
 				builder.Append(GetStatusString(status));
 
@@ -201,10 +193,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(CHECK_ENDPOINT);
-				builder.Append("?username=");
-				builder.Append(users.myUsername);
-				builder.Append("&user_token=");
-				builder.Append(users.myToken);
+				AppendUser(builder, users.myUsername!, users.myToken!);
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
@@ -218,6 +207,15 @@ namespace Hertzole.GameJolt
 
 				return GameJoltResult<bool>.Success(response.Success);
 			}
+		}
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static void AppendUser(StringBuilder builder, string username, string token)
+		{
+			builder.Append("?username=");
+			builder.Append(username);
+			builder.Append("&user_token=");
+			builder.Append(token);
 		}
 
 		internal static string GetStatusString(SessionStatus status)
