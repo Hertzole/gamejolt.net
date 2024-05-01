@@ -260,7 +260,7 @@ namespace Hertzole.GameJolt
 
 				Debug.Assert(response.success, "Response was successful but success was false.");
 
-				GameJoltScore[] scores = new GameJoltScore[response.scores.Length];
+				GameJoltScore[] scores = response.scores.Length > 0 ? new GameJoltScore[response.scores.Length] : Array.Empty<GameJoltScore>();
 
 				for (int i = 0; i < response.scores.Length; i++)
 				{
