@@ -126,7 +126,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(FetchTimeResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(timestamp)}: {timestamp}, {nameof(timezone)}: {timezone}, {nameof(year)}: {year}, {nameof(month)}: {month}, {nameof(day)}: {day}, {nameof(hour)}: {hour}, {nameof(minute)}: {minute}, {nameof(second)}: {second})";
+			return
+				$"{nameof(FetchTimeResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(timestamp)}: {timestamp}, {nameof(timezone)}: {timezone}, {nameof(year)}: {year}, {nameof(month)}: {month}, {nameof(day)}: {day}, {nameof(hour)}: {hour}, {nameof(minute)}: {minute}, {nameof(second)}: {second})";
 		}
 	}
 }

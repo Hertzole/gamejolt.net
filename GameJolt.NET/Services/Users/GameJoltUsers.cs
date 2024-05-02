@@ -211,7 +211,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(ENDPOINT);
-				
+
 				if (username != null)
 				{
 					builder.Append("?username=");

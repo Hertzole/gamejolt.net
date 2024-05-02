@@ -1,10 +1,9 @@
-﻿#if NET6_0_OR_GREATER
+﻿using System;
+#if NET6_0_OR_GREATER
 using BaseConverter = Hertzole.GameJolt.Serialization.System.GameJoltEnumConverter<Hertzole.GameJolt.UserType>;
 #else
 using BaseConverter = Hertzole.GameJolt.Serialization.Newtonsoft.GameJoltEnumConverter<Hertzole.GameJolt.UserType>;
 #endif
-
-using System;
 
 namespace Hertzole.GameJolt.Serialization.Shared
 {

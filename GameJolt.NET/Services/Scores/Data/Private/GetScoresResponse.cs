@@ -71,10 +71,11 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
-		
+
 		public override string ToString()
 		{
-			return $"{nameof(GetScoresResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(scores)}: {scores.ToCommaSeparatedString()})";
+			return
+				$"{nameof(GetScoresResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(scores)}: {scores.ToCommaSeparatedString()})";
 		}
 	}
 }

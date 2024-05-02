@@ -3,12 +3,12 @@
 #endif
 #nullable enable
 
+using System;
 #if USE_SPANS
 using StringType = System.ReadOnlySpan<char>;
 #else
 using StringType = System.String;
 #endif
-using System;
 
 namespace Hertzole.GameJolt
 {

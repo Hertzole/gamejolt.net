@@ -95,10 +95,11 @@ namespace Hertzole.GameJolt
 		{
 			return new GameJoltScore(sort, score, extraData, username, userId, guestName, DateTimeHelper.FromUnixTimestamp(storedTimestamp));
 		}
-		
+
 		public override string ToString()
 		{
-			return $"{nameof(ScoreInternal)} ({nameof(sort)}: {sort}, {nameof(score)}: {score}, {nameof(extraData)}: {extraData}, {nameof(username)}: {username}, {nameof(userId)}: {userId}, {nameof(guestName)}: {guestName}, {nameof(storedTimestamp)}: {storedTimestamp}, {nameof(stored)}: {stored})";
+			return
+				$"{nameof(ScoreInternal)} ({nameof(sort)}: {sort}, {nameof(score)}: {score}, {nameof(extraData)}: {extraData}, {nameof(username)}: {username}, {nameof(userId)}: {userId}, {nameof(guestName)}: {guestName}, {nameof(storedTimestamp)}: {storedTimestamp}, {nameof(stored)}: {stored})";
 		}
 	}
 }

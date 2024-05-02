@@ -64,7 +64,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(FetchTrophiesResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(trophies)}: {trophies.ToCommaSeparatedString()})";
+			return
+				$"{nameof(FetchTrophiesResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(trophies)}: {trophies.ToCommaSeparatedString()})";
 		}
 	}
 }

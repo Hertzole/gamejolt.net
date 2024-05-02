@@ -78,7 +78,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(TableInternal)} ({nameof(id)}: {id}, {nameof(name)}: {name}, {nameof(description)}: {description}, {nameof(isPrimary)}: {isPrimary})";
+			return
+				$"{nameof(TableInternal)} ({nameof(id)}: {id}, {nameof(name)}: {name}, {nameof(description)}: {description}, {nameof(isPrimary)}: {isPrimary})";
 		}
 	}
 }

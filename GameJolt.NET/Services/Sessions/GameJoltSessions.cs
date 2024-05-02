@@ -208,7 +208,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<bool>.Success(response.Success);
 			}
 		}
-		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static void AppendUser(StringBuilder builder, string username, string token)
 		{

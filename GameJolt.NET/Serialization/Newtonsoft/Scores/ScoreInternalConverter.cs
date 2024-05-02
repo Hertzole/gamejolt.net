@@ -59,7 +59,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					reader.Read();
 					continue;
 				}
-				
+
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 

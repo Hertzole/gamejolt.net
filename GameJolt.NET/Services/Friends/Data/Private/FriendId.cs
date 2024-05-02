@@ -49,7 +49,7 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
-		
+
 		public override string ToString()
 		{
 			return $"{nameof(FriendId)} ({nameof(id)}: {id})";

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 #if NET6_0_OR_GREATER
 using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
@@ -9,7 +10,6 @@ using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
-using System;
 
 namespace Hertzole.GameJolt
 {

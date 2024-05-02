@@ -136,7 +136,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(User)} ({nameof(id)}: {id}, {nameof(type)}: {type}, {nameof(username)}: {username}, {nameof(avatarUrl)}: {avatarUrl}, {nameof(signedUp)}: {signedUp}, {nameof(signedUpTimestamp)}: {signedUpTimestamp}, {nameof(lastLoggedIn)}: {lastLoggedIn}, {nameof(lastLoggedInTimestamp)}: {lastLoggedInTimestamp}, {nameof(status)}: {status}, {nameof(displayName)}: {displayName}, {nameof(userWebsite)}: {userWebsite}, {nameof(userDescription)}: {userDescription})";
+			return
+				$"{nameof(User)} ({nameof(id)}: {id}, {nameof(type)}: {type}, {nameof(username)}: {username}, {nameof(avatarUrl)}: {avatarUrl}, {nameof(signedUp)}: {signedUp}, {nameof(signedUpTimestamp)}: {signedUpTimestamp}, {nameof(lastLoggedIn)}: {lastLoggedIn}, {nameof(lastLoggedInTimestamp)}: {lastLoggedInTimestamp}, {nameof(status)}: {status}, {nameof(displayName)}: {displayName}, {nameof(userWebsite)}: {userWebsite}, {nameof(userDescription)}: {userDescription})";
 		}
 	}
 }

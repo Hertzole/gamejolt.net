@@ -62,10 +62,11 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
-		
+
 		public override string ToString()
 		{
-			return $"{nameof(FetchFriendsResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(friends)}: {friends.ToCommaSeparatedString()})";
+			return
+				$"{nameof(FetchFriendsResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(friends)}: {friends.ToCommaSeparatedString()})";
 		}
 	}
 }
