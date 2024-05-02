@@ -81,7 +81,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(GameJoltTrophy)} ({nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Description)}: {Description}, {nameof(Difficulty)}: {Difficulty}, {nameof(ImageUrl)}: {ImageUrl}, {nameof(HasAchieved)}: {HasAchieved})";
+			return
+				$"{nameof(GameJoltTrophy)} ({nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Description)}: {Description}, {nameof(Difficulty)}: {Difficulty}, {nameof(ImageUrl)}: {ImageUrl}, {nameof(HasAchieved)}: {HasAchieved})";
 		}
 	}
 }

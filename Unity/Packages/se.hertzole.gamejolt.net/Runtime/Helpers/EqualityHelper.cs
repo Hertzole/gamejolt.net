@@ -62,7 +62,7 @@ namespace Hertzole.GameJolt
 				hashCode = (hashCode * 397) ^ response.Success.GetHashCode();
 				hashCode = (hashCode * 397) ^ (response.Message?.GetHashCode() ?? 0);
 			}
-			
+
 			return hashCode;
 		}
 	}

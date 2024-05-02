@@ -211,7 +211,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(ENDPOINT);
-				
+
 				if (username != null)
 				{
 					builder.Append("?username=");
@@ -310,7 +310,7 @@ namespace Hertzole.GameJolt
 					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException());
 				}
 
-				GameJoltUser[] users = new GameJoltUser[response.Users.Length];
+				GameJoltUser[] users = response.Users.Length > 0 ? new GameJoltUser[response.Users.Length] : Array.Empty<GameJoltUser>();
 				for (int i = 0; i < response.Users.Length; i++)
 				{
 					users[i] = response.Users[i].ToPublicUser();

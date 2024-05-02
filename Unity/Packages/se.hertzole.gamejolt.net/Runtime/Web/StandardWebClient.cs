@@ -1,9 +1,9 @@
 ﻿#if !UNITY_2021_1_OR_NEWER
+
 using System.Net.Http;
 using System.Threading;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
 using StringTask = System.Threading.Tasks.ValueTask<string>;
-
 #else
 using StringTask = System.Threading.Tasks.Task<string>;
 #endif

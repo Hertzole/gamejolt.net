@@ -2,14 +2,11 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -17,24 +14,24 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct ScoreInternal : IEquatable<ScoreInternal>
 	{
-		[JsonName("sort")]
+		[JsonProperty("sort")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int sort;
-		[JsonName("score")]
+		[JsonProperty("score")]
 		public readonly string score;
-		[JsonName("extra_data")]
+		[JsonProperty("extra_data")]
 		public readonly string extraData;
-		[JsonName("user")]
+		[JsonProperty("user")]
 		public readonly string username;
-		[JsonName("user_id")]
+		[JsonProperty("user_id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int userId;
-		[JsonName("guest")]
+		[JsonProperty("guest")]
 		public readonly string guestName;
-		[JsonName("stored_timestamp")]
+		[JsonProperty("stored_timestamp")]
 		[JsonConverter(typeof(GameJoltLongConverter))]
 		public readonly long storedTimestamp;
-		[JsonName("stored")]
+		[JsonProperty("stored")]
 		public readonly string stored;
 
 		[JsonConstructor]
@@ -95,10 +92,11 @@ namespace Hertzole.GameJolt
 		{
 			return new GameJoltScore(sort, score, extraData, username, userId, guestName, DateTimeHelper.FromUnixTimestamp(storedTimestamp));
 		}
-		
+
 		public override string ToString()
 		{
-			return $"{nameof(ScoreInternal)} ({nameof(sort)}: {sort}, {nameof(score)}: {score}, {nameof(extraData)}: {extraData}, {nameof(username)}: {username}, {nameof(userId)}: {userId}, {nameof(guestName)}: {guestName}, {nameof(storedTimestamp)}: {storedTimestamp}, {nameof(stored)}: {stored})";
+			return
+				$"{nameof(ScoreInternal)} ({nameof(sort)}: {sort}, {nameof(score)}: {score}, {nameof(extraData)}: {extraData}, {nameof(username)}: {username}, {nameof(userId)}: {userId}, {nameof(guestName)}: {guestName}, {nameof(storedTimestamp)}: {storedTimestamp}, {nameof(stored)}: {stored})";
 		}
 	}
 }

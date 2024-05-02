@@ -11,7 +11,6 @@ using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.Ga
 using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
 using GameJoltStringTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string>>;
 using GameJoltStringArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string[]>>;
-
 #else
 using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
@@ -133,8 +132,7 @@ namespace Hertzole.GameJolt
 				return authResult;
 			}
 
-			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken, cancellationToken)
-				;
+			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken, cancellationToken);
 		}
 
 		/// <summary>
@@ -326,8 +324,7 @@ namespace Hertzole.GameJolt
 		public async Task<GameJoltResult<int>> UpdateAsync(string key, int data, NumericOperation operation, CancellationToken cancellationToken = default)
 		{
 			GameJoltResult<(string stringValue, int intValue)> result =
-				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken)
-					;
+				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken);
 
 			if (result.HasError)
 			{
@@ -390,8 +387,7 @@ namespace Hertzole.GameJolt
 
 			GameJoltResult<(string stringValue, int intValue)> result =
 				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken,
-						cancellationToken)
-					;
+					cancellationToken);
 
 			if (result.HasError)
 			{

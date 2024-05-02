@@ -26,7 +26,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					reader.Read();
 					continue;
 				}
-				
+
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
@@ -41,6 +41,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					{
 						users = serializer.Deserialize<User[]>(reader);
 					}
+
 					break;
 				}
 

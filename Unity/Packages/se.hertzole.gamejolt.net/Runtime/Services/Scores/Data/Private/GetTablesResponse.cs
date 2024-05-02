@@ -2,11 +2,10 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
@@ -15,12 +14,12 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct GetTablesResponse : IResponse, IEquatable<GetTablesResponse>
 	{
-		[JsonName("success")]
+		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public readonly bool success;
-		[JsonName("message")]
+		[JsonProperty("message")]
 		public readonly string? message;
-		[JsonName("tables")]
+		[JsonProperty("tables")]
 		public readonly TableInternal[] tables;
 
 		[JsonIgnore]
@@ -74,7 +73,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(GetTablesResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(tables)}: {tables.ToCommaSeparatedString()})";
+			return
+				$"{nameof(GetTablesResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(tables)}: {tables.ToCommaSeparatedString()})";
 		}
 	}
 }
