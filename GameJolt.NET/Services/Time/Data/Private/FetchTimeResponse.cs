@@ -2,14 +2,11 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -17,33 +14,33 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct FetchTimeResponse : IResponse, IEquatable<FetchTimeResponse>
 	{
-		[JsonName("timestamp")]
+		[JsonProperty("timestamp")]
 		[JsonConverter(typeof(GameJoltLongConverter))]
 		public readonly long timestamp;
-		[JsonName("timezone")]
+		[JsonProperty("timezone")]
 		public readonly string timezone;
-		[JsonName("year")]
+		[JsonProperty("year")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int year;
-		[JsonName("month")]
+		[JsonProperty("month")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int month;
-		[JsonName("day")]
+		[JsonProperty("day")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int day;
-		[JsonName("hour")]
+		[JsonProperty("hour")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int hour;
-		[JsonName("minute")]
+		[JsonProperty("minute")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int minute;
-		[JsonName("second")]
+		[JsonProperty("second")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int second;
-		[JsonName("success")]
+		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public bool Success { get; }
-		[JsonName("message")]
+		[JsonProperty("message")]
 		public string? Message { get; }
 
 		[JsonConstructor]

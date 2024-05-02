@@ -2,11 +2,10 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
@@ -18,13 +17,13 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Whether the request succeeded or failed.
 		/// </summary>
-		[JsonName("success")]
+		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public bool Success { get; }
 		/// <summary>
 		///     If the request was not successful, this will contain the error message.
 		/// </summary>
-		[JsonName("message")]
+		[JsonProperty("message")]
 		public string? Message { get; }
 
 		[JsonConstructor]

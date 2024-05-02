@@ -2,11 +2,10 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
 using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
@@ -15,12 +14,12 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct GetScoresResponse : IResponse, IEquatable<GetScoresResponse>
 	{
-		[JsonName("success")]
+		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public readonly bool success;
-		[JsonName("message")]
+		[JsonProperty("message")]
 		public readonly string? message;
-		[JsonName("scores")]
+		[JsonProperty("scores")]
 		public readonly ScoreInternal[] scores;
 
 		[JsonIgnore]

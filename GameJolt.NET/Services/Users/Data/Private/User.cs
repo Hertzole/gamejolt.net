@@ -3,14 +3,11 @@
 using System;
 using Hertzole.GameJolt.Serialization.Shared;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -18,34 +15,34 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct User : IEquatable<User>
 	{
-		[JsonName("id")]
+		[JsonProperty("id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int id;
-		[JsonName("type")]
+		[JsonProperty("type")]
 		[JsonConverter(typeof(GameJoltUserTypeConverter))]
 		public readonly UserType type;
-		[JsonName("username")]
+		[JsonProperty("username")]
 		public readonly string username;
-		[JsonName("avatar_url")]
+		[JsonProperty("avatar_url")]
 		public readonly string avatarUrl;
-		[JsonName("signed_up")]
+		[JsonProperty("signed_up")]
 		public readonly string signedUp;
-		[JsonName("signed_up_timestamp")]
+		[JsonProperty("signed_up_timestamp")]
 		[JsonConverter(typeof(GameJoltLongConverter))]
 		public readonly long signedUpTimestamp;
-		[JsonName("last_logged_in")]
+		[JsonProperty("last_logged_in")]
 		public readonly string lastLoggedIn;
-		[JsonName("last_logged_in_timestamp")]
+		[JsonProperty("last_logged_in_timestamp")]
 		[JsonConverter(typeof(GameJoltLongConverter))]
 		public readonly long lastLoggedInTimestamp;
-		[JsonName("status")]
+		[JsonProperty("status")]
 		[JsonConverter(typeof(GameJoltStatusConverter))]
 		public readonly UserStatus status;
-		[JsonName("developer_name")]
+		[JsonProperty("developer_name")]
 		public readonly string displayName;
-		[JsonName("developer_website")]
+		[JsonProperty("developer_website")]
 		public readonly string userWebsite;
-		[JsonName("developer_description")]
+		[JsonProperty("developer_description")]
 		public readonly string userDescription;
 
 		[JsonConstructor]

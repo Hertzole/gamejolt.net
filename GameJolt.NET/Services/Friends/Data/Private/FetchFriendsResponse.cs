@@ -2,14 +2,11 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -17,12 +14,12 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct FetchFriendsResponse : IResponse, IEquatable<FetchFriendsResponse>
 	{
-		[JsonName("friends")]
+		[JsonProperty("friends")]
 		public readonly FriendId[] friends;
-		[JsonName("success")]
+		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public bool Success { get; }
-		[JsonName("message")]
+		[JsonProperty("message")]
 		public string? Message { get; }
 
 		[JsonConstructor]

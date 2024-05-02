@@ -158,7 +158,7 @@ namespace Hertzole.GameJolt
 				sb.Append(", " + nameof(UserDescription) + ": ");
 				sb.Append(UserDescription);
 
-				sb.Append(")");
+				sb.Append(')');
 
 				return sb.ToString();
 			}
