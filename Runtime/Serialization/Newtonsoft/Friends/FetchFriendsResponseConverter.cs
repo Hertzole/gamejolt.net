@@ -27,14 +27,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					reader.Read();
 					continue;
 				}
-				
+
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
 				if (propertyName.Equals("friends", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					
+
 					if (reader.TokenType == JsonToken.Null)
 					{
 						friends = Array.Empty<FriendId>();
@@ -43,7 +43,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					{
 						friends = serializer.Deserialize<FriendId[]>(reader);
 					}
-					
+
 					break;
 				}
 

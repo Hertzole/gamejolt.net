@@ -17,7 +17,7 @@ namespace Hertzole.GameJolt.Serialization.System
 					{
 						return (int) longValue;
 					}
-					
+
 					return Convert.ToInt32(reader.GetDouble());
 
 				case JsonTokenType.String:
@@ -25,7 +25,7 @@ namespace Hertzole.GameJolt.Serialization.System
 					{
 						return result;
 					}
-					
+
 					if (double.TryParse(reader.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))
 					{
 						return Convert.ToInt32(doubleValue);

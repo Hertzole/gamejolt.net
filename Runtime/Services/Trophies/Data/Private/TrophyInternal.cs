@@ -3,14 +3,11 @@
 using System;
 using Hertzole.GameJolt.Serialization.Shared;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -18,19 +15,19 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct TrophyInternal : IEquatable<TrophyInternal>
 	{
-		[JsonName("id")]
+		[JsonProperty("id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int id;
-		[JsonName("title")]
+		[JsonProperty("title")]
 		public readonly string title;
-		[JsonName("description")]
+		[JsonProperty("description")]
 		public readonly string description;
-		[JsonName("difficulty")]
+		[JsonProperty("difficulty")]
 		[JsonConverter(typeof(GameJoltTrophyDifficultyConverter))]
 		public readonly TrophyDifficulty difficulty;
-		[JsonName("image_url")]
+		[JsonProperty("image_url")]
 		public readonly string imageUrl;
-		[JsonName("achieved")]
+		[JsonProperty("achieved")]
 		[JsonConverter(typeof(BooleanOrDateConverter))]
 		public readonly bool achieved;
 
@@ -89,7 +86,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(TrophyInternal)} ({nameof(id)}: {id}, {nameof(title)}: {title}, {nameof(description)}: {description}, {nameof(difficulty)}: {difficulty}, {nameof(imageUrl)}: {imageUrl}, {nameof(achieved)}: {achieved})";
+			return
+				$"{nameof(TrophyInternal)} ({nameof(id)}: {id}, {nameof(title)}: {title}, {nameof(description)}: {description}, {nameof(difficulty)}: {difficulty}, {nameof(imageUrl)}: {imageUrl}, {nameof(achieved)}: {achieved})";
 		}
 	}
 }
