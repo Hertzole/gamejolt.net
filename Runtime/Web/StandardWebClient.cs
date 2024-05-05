@@ -16,13 +16,18 @@ namespace Hertzole.GameJolt
 
 		public async StringTask GetStringAsync(string url, CancellationToken cancellationToken)
 		{
-			string response = await client.GetStringAsync(url, cancellationToken);
-			if (string.IsNullOrEmpty(response))
+			HttpResponseMessage response = await client.GetAsync(url, cancellationToken);
+
+			if (!response.IsSuccessStatusCode)
 			{
-				throw new GameJoltException("Response was empty.");
+				throw new HttpRequestException($"The request to '{url}' failed with status code {response.StatusCode}.");
 			}
 
-			return response!;
+#if NET5_0_OR_GREATER
+			return await response.Content.ReadAsStringAsync(cancellationToken);
+#else
+			return await response.Content.ReadAsStringAsync();
+#endif
 		}
 
 		public void Dispose()

@@ -1,4 +1,5 @@
 ﻿#if UNITY_2021_1_OR_NEWER
+using System.Net.Http;
 using System.Threading;
 using UnityEngine.Networking;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
@@ -8,7 +9,6 @@ using StringTask = System.Threading.Tasks.Task<string>;
 #endif
 #if !UNITY_2023_1_OR_NEWER
 using System.Threading.Tasks;
-
 #else
 using UnityEngine;
 #endif
@@ -33,30 +33,23 @@ namespace Hertzole.GameJolt
 
 			UnityWebRequest request = UnityWebRequest.Get(url);
 			UnityWebRequestAsyncOperation operation = request.SendWebRequest();
-
+			
 			operation.completed += _ =>
 			{
-				if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+				if (cancellationToken.IsCancellationRequested)
 				{
-					tcs.SetException(new GameJoltException(request.error));
-				}
-				else
-				{
-					tcs.SetResult(request.downloadHandler.text);
-				}
-			};
-
-			cancellationToken.Register(() =>
-			{
-				if (!tcs.Task.IsCompleted)
-				{
-#if NET5_0_OR_GREATER
-					tcs.SetCanceled(cancellationToken);
-#else
 					tcs.SetCanceled();
-#endif
+					return;
 				}
-			});
+				
+				if (request.result != UnityWebRequest.Result.Success)
+				{
+					tcs.SetException(new HttpRequestException($"The request to '{url}' failed with status code {request.responseCode}."));
+					return;
+				}
+				
+				tcs.SetResult(request.downloadHandler.text);
+			};
 
 			return await tcs.Task;
 		}
@@ -70,10 +63,10 @@ namespace Hertzole.GameJolt
 			await request.SendWebRequest();
 			
 			cancellationToken.ThrowIfCancellationRequested();
-			
-			if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+
+			if (request.result != UnityWebRequest.Result.Success)
 			{
-				throw new GameJoltException(request.error);
+				throw new HttpRequestException($"The request to '{url}' failed with status code {request.responseCode}.");
 			}
 			
 			return request.downloadHandler.text;
