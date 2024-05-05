@@ -181,5 +181,20 @@ namespace GameJolt.NET.Tests
 			return Task.FromResult(result);
 #endif
 		}
+
+		internal static async Task AssertErrorAsync<TResponse, TResult, TException>(Func<TResponse> createResponse,
+			Func<Task<GameJoltResult<TResult>>> getResult,
+			string errorMessage = "") where TResponse : struct, IResponse where TException : Exception
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default)
+			           .ReturnsForAnyArgs(_ => FromResult(serializer.SerializeResponse(createResponse.Invoke())));
+
+			GameJoltResult<TResult> result = await getResult.Invoke();
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UnknownFatalError.Message : errorMessage));
+			Assert.That(result.Exception, Is.TypeOf<TException>());
+		}
 	}
 }
