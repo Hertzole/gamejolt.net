@@ -46,7 +46,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 		public sealed override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
 		{
 			bool hasReadResponse = false;
-			
+
 			bool success = false;
 			string? message = null;
 			T existingData = default;
@@ -65,7 +65,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				else if (propertyName.Equals("message", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					if(reader.TokenType == JsonToken.Null)
+					if (reader.TokenType == JsonToken.Null)
 					{
 						message = null;
 					}
@@ -97,14 +97,15 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 		protected abstract T CreateResponse(bool success, string? message, T existingData);
 	}
-	
+
 	internal sealed class ResponseConverter : ResponseConverter<Response>
 	{
 		protected override void WriteResponseJson(JsonWriter writer, Response value, JsonSerializer serializer) { }
 
 		protected override Response ReadResponseJson(JsonReader reader, JsonSerializer serializer)
 		{
-			throw new NotSupportedException("This method should not be called. This probably means that the response has extra data that is not being handled.");
+			throw new NotSupportedException(
+				"This method should not be called. This probably means that the response has extra data that is not being handled.");
 		}
 
 		protected override Response CreateResponse(bool success, string? message, Response existingData)

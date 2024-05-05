@@ -17,14 +17,14 @@ namespace Hertzole.GameJolt.Serialization.System
 					{
 						return longValue;
 					}
-					
+
 					return Convert.ToInt64(reader.GetDouble());
 				case JsonTokenType.String:
 					if (long.TryParse(reader.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long result))
 					{
 						return result;
 					}
-					
+
 					if (double.TryParse(reader.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out double doubleValue))
 					{
 						return Convert.ToInt64(doubleValue);

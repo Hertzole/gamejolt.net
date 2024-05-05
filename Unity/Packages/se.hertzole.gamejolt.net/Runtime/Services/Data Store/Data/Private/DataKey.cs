@@ -1,19 +1,18 @@
 ﻿#nullable enable
 
-#if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
-#else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
-#endif
 using System;
+#if NET6_0_OR_GREATER
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
+#else
+using Newtonsoft.Json;
+#endif
 
 namespace Hertzole.GameJolt
 {
 	internal readonly struct DataKey : IEquatable<DataKey>
 	{
-		[JsonName("key")]
+		[JsonProperty("key")]
 		public readonly string key;
 
 		[JsonConstructor]

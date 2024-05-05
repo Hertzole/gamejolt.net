@@ -27,14 +27,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					reader.Read();
 					continue;
 				}
-				
+
 				// Read the property name.
 				string propertyName = (string) reader.Value!;
 
 				if (propertyName.Equals("tables", StringComparison.OrdinalIgnoreCase))
 				{
 					reader.Read();
-					
+
 					if (reader.TokenType == JsonToken.Null)
 					{
 						tables = Array.Empty<TableInternal>();
@@ -43,7 +43,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 					{
 						tables = serializer.Deserialize<TableInternal[]>(reader);
 					}
-					
+
 					break;
 				}
 

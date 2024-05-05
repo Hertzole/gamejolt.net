@@ -40,7 +40,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(ENDPOINT);
-                
+
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				FetchTimeResponse response = settings.DeserializeResponse<FetchTimeResponse>(json);
 

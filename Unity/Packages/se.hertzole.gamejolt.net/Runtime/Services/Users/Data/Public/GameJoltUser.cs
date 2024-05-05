@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -127,7 +128,7 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			using (StringBuilderPool.Rent(out var sb))
+			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
 				sb.Append(nameof(GameJoltUser) + " (" + nameof(Id) + ": ");
 				sb.Append(Id);
@@ -147,18 +148,18 @@ namespace Hertzole.GameJolt
 				sb.Append(Status);
 				sb.Append(", " + nameof(DisplayName) + ": ");
 				sb.Append(DisplayName);
-				 
+
 				if (!string.IsNullOrEmpty(UserWebsite))
 				{
 					sb.Append(", " + nameof(UserWebsite) + ": ");
 					sb.Append(UserWebsite);
 				}
-				
+
 				sb.Append(", " + nameof(UserDescription) + ": ");
 				sb.Append(UserDescription);
-				
-				sb.Append(")");
-                
+
+				sb.Append(')');
+
 				return sb.ToString();
 			}
 		}

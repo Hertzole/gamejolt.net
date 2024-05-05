@@ -2,16 +2,11 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
-using JsonIgnore = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
-using JsonIgnore = Newtonsoft.Json.JsonIgnoreAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -19,12 +14,12 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct GetScoreRankResponse : IResponse, IEquatable<GetScoreRankResponse>
 	{
-		[JsonName("success")]
+		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public readonly bool success;
-		[JsonName("message")]
+		[JsonProperty("message")]
 		public readonly string? message;
-		[JsonName("rank")]
+		[JsonProperty("rank")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int rank;
 
@@ -76,7 +71,7 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
-		
+
 		public override string ToString()
 		{
 			return $"{nameof(GetScoreRankResponse)} ({nameof(Success)}: {Success}, {nameof(Message)}: {Message}, {nameof(rank)}: {rank})";

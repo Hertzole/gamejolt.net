@@ -2,14 +2,11 @@
 
 using System;
 #if NET6_0_OR_GREATER
-using JsonName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using JsonConverter = System.Text.Json.Serialization.JsonConverterAttribute;
-using JsonConstructor = System.Text.Json.Serialization.JsonConstructorAttribute;
+using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;
 #else
-using JsonName = Newtonsoft.Json.JsonPropertyAttribute;
-using JsonConverter = Newtonsoft.Json.JsonConverterAttribute;
-using JsonConstructor = Newtonsoft.Json.JsonConstructorAttribute;
+using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
 
@@ -17,14 +14,14 @@ namespace Hertzole.GameJolt
 {
 	internal readonly struct TableInternal : IEquatable<TableInternal>
 	{
-		[JsonName("id")]
+		[JsonProperty("id")]
 		[JsonConverter(typeof(GameJoltIntConverter))]
 		public readonly int id;
-		[JsonName("name")]
+		[JsonProperty("name")]
 		public readonly string name;
-		[JsonName("description")]
+		[JsonProperty("description")]
 		public readonly string description;
-		[JsonName("primary")]
+		[JsonProperty("primary")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
 		public readonly bool isPrimary;
 
@@ -78,7 +75,8 @@ namespace Hertzole.GameJolt
 
 		public override string ToString()
 		{
-			return $"{nameof(TableInternal)} ({nameof(id)}: {id}, {nameof(name)}: {name}, {nameof(description)}: {description}, {nameof(isPrimary)}: {isPrimary})";
+			return
+				$"{nameof(TableInternal)} ({nameof(id)}: {id}, {nameof(name)}: {name}, {nameof(description)}: {description}, {nameof(isPrimary)}: {isPrimary})";
 		}
 	}
 }
