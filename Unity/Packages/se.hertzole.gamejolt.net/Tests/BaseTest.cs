@@ -104,6 +104,9 @@ namespace GameJolt.NET.Tests
 #endif
 
 			await OnTearDownAsync();
+
+			// Reset the web client to the default one so that we don't use the fake one in other tests.
+			GameJoltAPI.webClient = GameJoltAPI.GetWebClient();
 		}
 
 		protected virtual Task OnTearDownAsync()
