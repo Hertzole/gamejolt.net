@@ -17,18 +17,8 @@ namespace Hertzole.GameJolt
 		private static GameJoltFriends? friends;
 		private static GameJoltTime? time;
 
-		internal static readonly IGameJoltSerializer serializer =
-#if NET6_0_OR_GREATER
-			new SystemJsonSerializer();
-#else
-			new NewtonsoftJsonSerializer();
-#endif
-		internal static IGameJoltWebClient webClient =
-#if UNITY_2021_1_OR_NEWER
-			new UnityWebClient();
-#else
-			new StandardWebClient();
-#endif
+		internal static readonly IGameJoltSerializer serializer = GetSerializer();
+		internal static IGameJoltWebClient webClient = GetWebClient();
 
 		internal static int GameId { get; private set; }
 		internal static string? PrivateKey { get; private set; }
@@ -208,6 +198,24 @@ namespace Hertzole.GameJolt
 			{
 				throw new GameJoltInitializationException();
 			}
+		}
+
+		internal static IGameJoltSerializer GetSerializer()
+		{
+#if NET6_0_OR_GREATER
+			return new SystemJsonSerializer();
+#else
+			return new NewtonsoftJsonSerializer();
+#endif
+		}
+		
+		internal static IGameJoltWebClient GetWebClient()
+		{
+#if UNITY_2021_1_OR_NEWER
+			return new UnityWebClient();
+#else
+			return new StandardWebClient();
+#endif
 		}
 	}
 }
