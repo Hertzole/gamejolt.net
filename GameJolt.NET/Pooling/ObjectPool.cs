@@ -10,6 +10,7 @@ namespace Hertzole.GameJolt
 		private readonly Func<T> createFunc;
 		private readonly Action<T>? onGet;
 		private readonly Action<T>? onReturn;
+		private readonly object lockObject = new object();
 
 		public ObjectPool(Func<T> createFunc, Action<T>? onGet = null, Action<T>? onReturn = null)
 		{
@@ -20,25 +21,34 @@ namespace Hertzole.GameJolt
 
 		public T Rent()
 		{
-			if (!pool.TryPop(out T? item))
+			lock (lockObject)
 			{
-				item = createFunc();
-			}
+				if (!pool.TryPop(out T? item))
+				{
+					item = createFunc();
+				}
 
-			onGet?.Invoke(item);
-			return item;
+				onGet?.Invoke(item);
+				return item;
+			}
 		}
 
 		public PoolHandle<T> Rent(out T item)
 		{
-			item = Rent();
-			return new PoolHandle<T>(this, item);
+			lock (lockObject)
+			{
+				item = Rent();
+				return new PoolHandle<T>(this, item);
+			}
 		}
 
 		public void Return(T obj)
 		{
-			onReturn?.Invoke(obj);
-			pool.Push(obj);
+			lock (lockObject)
+			{
+				onReturn?.Invoke(obj);
+				pool.Push(obj);
+			}
 		}
 	}
 }
