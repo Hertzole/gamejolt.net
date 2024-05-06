@@ -75,6 +75,35 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task SetGlobal_Null_Fail([Values] bool emptyString)
+		{
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", emptyString ? string.Empty : null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
+		}
+
+		[Test]
+		public async Task SetGlobal_Error_Fail()
+		{
+			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			Response CreateResponse()
+			{
+				return new Response(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+			}
+
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.DataStore.SetAsync("key", "value");
+			}
+		}
+
+		[Test]
 		public async Task SetUser_Authenticated_String_Success()
 		{
 			await AuthenticateAsync();
@@ -127,7 +156,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 		}
-		
+
 		[Test]
 		public async Task SetUser_Authenticated_Bool_Success()
 		{
@@ -144,6 +173,38 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
+		}
+
+		[Test]
+		public async Task SetUser_Authenticated_Null_Fail([Values] bool emptyString)
+		{
+			await AuthenticateAsync();
+
+			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", emptyString ? string.Empty : null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
+		}
+
+		[Test]
+		public async Task SetUser_Authenticated_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			Response CreateResponse()
+			{
+				return new Response(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+			}
+
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", "value");
+			}
 		}
 
 		[Test]
@@ -175,7 +236,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
-		
+
 		[Test]
 		public async Task SetUser_NotAuthenticated_Bool_Fail()
 		{
@@ -200,6 +261,25 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
+		}
+
+		[Test]
+		public async Task RemoveGlobal_Error_Fail()
+		{
+			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			Response CreateResponse()
+			{
+				return new Response(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+			}
+
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.DataStore.RemoveAsync("key");
+			}
 		}
 
 		[Test]
@@ -228,6 +308,26 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
+		}
+
+		[Test]
+		public async Task RemoveUser_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			Response CreateResponse()
+			{
+				return new Response(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+			}
+
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.DataStore.RemoveAsCurrentUserAsync("key");
+			}
 		}
 
 		[Test]
@@ -268,6 +368,25 @@ namespace GameJolt.NET.Tests
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
+			}
+		}
+
+		[Test]
+		public async Task UpdateGlobal_String_Error_Fail()
+		{
+			await AssertErrorAsync<UpdateDataResponse, string, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			UpdateDataResponse CreateResponse()
+			{
+				return new UpdateDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<string>> GetResult()
+			{
+				return GameJoltAPI.DataStore.UpdateAsync("key", "value", StringOperation.Append);
 			}
 		}
 
@@ -336,6 +455,25 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task UpdateGlobal_Int_Error_Fail()
+		{
+			await AssertErrorAsync<UpdateDataResponse, int, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			UpdateDataResponse CreateResponse()
+			{
+				return new UpdateDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<int>> GetResult()
+			{
+				return GameJoltAPI.DataStore.UpdateAsync("key", 0, NumericOperation.Add);
+			}
+		}
+
+		[Test]
 		public async Task UpdateUser_Authenticated_String_Success([Values] StringOperation operation)
 		{
 			await AuthenticateAsync();
@@ -375,6 +513,26 @@ namespace GameJolt.NET.Tests
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
+			}
+		}
+
+		[Test]
+		public async Task UpdateUser_Authenticated_String_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<UpdateDataResponse, string, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			UpdateDataResponse CreateResponse()
+			{
+				return new UpdateDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<string>> GetResult()
+			{
+				return GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", "value", StringOperation.Append);
 			}
 		}
 
@@ -445,6 +603,26 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task UpdateUser_Authenticated_Int_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<UpdateDataResponse, int, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			UpdateDataResponse CreateResponse()
+			{
+				return new UpdateDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<int>> GetResult()
+			{
+				return GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", 0, NumericOperation.Add);
+			}
+		}
+
+		[Test]
 		public async Task UpdateUser_NotAuthenticated_String_Fail([Values] StringOperation operation)
 		{
 			GameJoltResult<string> result = await GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("key", "1", operation);
@@ -482,6 +660,25 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetValueGlobal_String_Error_Fail()
+		{
+			await AssertErrorAsync<GetDataResponse, string, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<string>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsStringAsync("key");
+			}
+		}
+
+		[Test]
 		public async Task GetValueGlobal_Int_Success()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -496,6 +693,42 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(1));
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Int_InvalidValue_Fail()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "invalid value"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidDataStoreValueException>());
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Int_Error_Fail()
+		{
+			await AssertErrorAsync<GetDataResponse, int, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<int>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsIntAsync("key");
+			}
 		}
 
 		[Test]
@@ -516,7 +749,60 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(bytes));
 		}
-		
+
+		[Test]
+		public async Task GetValueGlobal_Bytes_InvalidValue_Fail()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "VeryInvalidValue12345"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<FormatException>());
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Bytes_EmptyValue_Success()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, string.Empty));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key");
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Bytes_Error_Fail()
+		{
+			await AssertErrorAsync<GetDataResponse, byte[], GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<byte[]>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsBytesAsync("key");
+			}
+		}
+
 		[Test]
 		public async Task GetValueGlobal_Bool_Success()
 		{
@@ -532,6 +818,42 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.True);
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Bool_InvalidValue_Fail()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "invalid value"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<bool> result = await GameJoltAPI.DataStore.GetValueAsBoolAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidDataStoreValueException>());
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Bool_Error_Fail()
+		{
+			await AssertErrorAsync<GetDataResponse, bool, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<bool>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsBoolAsync("key");
+			}
 		}
 
 		[Test]
@@ -554,6 +876,26 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetValueUser_Authenticated_String_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<GetDataResponse, string, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<string>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsStringAsCurrentUserAsync("key");
+			}
+		}
+
+		[Test]
 		public async Task GetValueUser_Authenticated_Int_Success()
 		{
 			await AuthenticateAsync();
@@ -570,6 +912,45 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(1));
+		}
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Int_InvalidValue_Fail()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "invalid value"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<int> result = await GameJoltAPI.DataStore.GetValueAsIntAsCurrentUserAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidDataStoreValueException>());
+		}
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Int_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<GetDataResponse, int, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<int>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsIntAsCurrentUserAsync("key");
+			}
 		}
 
 		[Test]
@@ -592,7 +973,65 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(bytes));
 		}
-		
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Bytes_InvalidValue_Fail()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "VeryInvalidValue12345"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<FormatException>());
+		}
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Bytes_EmptyValue_Success()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, string.Empty));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<byte[]> result = await GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Bytes_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<GetDataResponse, byte[], GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<byte[]>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key");
+			}
+		}
+
 		[Test]
 		public async Task GetValueUser_Authenticated_Bool_Success()
 		{
@@ -610,6 +1049,45 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.True);
+		}
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Bool_InvalidValue_Fail()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "invalid value"));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<bool> result = await GameJoltAPI.DataStore.GetValueAsBoolAsCurrentUserAsync("key");
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidDataStoreValueException>());
+		}
+
+		[Test]
+		public async Task GetValueUser_Authenticated_Bool_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<GetDataResponse, bool, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
+				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+
+			return;
+
+			GetDataResponse CreateResponse()
+			{
+				return new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null);
+			}
+
+			Task<GameJoltResult<bool>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetValueAsBoolAsCurrentUserAsync("key");
+			}
 		}
 
 		[Test]
@@ -641,7 +1119,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
-		
+
 		[Test]
 		public async Task GetValueUser_NotAuthenticated_Bool_Fail()
 		{
@@ -690,6 +1168,44 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetKeysGlobal_Success_NoKeys()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+				Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT));
+
+				string json = serializer.SerializeResponse(new GetKeysResponse(true, null, null));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsync();
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+
+		[Test]
+		public async Task GetKeysGlobal_Error_Fail()
+		{
+			await AssertErrorAsync<GetKeysResponse, string[], GameJoltException>(CreateResponse, GetResult);
+			return;
+
+			GetKeysResponse CreateResponse()
+			{
+				return new GetKeysResponse(false, GameJoltException.UnknownFatalError.Message, null);
+			}
+
+			Task<GameJoltResult<string[]>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetKeysAsync();
+			}
+		}
+
+		[Test]
 		[TestCase("")]
 		[TestCase("*")]
 		public async Task GetKeysUser_Authenticated_Success(string pattern)
@@ -729,6 +1245,47 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetKeysUser_Authenticated_Success_NoKeys()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+				Assert.That(arg, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltDataStore.FETCH_KEYS_ENDPOINT + "?username="));
+
+				string json = serializer.SerializeResponse(new GetKeysResponse(true, null, null));
+
+				return FromResult(json);
+			});
+
+			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync();
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+
+		[Test]
+		public async Task GetKeysUser_Authenticated_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<GetKeysResponse, string[], GameJoltException>(CreateResponse, GetResult);
+			return;
+
+			GetKeysResponse CreateResponse()
+			{
+				return new GetKeysResponse(false, GameJoltException.UnknownFatalError.Message, null);
+			}
+
+			Task<GameJoltResult<string[]>> GetResult()
+			{
+				return GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync();
+			}
+		}
+
+		[Test]
 		public async Task GetKeysUser_NotAuthenticated_Fail()
 		{
 			GameJoltResult<string[]> result = await GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync("");
@@ -760,12 +1317,16 @@ namespace GameJolt.NET.Tests
 			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", bytes),
 				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}")); });
 		}
-		
+
 		[Test]
 		public async Task Set_Bool_ValidUrl([Values] bool value)
 		{
 			await TestUrlAsync(() => GameJoltAPI.DataStore.SetAsync("Key", value),
-				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={value.ToString().ToLowerInvariant()}")); });
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={value.ToString().ToLowerInvariant()}"));
+				});
 		}
 
 		[Test]
@@ -805,7 +1366,7 @@ namespace GameJolt.NET.Tests
 					$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.SET_ENDPOINT}?key=Key&data={bytes}&username={Username}&user_token={Token}"));
 			});
 		}
-		
+
 		[Test]
 		public async Task SetAsCurrentUser_Bool_ValidUrl([Values] bool value)
 		{
@@ -901,7 +1462,7 @@ namespace GameJolt.NET.Tests
 			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBytesAsync("Key"),
 				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
 		}
-		
+
 		[Test]
 		public async Task GetValueAsync_Bool_ValidUrl()
 		{
@@ -960,7 +1521,7 @@ namespace GameJolt.NET.Tests
 						Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key&username={Username}&user_token={Token}"));
 				});
 		}
-		
+
 		[Test]
 		[TestCase("")]
 		[TestCase("*")]
@@ -979,7 +1540,7 @@ namespace GameJolt.NET.Tests
 					}
 				});
 		}
-		
+
 		[Test]
 		[TestCase("")]
 		[TestCase("*")]
@@ -992,13 +1553,50 @@ namespace GameJolt.NET.Tests
 				{
 					if (string.IsNullOrEmpty(pattern))
 					{
-						Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?username={Username}&user_token={Token}"));
+						Assert.That(url,
+							Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?username={Username}&user_token={Token}"));
 					}
 					else
 					{
-						Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?pattern={pattern}&username={Username}&user_token={Token}"));
+						Assert.That(url,
+							Does.StartWith(
+								$"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_KEYS_ENDPOINT}?pattern={pattern}&username={Username}&user_token={Token}"));
 					}
 				});
+		}
+
+		[Test]
+		public async Task UpdateString_InvalidOperation_Throws()
+		{
+			bool caught = false;
+
+			try
+			{
+				await GameJoltAPI.DataStore.UpdateAsync("key", "value", (StringOperation) 10);
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+				caught = true;
+			}
+
+			Assert.That(caught, Is.True);
+		}
+
+		[Test]
+		public async Task UpdateInt_InvalidOperation_Throws()
+		{
+			bool caught = false;
+
+			try
+			{
+				await GameJoltAPI.DataStore.UpdateAsync("key", 1, (NumericOperation) 10);
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+				caught = true;
+			}
+
+			Assert.That(caught, Is.True);
 		}
 	}
 }

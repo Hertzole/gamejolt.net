@@ -55,6 +55,9 @@ namespace Hertzole.GameJolt
 				case "Mathematical operations require the pre-existing data stored to also be numeric.":
 					exception = new GameJoltInvalidDataStoreValueException("Mathematical operations require the pre-existing data stored to also be numeric.");
 					return true;
+				case GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE:
+					exception = new GameJoltInvalidDataStoreKeyException(GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
+					return true;
 				default:
 					exception = new GameJoltException(response.Message);
 					return true;
