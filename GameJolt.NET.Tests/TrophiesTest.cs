@@ -200,6 +200,66 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetTrophies_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy[], GameJoltInvalidTrophyException>(CreateResponse, GetResult, GameJoltInvalidTrophyException.MESSAGE);
+			return;
+
+			FetchTrophiesResponse CreateResponse()
+			{
+				return new FetchTrophiesResponse(false, GameJoltInvalidTrophyException.MESSAGE, null);
+			}
+            
+			Task<GameJoltResult<GameJoltTrophy[]>> GetResult()
+			{
+				return GameJoltAPI.Trophies.GetTrophiesAsync();
+			}
+		}
+
+		[Test]
+		public async Task GetTrophy_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy, GameJoltInvalidTrophyException>(CreateResponse, GetResult, GameJoltInvalidTrophyException.MESSAGE);
+			return;
+
+			FetchTrophiesResponse CreateResponse()
+			{
+				return new FetchTrophiesResponse(false, GameJoltInvalidTrophyException.MESSAGE, null);
+			}
+			
+			Task<GameJoltResult<GameJoltTrophy>> GetResult()
+			{
+				return GameJoltAPI.Trophies.GetTrophyAsync(0);
+			}
+		}
+
+		[Test]
+		public async Task GetTrophies_NoTrophies_Success()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("trophies/?"))
+				{
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, Array.Empty<TrophyInternal>())));
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+
+		[Test]
 		public async Task UnlockTrophy_Authenticated_ReturnsSuccess()
 		{
 			await AuthenticateAsync();
