@@ -3,7 +3,6 @@ using NUnit.Framework;
 
 namespace GameJolt.NET.Tests.Exceptions
 {
-	[Parallelizable(ParallelScope.All)]
 	public sealed class Scores : BaseExceptionTest
 	{
 		[Test]
