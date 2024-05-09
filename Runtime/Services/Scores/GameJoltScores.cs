@@ -70,6 +70,7 @@ namespace Hertzole.GameJolt
 		/// <param name="extraData">If there's any extra data you would like to store as a string, you can use this field.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			int sort,

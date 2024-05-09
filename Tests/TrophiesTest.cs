@@ -200,6 +200,66 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetTrophies_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy[], GameJoltInvalidTrophyException>(CreateResponse, GetResult, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE);
+			return;
+
+			FetchTrophiesResponse CreateResponse()
+			{
+				return new FetchTrophiesResponse(false, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE, null);
+			}
+            
+			Task<GameJoltResult<GameJoltTrophy[]>> GetResult()
+			{
+				return GameJoltAPI.Trophies.GetTrophiesAsync();
+			}
+		}
+
+		[Test]
+		public async Task GetTrophy_Error_Fail()
+		{
+			await AuthenticateAsync();
+			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy, GameJoltInvalidTrophyException>(CreateResponse, GetResult, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE);
+			return;
+
+			FetchTrophiesResponse CreateResponse()
+			{
+				return new FetchTrophiesResponse(false, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE, null);
+			}
+			
+			Task<GameJoltResult<GameJoltTrophy>> GetResult()
+			{
+				return GameJoltAPI.Trophies.GetTrophyAsync(0);
+			}
+		}
+
+		[Test]
+		public async Task GetTrophies_NoTrophies_Success()
+		{
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("trophies/?"))
+				{
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, Array.Empty<TrophyInternal>())));
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+
+		[Test]
 		public async Task UnlockTrophy_Authenticated_ReturnsSuccess()
 		{
 			await AuthenticateAsync();
@@ -255,7 +315,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
 				{
-					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE)));
 				}
 
 				return FromResult("");
@@ -266,6 +326,53 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltInvalidTrophyException);
+		}
+
+		[Test]
+		public async Task UnlockTrophy_AlreadyUnlocked_Error()
+		{
+			await AuthenticateAsync();
+			
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltTrophyException.ALREADY_UNLOCKED_MESSAGE)));
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0, true);
+			
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception is GameJoltTrophyException);
+		}
+
+		[Test]
+		public async Task UnlockTrophy_AlreadyUnlocked_NoError()
+		{
+			await AuthenticateAsync();
+			
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltTrophies.ADD_ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltTrophyException.ALREADY_UNLOCKED_MESSAGE)));
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0, false);
+			
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
@@ -324,7 +431,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltInvalidTrophyException.MESSAGE)));
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE)));
 				}
 
 				return FromResult("");
@@ -348,7 +455,7 @@ namespace GameJolt.NET.Tests
 
 				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
 				{
-					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltLockedTrophyException.MESSAGE)));
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltTrophyException.DOES_NOT_HAVE_MESSAGE)));
 				}
 
 				return FromResult("");
@@ -358,7 +465,30 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception is GameJoltLockedTrophyException);
+			Assert.That(result.Exception is GameJoltTrophyException);
+		}
+		
+		[Test]
+		public async Task RemoveTrophy_NotUnlocked_NoError()
+		{
+			await AuthenticateAsync();
+			
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltTrophies.REMOVE_ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new Response(false, GameJoltTrophyException.DOES_NOT_HAVE_MESSAGE)));
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0, false);
+			
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
