@@ -1,6 +1,6 @@
 ﻿namespace Hertzole.GameJolt
 {
-	public class GameJoltSessionException : GameJoltException
+	public sealed class GameJoltSessionException : GameJoltException
 	{
 		public GameJoltSessionException(string message) : base(message) { }
 	}
