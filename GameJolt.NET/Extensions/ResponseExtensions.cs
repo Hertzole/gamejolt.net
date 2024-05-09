@@ -25,43 +25,174 @@ namespace Hertzole.GameJolt
 				return false;
 			}
 
-			if (response.Message!.StartsWith("No item with that key could be found.", StringComparison.OrdinalIgnoreCase) ||
-			    response.Message.StartsWith("There is no item with the key passed in:", StringComparison.OrdinalIgnoreCase))
+			string message = response.Message!;
+
+			if (TryGetDataStoreException(message, out exception))
 			{
-				exception = new GameJoltInvalidDataStoreKeyException(response.Message);
 				return true;
 			}
 
-			switch (response.Message)
+			if (TryGetScoresException(message, out exception))
 			{
-				case GameJoltAuthenticationException.MESSAGE:
-					exception = new GameJoltAuthenticationException();
-					return true;
-				case GameJoltInvalidGameException.MESSAGE:
-					exception = new GameJoltInvalidGameException();
-					return true;
-				case GameJoltInvalidUserException.MESSAGE:
-					exception = new GameJoltInvalidUserException();
-					return true;
-				case GameJoltInvalidTrophyException.MESSAGE:
-					exception = new GameJoltInvalidTrophyException();
-					return true;
-				case "Incorrect trophy ID.":
-					exception = new GameJoltInvalidTrophyException("Incorrect trophy ID.");
-					return true;
-				case GameJoltLockedTrophyException.MESSAGE:
-					exception = new GameJoltLockedTrophyException();
-					return true;
-				case "Mathematical operations require the pre-existing data stored to also be numeric.":
-					exception = new GameJoltInvalidDataStoreValueException("Mathematical operations require the pre-existing data stored to also be numeric.");
-					return true;
-				case GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE:
-					exception = new GameJoltInvalidDataStoreKeyException(GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
-					return true;
-				default:
-					exception = new GameJoltException(response.Message);
-					return true;
+				return true;
 			}
+
+			if (TryGetSessionsException(message, out exception))
+			{
+				return true;
+			}
+
+			if (TryGetTrophiesException(message, out exception))
+			{
+				return true;
+			}
+
+			if (TryGetUsersException(message, out exception))
+			{
+				return true;
+			}
+			
+			if (TryGetGlobalException(message, out exception))
+			{
+				return true;
+			}
+
+			exception = new GameJoltException(response.Message);
+			return true;
+		}
+
+		private static bool TryGetDataStoreException(string message,
+#if NULLABLE_ATTRIBUTES
+			[NotNullWhen(true)]
+#endif
+			out Exception? exception)
+		{
+			if (message.Equals("You must enter the key for the item you would like to retrieve data for.", StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals("No item with that key could be found.", StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidDataStoreKeyException(message);
+				return true;
+			}
+
+			if (message.Equals("You must enter an value with the request.", StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals("You must enter data with the request.", StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals("Mathematical operations require the pre-existing data stored to also be numeric.", StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals("Value must be numeric if operation is mathematical.", StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals("GAME JOLT STOP: 0x00000019 (0x00000000, 0xC00E0FF0, 0xFFFFEFD4, 0xC0000000) UNIVERSAL_COLLAPSE",
+				    StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidDataStoreValueException(message);
+				return true;
+			}
+
+			if (message.StartsWith("There is no item with the key passed in:", StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidDataStoreKeyException(message);
+				return true;
+			}
+
+			exception = null;
+			return false;
+		}
+
+		private static bool TryGetScoresException(string message,
+#if NULLABLE_ATTRIBUTES
+			[NotNullWhen(true)]
+#endif
+			out Exception? exception)
+		{
+			if (message.Equals(GameJoltInvalidTableException.MESSAGE, StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidTableException();
+				return true;
+			}
+
+			if (message.Equals("Guests are not allowed to enter scores for this game.", StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltAuthorizedException(message);
+				return true;
+			}
+
+			exception = null;
+			return false;
+		}
+
+		private static bool TryGetSessionsException(string message,
+#if NULLABLE_ATTRIBUTES
+			[NotNullWhen(true)]
+#endif
+			out Exception? exception)
+		{
+			if (message.Equals("Could not find an open session. You must open a new one.", StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltSessionException(message);
+				return true;
+			}
+
+			exception = null;
+			return false;
+		}
+
+		private static bool TryGetTrophiesException(string message,
+#if NULLABLE_ATTRIBUTES
+			[NotNullWhen(true)]
+#endif
+			out Exception? exception)
+		{
+			if (message.Equals(GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE, StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals(GameJoltInvalidTrophyException.INCORRECT_ID_MESSAGE, StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidTrophyException(message);
+				return true;
+			}
+
+			if (message.Equals(GameJoltTrophyException.ALREADY_UNLOCKED_MESSAGE, StringComparison.OrdinalIgnoreCase) ||
+			    message.Equals(GameJoltTrophyException.DOES_NOT_HAVE_MESSAGE, StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltTrophyException(message);
+				return true;
+			}
+
+			exception = null;
+			return false;
+		}
+
+		private static bool TryGetUsersException(string message,
+#if NULLABLE_ATTRIBUTES
+			[NotNullWhen(true)]
+#endif
+			out Exception? exception)
+		{
+			if (message.Equals(GameJoltInvalidUserException.MESSAGE, StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidUserException();
+				return true;
+			}
+
+			if (message.Equals(GameJoltAuthenticationException.MESSAGE, StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltAuthenticationException();
+				return true;
+			}
+
+			exception = null;
+			return false;
+		}
+		
+		private static bool TryGetGlobalException(string message,
+#if NULLABLE_ATTRIBUTES
+			[NotNullWhen(true)]
+#endif
+			out Exception? exception)
+		{
+			if (message.Equals(GameJoltInvalidGameException.MESSAGE, StringComparison.OrdinalIgnoreCase))
+			{
+				exception = new GameJoltInvalidGameException();
+				return true;
+			}
+
+			exception = null;
+			return false;
 		}
 	}
 }
