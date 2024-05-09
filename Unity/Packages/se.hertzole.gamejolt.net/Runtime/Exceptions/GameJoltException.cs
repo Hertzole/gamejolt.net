@@ -4,7 +4,9 @@ namespace Hertzole.GameJolt
 {
 	public class GameJoltException : Exception
 	{
-		internal static GameJoltException UnknownFatalError { get; } = new GameJoltException("Unknown fatal error occurred.");
+		internal const string UNKNOWN_FATAL_ERROR = "Unknown fatal error occurred.";
+        
+		internal static GameJoltException UnknownFatalError { get; } = new GameJoltException(UNKNOWN_FATAL_ERROR);
 
 		public GameJoltException() { }
 

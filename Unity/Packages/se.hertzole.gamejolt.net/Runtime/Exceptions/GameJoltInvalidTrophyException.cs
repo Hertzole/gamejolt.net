@@ -2,10 +2,9 @@
 {
 	public sealed class GameJoltInvalidTrophyException : GameJoltException
 	{
-		public GameJoltInvalidTrophyException() : base(MESSAGE) { }
-
 		public GameJoltInvalidTrophyException(string message) : base(message) { }
 
-		internal const string MESSAGE = "The trophy returned does not belong to this game.";
+		internal const string DOES_NOT_BELONG_MESSAGE = "The trophy returned does not belong to this game.";
+		internal const string INCORRECT_ID_MESSAGE = "Incorrect trophy ID.";
 	}
 }

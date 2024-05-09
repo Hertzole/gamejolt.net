@@ -182,11 +182,19 @@ namespace Hertzole.GameJolt
 		///     Unlocks a trophy for the current user. This method requires the current user to be authenticated.
 		/// </summary>
 		/// <param name="trophyId">The ID of the trophy to unlock.</param>
+		/// <param name="errorIfUnlocked">
+		///     If true, the result will not be successful and will have an error if the user has already
+		///     unlocked the trophy.
+		/// </param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
-		public async Task<GameJoltResult> UnlockTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
+		/// <exception cref="GameJoltTrophyException">
+		///     Returned if the user has already unlocked this trophy and
+		///     <c>errorIfUnlocked</c> is <c>true</c>.
+		/// </exception>
+		public async Task<GameJoltResult> UnlockTrophyAsync(int trophyId, bool errorIfUnlocked = false, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -208,7 +216,12 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					// If the trophy is already unlocked, we don't want to throw an exception, unless the user wants an error.
+					// If the exception is not a GameJoltTrophyException, we want to return it.
+					if ((exception is GameJoltTrophyException && errorIfUnlocked) || exception is not GameJoltTrophyException)
+					{
+						return GameJoltResult.Error(exception!);
+					}
 				}
 
 				return GameJoltResult.Success();
@@ -219,11 +232,19 @@ namespace Hertzole.GameJolt
 		///     Removes an unlocked trophy for the current user. This method requires the current user to be authenticated.
 		/// </summary>
 		/// <param name="trophyId">The ID of the trophy to remove.</param>
+		/// /// <param name="errorIfNotUnlocked">
+		///     If true, the result will not be successful and will have an error if the user hasn't
+		///     unlocked the trophy.
+		/// </param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
-		public async Task<GameJoltResult> RemoveUnlockedTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
+		/// /// <exception cref="GameJoltTrophyException">
+		///     Returned if the user hasn't unlocked this trophy and
+		///     <c>errorIfNotUnlocked</c> is <c>true</c>.
+		/// </exception>
+		public async Task<GameJoltResult> RemoveUnlockedTrophyAsync(int trophyId, bool errorIfNotUnlocked = true, CancellationToken cancellationToken = default)
 		{
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
@@ -245,7 +266,12 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					// If the trophy is not unlocked, we don't want to throw an exception, unless the user wants an error.
+					// If the exception is not a GameJoltTrophyException, we want to return it.
+					if ((exception is GameJoltTrophyException && errorIfNotUnlocked) || exception is not GameJoltTrophyException)
+					{
+						return GameJoltResult.Error(exception!);
+					}
 				}
 
 				return GameJoltResult.Success();
