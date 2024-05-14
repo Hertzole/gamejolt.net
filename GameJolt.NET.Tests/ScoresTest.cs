@@ -66,6 +66,25 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task SubmitScore_Error_Fail()
+		{
+			await AuthenticateAsync();
+
+			await AssertErrorAsync<Response, GameJoltInvalidTableException>(CreateResponse, GetResult, GameJoltInvalidTableException.MESSAGE);
+			return;
+
+			Response CreateResponse()
+			{
+				return new Response(false, GameJoltInvalidTableException.MESSAGE);
+			}
+			
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
+			}
+		}
+
+		[Test]
 		public async Task GetRank_Success()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -85,6 +104,23 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public async Task GetRank_Error_Fail()
+		{
+			await AssertErrorAsync<GetScoreRankResponse, int, GameJoltInvalidTableException>(CreateResponse, GetResult, GameJoltInvalidTableException.MESSAGE);
+			return;
+
+			GetScoreRankResponse CreateResponse()
+			{
+				return new GetScoreRankResponse(false, GameJoltInvalidTableException.MESSAGE, 0);
+			}
+			
+			Task<GameJoltResult<int>> GetResult()
+			{
+				return GameJoltAPI.Scores.GetRankAsync(0, 0);
+			}
 		}
 
 		[Test]
@@ -117,6 +153,23 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Value[0].Name, Is.EqualTo(table.name));
 			Assert.That(result.Value[0].Description, Is.EqualTo(table.description));
 			Assert.That(result.Value[0].IsPrimary, Is.EqualTo(table.isPrimary));
+		}
+		
+		[Test]
+		public async Task GetTables_Error_Fail()
+		{
+			await AssertErrorAsync<GetTablesResponse, GameJoltTable[], GameJoltException>(CreateResponse, GetResult);
+			return;
+
+			GetTablesResponse CreateResponse()
+			{
+				return new GetTablesResponse(false, GameJoltException.UnknownFatalError.Message, null);
+			}
+			
+			Task<GameJoltResult<GameJoltTable[]>> GetResult()
+			{
+				return GameJoltAPI.Scores.GetTablesAsync();
+			}
 		}
 
 		[Test]
@@ -169,6 +222,47 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Value[0].Stored, Is.EqualTo(DateTimeHelper.FromUnixTimestamp(score.storedTimestamp)));
 		}
 
+		[Test]
+		public async Task Query_NoScores_Success()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new GetScoresResponse(true, null, null)));
+				}
+
+				return FromResult("");
+			});
+
+			GameJoltResult<GameJoltScore[]> result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser()
+			                                                          .BetterThan(0).WorseThan(0).GetAsync();
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value, Is.Empty);
+		}
+		
+		[Test]
+		public async Task Query_Error_Fail()
+		{
+			await AssertErrorAsync<GetScoresResponse, GameJoltScore[], GameJoltException>(CreateResponse, GetResult);
+			return;
+
+			GetScoresResponse CreateResponse()
+			{
+				return new GetScoresResponse(false, GameJoltException.UnknownFatalError.Message, null);
+			}
+			
+			Task<GameJoltResult<GameJoltScore[]>> GetResult()
+			{
+				return GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync();
+			}
+		}
+		
 		[Test]
 		public void ScoreDisplayName_Username()
 		{
