@@ -65,7 +65,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			await WaitFramesAsync(1);
 
-			GameJoltManager sceneInstance = Object.FindObjectOfType<GameJoltManager>();
+			GameJoltManager sceneInstance = FindObject<GameJoltManager>();
 
 			Assert.That(sceneInstance == null, Is.False, "GameJoltManager in scene is null.");
 			Assert.That(sceneInstance, Is.EqualTo(GameJoltManager.instance), "GameJoltManager in scene is not the same as the instance.");
@@ -355,7 +355,7 @@ namespace GameJolt.NET.Tests.Unity
 		[Test]
 		public async Task Initialize_CreatesSingleton()
 		{
-			GameJoltManager[]? managers = Object.FindObjectsOfType<GameJoltManager>();
+			GameJoltManager[]? managers = FindObjects<GameJoltManager>();
 
 			Assert.That(managers.Length, Is.EqualTo(0), "There are managers in the scene.");
 
@@ -363,7 +363,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			await WaitFramesAsync(1);
 
-			managers = Object.FindObjectsOfType<GameJoltManager>();
+			managers = FindObjects<GameJoltManager>();
 
 			Assert.That(managers.Length, Is.EqualTo(1), "There are no managers in the scene.");
 
@@ -377,7 +377,7 @@ namespace GameJolt.NET.Tests.Unity
 
 			GameJoltManager.Initialize();
 
-			GameJoltManager[]? managers = Object.FindObjectsOfType<GameJoltManager>();
+			GameJoltManager[]? managers = FindObjects<GameJoltManager>();
 
 			Assert.That(managers.Length, Is.EqualTo(1), "There are no managers in the scene.");
 
@@ -397,6 +397,24 @@ namespace GameJolt.NET.Tests.Unity
 			{
 				await Task.Yield();
 			}
+		}
+
+		private static T FindObject<T>() where T : Object
+		{
+#if UNITY_2023_1_OR_NEWER
+			return Object.FindFirstObjectByType<T>();
+#else
+			return Object.FindObjectOfType<T>();
+#endif
+		}
+
+		private static T[] FindObjects<T>() where T : Object
+		{
+#if UNITY_2023_1_OR_NEWER
+			return Object.FindObjectsByType<T>(FindObjectsSortMode.None);
+#else
+			return Object.FindObjectsOfType<T>();
+#endif
 		}
 	}
 }
