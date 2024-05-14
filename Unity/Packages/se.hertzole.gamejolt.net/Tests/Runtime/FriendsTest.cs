@@ -84,13 +84,13 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			await AssertErrorAsync<FetchFriendsResponse, int[], GameJoltException>(CreateResponse, CallMethod, GameJoltException.UnknownFatalError.Message);
+			await AssertErrorAsync<FetchFriendsResponse, int[], GameJoltException>(CreateResponse, CallMethod, GameJoltException.UNKNOWN_FATAL_ERROR);
 
 			return;
 
 			FetchFriendsResponse CreateResponse()
 			{
-				return new FetchFriendsResponse(false, GameJoltException.UnknownFatalError.Message, null);
+				return new FetchFriendsResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
 			}
 
 			Task<GameJoltResult<int[]>> CallMethod()

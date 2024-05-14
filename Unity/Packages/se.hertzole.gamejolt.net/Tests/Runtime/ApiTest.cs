@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
-	public class ApiTest
+	public sealed class ApiTest
 	{
 #if UNITY_64 // Just for the Unity version.
 		[SetUp]
@@ -63,49 +63,73 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public void Initialize_Success()
+		{
+			GameJoltAPI.Initialize(0, "");
+			Assert.That(GameJoltAPI.IsInitialized, Is.True);
+			GameJoltAPI.Shutdown(); // Clean up.
+		}
+
+		[Test]
 		public void Initialize_OnInitialized_IsInvoked()
 		{
 			bool invoked = false;
-			GameJoltAPI.OnInitialized += () => invoked = true;
+			GameJoltAPI.OnInitialized += Initialized;
 
 			GameJoltAPI.Initialize(0, "");
 
 			Assert.That(invoked, Is.True);
 
 			GameJoltAPI.Shutdown(); // Clean up.
+			GameJoltAPI.OnInitialized -= Initialized;
+			return;
+
+			void Initialized()
+			{
+				invoked = true;
+			}
 		}
 
 		[Test]
 		public void Shutdown_OnShutdown_IsInvoked()
 		{
 			bool invoked = false;
-			GameJoltAPI.OnShutdown += () =>
+			GameJoltAPI.OnShutdown += Shutdown;
+
+			GameJoltAPI.Initialize(0, "");
+			GameJoltAPI.Shutdown();
+			GameJoltAPI.OnShutdown -= Shutdown;
+
+			Assert.That(invoked, Is.True);
+			return;
+
+			void Shutdown()
 			{
 				invoked = true;
 				// It should still be initialized until the shutdown is complete.
 				Assert.That(GameJoltAPI.IsInitialized, Is.True);
-			};
-
-			GameJoltAPI.Initialize(0, "");
-			GameJoltAPI.Shutdown();
-
-			Assert.That(invoked, Is.True);
+			}
 		}
 
 		[Test]
 		public void ShutdownComplete_OnShutdownComplete_IsInvoked()
 		{
 			bool invoked = false;
-			GameJoltAPI.OnShutdownComplete += () =>
-			{
-				invoked = true;
-				Assert.That(GameJoltAPI.IsInitialized, Is.False);
-			};
+
+			GameJoltAPI.OnShutdownComplete += ShutdownComplete;
 
 			GameJoltAPI.Initialize(0, "");
 			GameJoltAPI.Shutdown();
+			GameJoltAPI.OnShutdownComplete -= ShutdownComplete;
 
 			Assert.That(invoked, Is.True);
+			return;
+
+			void ShutdownComplete()
+			{
+				invoked = true;
+				Assert.That(GameJoltAPI.IsInitialized, Is.False);
+			}
 		}
 	}
 }

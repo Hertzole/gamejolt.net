@@ -69,11 +69,11 @@ namespace Hertzole.GameJolt
 				int hashCode = sort;
 				hashCode = (hashCode * 397) ^ userId;
 				hashCode = (hashCode * 397) ^ storedTimestamp.GetHashCode();
-				hashCode = (hashCode * 397) ^ (score != null ? score.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (extraData != null ? extraData.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (username != null ? username.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (guestName != null ? guestName.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (stored != null ? stored.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(score) ? score.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(extraData) ? extraData.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(username) ? username.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(guestName) ? guestName.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(stored) ? stored.GetHashCode() : 0);
 				return hashCode;
 			}
 		}

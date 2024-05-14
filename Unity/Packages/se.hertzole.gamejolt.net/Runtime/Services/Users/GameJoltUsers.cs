@@ -310,7 +310,8 @@ namespace Hertzole.GameJolt
 					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException());
 				}
 
-				GameJoltUser[] users = response.Users.Length > 0 ? new GameJoltUser[response.Users.Length] : Array.Empty<GameJoltUser>();
+				// No need to use Array.Empty here since we know the array is not empty.
+				GameJoltUser[] users = new GameJoltUser[response.Users.Length];
 				for (int i = 0; i < response.Users.Length; i++)
 				{
 					users[i] = response.Users[i].ToPublicUser();

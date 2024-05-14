@@ -14,6 +14,8 @@ namespace GameJolt.NET.Tests.Equality
 				new GetScoreRankResponse(false, "message", 1),
 				new GetScoreRankResponse(true, "message2", 1),
 				new GetScoreRankResponse(true, "message", 2));
+
+			AssertNotEqualObject<GetScoreRankResponse>();
 		}
 
 		[Test]
@@ -28,6 +30,8 @@ namespace GameJolt.NET.Tests.Equality
 				new GetScoresResponse(false, "message", new[] { score1, score2 }),
 				new GetScoresResponse(true, "message2", new[] { score1, score2 }),
 				new GetScoresResponse(true, "message", new[] { DummyData.Score(), DummyData.Score() }));
+
+			AssertNotEqualObject<GetScoresResponse>();
 		}
 
 		[Test]
@@ -42,6 +46,8 @@ namespace GameJolt.NET.Tests.Equality
 				new GetTablesResponse(false, "message", new[] { table1, table2 }),
 				new GetTablesResponse(true, "message2", new[] { table1, table2 }),
 				new GetTablesResponse(true, "message", new[] { DummyData.Table(), DummyData.Table() }));
+
+			AssertNotEqualObject<GetTablesResponse>();
 		}
 
 		[Test]
@@ -56,7 +62,15 @@ namespace GameJolt.NET.Tests.Equality
 				new ScoreInternal(0, "score", "extra", "username", 2, "guest", "stored", 2),
 				new ScoreInternal(0, "score", "extra", "username", 1, "guest2", "stored", 2),
 				new ScoreInternal(0, "score", "extra", "username", 1, "guest", "stored2", 2),
-				new ScoreInternal(0, "score", "extra", "username", 1, "guest", "stored", 3));
+				new ScoreInternal(0, "score", "extra", "username", 1, "guest", "stored", 3),
+				new ScoreInternal(0, null, "extra", "username", 1, "guest", "stored", 2),
+				new ScoreInternal(0, "score", null, "username", 1, "guest", "stored", 2),
+				new ScoreInternal(0, "score", "extra", null, 1, "guest", "stored", 2),
+				new ScoreInternal(0, "score", "extra", "username", 0, "guest", "stored", 2),
+				new ScoreInternal(0, "score", "extra", "username", 1, null, "stored", 2),
+				new ScoreInternal(0, "score", "extra", "username", 1, "guest", null, 2));
+
+			AssertNotEqualObject<ScoreInternal>();
 		}
 
 		[Test]
@@ -67,7 +81,11 @@ namespace GameJolt.NET.Tests.Equality
 				new TableInternal(1, "name", "description", false),
 				new TableInternal(0, "name2", "description", false),
 				new TableInternal(0, "name", "description2", false),
-				new TableInternal(0, "name", "description", true));
+				new TableInternal(0, "name", "description", true),
+				new TableInternal(0, null, "description", false),
+				new TableInternal(0, "name", null, false));
+
+			AssertNotEqualObject<TableInternal>();
 		}
 
 		[Test]
@@ -86,7 +104,12 @@ namespace GameJolt.NET.Tests.Equality
 				new GameJoltScore(0, "score", "extraData", "username", 2, "guestName", storeTime),
 				new GameJoltScore(0, "score", "extraData", "username", 1, "guestName2", storeTime),
 				new GameJoltScore(0, "score", "extraData", "username", 1, null, storeTime),
-				new GameJoltScore(0, "score", "extraData", "username", 1, "guestName", storeTime.AddSeconds(1)));
+				new GameJoltScore(0, "score", "extraData", "username", 1, "guestName", storeTime.AddSeconds(1)),
+				new GameJoltScore(0, "score", null, "username", 1, "guestName", storeTime),
+				new GameJoltScore(0, "score", "extraData", null, 1, "guestName", storeTime),
+				new GameJoltScore(0, "score", "extraData", "username", 1, null, storeTime));
+
+			AssertNotEqualObject<GameJoltScore>();
 		}
 
 		[Test]
@@ -97,7 +120,11 @@ namespace GameJolt.NET.Tests.Equality
 				new GameJoltTable(1, "name", "description", false),
 				new GameJoltTable(0, "name2", "description", false),
 				new GameJoltTable(0, "name", "description2", false),
-				new GameJoltTable(0, "name", "description", true));
+				new GameJoltTable(0, "name", "description", true),
+				new GameJoltTable(0, null, "description", false),
+				new GameJoltTable(0, "name", null, false));
+
+			AssertNotEqualObject<GameJoltTable>();
 		}
 
 		[Test]
@@ -114,7 +141,12 @@ namespace GameJolt.NET.Tests.Equality
 				new GetScoresQuery(null, 0, 1, "username", "token", "guest2", 3, 4),
 				new GetScoresQuery(null, 0, 1, "username", "token", null, 3, 4),
 				new GetScoresQuery(null, 0, 1, "username", "token", "guest", 4, 4),
-				new GetScoresQuery(null, 0, 1, "username", "token", "guest", 3, 5));
+				new GetScoresQuery(null, 0, 1, "username", "token", "guest", 3, 5),
+				new GetScoresQuery(null, 0, 1, null, "token", "guest", 3, 4),
+				new GetScoresQuery(null, 0, 1, "username", null, "guest", 3, 4),
+				new GetScoresQuery(null, 0, 1, "username", "token", null, 3, 4));
+			
+			AssertNotEqualObject<GetScoresQuery>();
 		}
 	}
 }
