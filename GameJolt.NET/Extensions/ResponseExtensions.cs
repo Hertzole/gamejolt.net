@@ -123,7 +123,7 @@ namespace Hertzole.GameJolt
 #endif
 			out Exception? exception)
 		{
-			if (message.Equals("Could not find an open session. You must open a new one.", StringComparison.OrdinalIgnoreCase))
+			if (message.Equals(GameJoltSessionException.MESSAGE, StringComparison.OrdinalIgnoreCase))
 			{
 				exception = new GameJoltSessionException(message);
 				return true;
