@@ -35,13 +35,13 @@ jobs:
       - name: Remove old files
         run: |
           find ./Unity/Packages/se.hertzole.gamejolt.net/Runtime -name \*.cs -type f -delete
-          find ./Unity/Packages/se.hertzole.gamejolt.net/Tests -name \*.cs -type f -delete
+          find ./Unity/Packages/se.hertzole.gamejolt.net/Editor -name \*.cs -type f -delete
+          find ./Unity/Packages/se.hertzole.gamejolt.net/Tests/Runtime -name \*.cs -type f -delete
 
-      - name: Copy runtime
-        run: rsync -av --exclude='*.csproj' './GameJolt.NET/' './Unity/Packages/se.hertzole.gamejolt.net/Runtime/'
-
-      - name: Copy tests
-        run: rsync -av --exclude='*.csproj' './GameJolt.NET.Tests/' './Unity/Packages/se.hertzole.gamejolt.net/Tests/'
+      - name: Copy files
+        run: |
+          chmod +x ./ci/move_to_unity.sh
+          ./ci/move_to_unity.sh
 
       - name: Activate Unity
         continue-on-error: true
