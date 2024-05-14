@@ -73,7 +73,7 @@ namespace GameJolt.NET.Tests
 
 			GetKeysResponse CreateResponse()
 			{
-				return new GetKeysResponse(false, GameJoltException.UnknownFatalError.Message, null);
+				return new GetKeysResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
 			}
 
 			Task<GameJoltResult<string[]>> GetResult()

@@ -163,7 +163,7 @@ namespace GameJolt.NET.Tests
 
 			GetTablesResponse CreateResponse()
 			{
-				return new GetTablesResponse(false, GameJoltException.UnknownFatalError.Message, null);
+				return new GetTablesResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
 			}
 			
 			Task<GameJoltResult<GameJoltTable[]>> GetResult()
@@ -254,7 +254,7 @@ namespace GameJolt.NET.Tests
 
 			GetScoresResponse CreateResponse()
 			{
-				return new GetScoresResponse(false, GameJoltException.UnknownFatalError.Message, null);
+				return new GetScoresResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
 			}
 			
 			Task<GameJoltResult<GameJoltScore[]>> GetResult()
