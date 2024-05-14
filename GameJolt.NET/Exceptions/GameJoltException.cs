@@ -8,8 +8,6 @@ namespace Hertzole.GameJolt
         
 		internal static GameJoltException UnknownFatalError { get; } = new GameJoltException(UNKNOWN_FATAL_ERROR);
 
-		public GameJoltException() { }
-
 		public GameJoltException(string message) : base(message) { }
 	}
 }
