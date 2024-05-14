@@ -193,7 +193,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UNKNOWN_FATAL_ERROR : errorMessage));
+			Assert.That(result.Exception!.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UNKNOWN_FATAL_ERROR : errorMessage));
 			Assert.That(result.Exception, Is.TypeOf<TException>());
 		}
 		
@@ -208,7 +208,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UNKNOWN_FATAL_ERROR : errorMessage));
+			Assert.That(result.Exception!.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UNKNOWN_FATAL_ERROR : errorMessage));
 			Assert.That(result.Exception, Is.TypeOf<TException>());
 		}
 	}
