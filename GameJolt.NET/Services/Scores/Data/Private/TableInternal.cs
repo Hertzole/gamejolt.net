@@ -52,8 +52,8 @@ namespace Hertzole.GameJolt
 			{
 				int hashCode = id;
 				hashCode = (hashCode * 397) ^ isPrimary.GetHashCode();
-				hashCode = (hashCode * 397) ^ (name != null ? name.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (description != null ? description.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(name) ? name.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(description) ? description.GetHashCode() : 0);
 				return hashCode;
 			}
 		}

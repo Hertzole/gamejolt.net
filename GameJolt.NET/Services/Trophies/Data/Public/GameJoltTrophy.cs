@@ -62,9 +62,9 @@ namespace Hertzole.GameJolt
 				int hashCode = Id;
 				hashCode = (hashCode * 397) ^ (int) Difficulty;
 				hashCode = (hashCode * 397) ^ HasAchieved.GetHashCode();
-				hashCode = (hashCode * 397) ^ (Title != null ? Title.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (Description != null ? Description.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (ImageUrl != null ? ImageUrl.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(Title) ? Title.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(Description) ? Description.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(ImageUrl) ? ImageUrl.GetHashCode() : 0);
 				return hashCode;
 			}
 		}

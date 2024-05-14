@@ -105,7 +105,7 @@ namespace Hertzole.GameJolt
 				hashCode = (hashCode * 397) ^ signedUp.GetHashCode();
 				hashCode = (hashCode * 397) ^ lastLoggedIn.GetHashCode();
 				hashCode = (hashCode * 397) ^ displayName.GetHashCode();
-				hashCode = (hashCode * 397) ^ (userWebsite != null ? userWebsite.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(userWebsite) ? userWebsite.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ userDescription.GetHashCode();
 				return hashCode;
 			}

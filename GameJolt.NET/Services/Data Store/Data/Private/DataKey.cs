@@ -33,7 +33,7 @@ namespace Hertzole.GameJolt
 
 		public override int GetHashCode()
 		{
-			return key != null ? key.GetHashCode() : 0;
+			return !string.IsNullOrEmpty(key) ? key.GetHashCode() : 0;
 		}
 
 		public static bool operator ==(DataKey left, DataKey right)
