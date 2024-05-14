@@ -108,7 +108,7 @@ namespace Hertzole.GameJolt
 			return GameJoltResult<GameJoltTrophy>.Success(result.Value[0]);
 		}
 
-		private async GameJoltTrophyArrayTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
+		internal async GameJoltTrophyArrayTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
 			int idLength,
 			bool? getAchieved,
 			CancellationToken cancellationToken)

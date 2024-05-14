@@ -217,6 +217,48 @@ namespace GameJolt.NET.Tests
 			}
 		}
 
+		// This method is mainly just to allow the foreach loop end by itself instead of having to manually break it.
+		[Test]
+		public async Task GetTrophies_TooManyIds_Success()
+		{
+			TrophyInternal[] trophies = new TrophyInternal[]
+			{
+				DummyData.Trophy(),
+				DummyData.Trophy(),
+				DummyData.Trophy()
+			};
+		
+			await AuthenticateAsync();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("trophies/?"))
+				{
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, trophies)));
+				}
+
+				return FromResult("");
+			});
+			
+			int[] ids = new int[]
+			{
+				trophies[0].id,
+				trophies[1].id,
+				trophies[2].id
+			};
+			
+			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesInternalAsync(ids, 5, true, default);
+			
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value!.Length, Is.EqualTo(3));
+			Assert.That(result.Value[0].Id, Is.EqualTo(trophies[0].id));
+			Assert.That(result.Value[1].Id, Is.EqualTo(trophies[1].id));
+			Assert.That(result.Value[2].Id, Is.EqualTo(trophies[2].id));
+		}
+
 		[Test]
 		public async Task GetTrophy_Error_Fail()
 		{
