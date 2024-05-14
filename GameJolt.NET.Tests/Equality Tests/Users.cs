@@ -26,6 +26,8 @@ namespace GameJolt.NET.Tests.Equality
 				new User(0, UserType.User, "username", "avatar", "signedUp", 0, "lastLoggedIn", 0, UserStatus.Active, "displayName", null, "description"),
 				new User(0, UserType.User, "username", "avatar", "signedUp", 0, "lastLoggedIn", 0, UserStatus.Active, "displayName", "website",
 					"description2"));
+			
+			AssertNotEqualObject<User>();
 		}
 
 		[Test]
@@ -36,6 +38,8 @@ namespace GameJolt.NET.Tests.Equality
 				new UsersFetchResponse(false, "message", Array.Empty<User>()),
 				new UsersFetchResponse(true, "message2", Array.Empty<User>()),
 				new UsersFetchResponse(true, "message", new[] { DummyData.User() }));
+			
+			AssertNotEqualObject<UsersFetchResponse>();
 		}
 
 		[Test]
@@ -68,6 +72,8 @@ namespace GameJolt.NET.Tests.Equality
 					DateTime.MaxValue.AddSeconds(-1), true),
 				new GameJoltUser(0, UserType.User, "username", "avatar", UserStatus.Active, "displayName", "website", "description", DateTime.MinValue,
 					DateTime.MaxValue, false));
+			
+			AssertNotEqualObject<GameJoltUser>();
 		}
 	}
 }

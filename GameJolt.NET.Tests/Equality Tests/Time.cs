@@ -20,6 +20,8 @@ namespace GameJolt.NET.Tests.Equality
 				new FetchTimeResponse(0, "timezone", 1, 2, 3, 4, 5, 7, true, "message"),
 				new FetchTimeResponse(0, "timezone", 1, 2, 3, 4, 5, 6, false, "message"),
 				new FetchTimeResponse(0, "timezone", 1, 2, 3, 4, 5, 6, true, "message2"));
+			
+			AssertNotEqualObject<FetchTimeResponse>();
 		}
 	}
 }

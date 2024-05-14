@@ -28,5 +28,12 @@ namespace GameJolt.NET.Tests.Equality
 				Assert.That(invertCompare.Invoke(a, b), Is.True, "First value should not be equal to the second value by comparison.");
 			}
 		}
+		
+		protected static void AssertNotEqualObject<T>() where T : new()
+		{
+			T a = new T();
+
+			Assert.That(a.Equals(new object()), Is.False);
+		}
 	}
 }

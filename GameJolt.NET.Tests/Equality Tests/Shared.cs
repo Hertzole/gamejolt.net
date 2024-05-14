@@ -12,6 +12,8 @@ namespace GameJolt.NET.Tests.Equality
 				new Response(true, "message"),
 				new Response(false, "message"),
 				new Response(true, "message2"));
+			
+			AssertNotEqualObject<Response>();
 		}
 	}
 }

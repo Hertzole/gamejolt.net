@@ -14,6 +14,8 @@ namespace GameJolt.NET.Tests.Equality
 				new FetchTrophiesResponse(false, "message", Array.Empty<TrophyInternal>()),
 				new FetchTrophiesResponse(true, "message2", Array.Empty<TrophyInternal>()),
 				new FetchTrophiesResponse(true, "message", new[] { DummyData.Trophy() }));
+			
+			AssertNotEqualObject<FetchTrophiesResponse>();
 		}
 
 		[Test]
@@ -26,7 +28,12 @@ namespace GameJolt.NET.Tests.Equality
 				new TrophyInternal(0, "title", "description2", TrophyDifficulty.Bronze, "image", true),
 				new TrophyInternal(0, "title", "description", TrophyDifficulty.Silver, "image", true),
 				new TrophyInternal(0, "title", "description", TrophyDifficulty.Bronze, "image2", true),
-				new TrophyInternal(0, "title", "description", TrophyDifficulty.Bronze, "image", false));
+				new TrophyInternal(0, "title", "description", TrophyDifficulty.Bronze, "image", false),
+				new TrophyInternal(0, null, "description", TrophyDifficulty.Bronze, "image", true),
+				new TrophyInternal(0, "title", null, TrophyDifficulty.Bronze, "image", true),
+				new TrophyInternal(0, "title", "description", TrophyDifficulty.Bronze, null, true));
+			
+			AssertNotEqualObject<TrophyInternal>();
 		}
 
 		[Test]
@@ -39,7 +46,12 @@ namespace GameJolt.NET.Tests.Equality
 				new GameJoltTrophy(0, "title", "description2", TrophyDifficulty.Bronze, "image", true),
 				new GameJoltTrophy(0, "title", "description", TrophyDifficulty.Silver, "image", true),
 				new GameJoltTrophy(0, "title", "description", TrophyDifficulty.Bronze, "image2", true),
-				new GameJoltTrophy(0, "title", "description", TrophyDifficulty.Bronze, "image", false));
+				new GameJoltTrophy(0, "title", "description", TrophyDifficulty.Bronze, "image", false),
+				new GameJoltTrophy(0, null, "description", TrophyDifficulty.Bronze, "image", true),
+				new GameJoltTrophy(0, "title", null, TrophyDifficulty.Bronze, "image", true),
+				new GameJoltTrophy(0, "title", "description", TrophyDifficulty.Bronze, null, true));
+			
+			AssertNotEqualObject<GameJoltTrophy>();
 		}
 	}
 }
