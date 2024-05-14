@@ -15,6 +15,8 @@ namespace GameJolt.NET.Tests.Equality
 				new FetchFriendsResponse(true, "message2", Array.Empty<FriendId>()),
 				new FetchFriendsResponse(true, "message", new[] { new FriendId(0) }),
 				new FetchFriendsResponse(true, "message", new[] { new FriendId(0), new FriendId(1) }));
+			
+			AssertNotEqualObject<FetchFriendsResponse>();
 		}
 
 		[Test]
@@ -23,6 +25,8 @@ namespace GameJolt.NET.Tests.Equality
 			TestEquality((a, b) => a == b, (a, b) => a != b,
 				new FriendId(0),
 				new FriendId(1));
+			
+			AssertNotEqualObject<FriendId>();
 		}
 	}
 }

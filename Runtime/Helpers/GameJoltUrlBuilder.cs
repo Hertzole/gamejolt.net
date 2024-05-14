@@ -72,7 +72,7 @@ namespace Hertzole.GameJolt
 		}
 #endif
 
-		private static bool EndsWithSlash(StringBuilder sb)
+		internal static bool EndsWithSlash(StringBuilder sb)
 		{
 			return sb.Length > 0 && sb[sb.Length - 1] == '/';
 		}
