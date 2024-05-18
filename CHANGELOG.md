@@ -1,3 +1,22 @@
+# [1.3.0](https://github.com/Hertzole/gamejolt.net/compare/v1.2.0...v1.3.0) (2024-05-14)
+
+
+### Bug Fixes
+
+* exceptions not being sealed ([cd05490](https://github.com/Hertzole/gamejolt.net/commit/cd05490846d31c04ac7981a61c6e58273fd3b545))
+* made internal object pool thread safe ([1d5f7ac](https://github.com/Hertzole/gamejolt.net/commit/1d5f7acb68cb078c8daceafdcf3ecbf06b8549a8))
+* wrong exception type when data key is invalid ([fc464f4](https://github.com/Hertzole/gamejolt.net/commit/fc464f40aa4511d5180b7b98a96fc5baab19a1f1))
+
+
+### Features
+
+* errorIfUnlocked/notUnlocked to trophies ([7a298f7](https://github.com/Hertzole/gamejolt.net/commit/7a298f78788de37f93b0f16c8ef9c5b264c31174))
+
+
+### Performance Improvements
+
+* use empty array instead of new array if results are empty ([da611df](https://github.com/Hertzole/gamejolt.net/commit/da611df6e52c01dd97e855a7c4c11c751bef0360))
+
 # [1.2.0](https://github.com/Hertzole/gamejolt.net/compare/v1.1.0...v1.2.0) (2024-04-26)
 
 
