@@ -1,3 +1,11 @@
+## [1.3.1](https://github.com/Hertzole/gamejolt.net/compare/v1.3.0...v1.3.1) (2024-05-18)
+
+
+### Bug Fixes
+
+* **Unity:** game jolt instance not surviving scene loads ([9729422](https://github.com/Hertzole/gamejolt.net/commit/97294226c32e5b881f492ae9424b91f384140d48))
+* **Unity:** removed left over debug logs ([ddbe91f](https://github.com/Hertzole/gamejolt.net/commit/ddbe91fb00e546c0b292236b19970ce62b1f4881))
+
 # [1.3.0](https://github.com/Hertzole/gamejolt.net/compare/v1.2.0...v1.3.0) (2024-05-14)
 
 
