@@ -27,6 +27,8 @@ namespace Hertzole.GameJolt
 
 			// This is used in OnDestroy to only close the session if this is the main instance.
 			isMainInstance = true;
+            
+			DontDestroyOnLoad(gameObject);
 
 			instance = this;
 		}
