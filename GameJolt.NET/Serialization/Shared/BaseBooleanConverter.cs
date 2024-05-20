@@ -29,6 +29,8 @@ namespace Hertzole.GameJolt.Serialization.Shared
 			"0",
 			"no"
 		};
+		
+		protected const string INVALID_STRING = "Invalid string value. Expected 'true', 'false', '1', or '0'.";
 
 		/// <summary>
 		///     Reads a number and converts it to a boolean, 0 is false, 1 is true. Otherwise throws an exception.
@@ -53,9 +55,10 @@ namespace Hertzole.GameJolt.Serialization.Shared
 		///     Reads a string and converts it to a boolean. Throws an exception if the value is not a valid boolean.
 		/// </summary>
 		/// <param name="value">The string to convert.</param>
+		/// <param name="result">True if the string is a valid boolean, otherwise false.</param>
 		/// <returns>True if the value is "true", false if the value is "false".</returns>
 		/// <exception cref="JsonSerializationException">If the value is not a valid boolean.</exception>
-		protected static bool ReadString(string? value)
+		protected static bool TryReadString(string? value, out bool result)
 		{
 			// This should never happen, but just in case.
 			if (string.IsNullOrEmpty(value))
@@ -66,17 +69,20 @@ namespace Hertzole.GameJolt.Serialization.Shared
 			// Check if the value is a valid boolean.
 			if (IsTrue(value!))
 			{
+				result = true;
 				return true;
 			}
 
 			// Check if the value is a valid boolean.
 			if (IsFalse(value!))
 			{
-				return false;
+				result = false;
+				return true;
 			}
 
 			// If the value is not a valid boolean, throw an exception.
-			throw new JsonSerializationException($"Unknown boolean value: {value}");
+			result = default;
+			return false;
 		}
 
 		private static bool IsTrue(string value)

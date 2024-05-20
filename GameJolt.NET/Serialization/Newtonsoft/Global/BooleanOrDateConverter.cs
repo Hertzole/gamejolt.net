@@ -2,11 +2,12 @@
 #nullable enable
 
 using System;
+using Hertzole.GameJolt.Serialization.Shared;
 using Newtonsoft.Json;
 
 namespace Hertzole.GameJolt.Serialization.Newtonsoft
 {
-	internal sealed class BooleanOrDateConverter : JsonConverter<bool>
+	internal sealed class BooleanOrDateConverter : BaseBooleanConverter
 	{
 		public static readonly BooleanOrDateConverter Instance = new BooleanOrDateConverter();
 
@@ -31,44 +32,16 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				case JsonToken.Boolean:
 					return (bool) reader.Value!;
 				case JsonToken.Integer:
-					long intValue = (long) reader.Value!;
-					switch (intValue)
-					{
-						case 0:
-							return false;
-						case 1:
-							return true;
-						default:
-							throw new JsonSerializationException($"Can't convert to BooleanOrDate from {reader.TokenType}");
-					}
+					return ReadNumber((long) reader.Value!);
 				case JsonToken.String:
 				{
-					string? value = (string) reader.Value!;
-					if (string.IsNullOrEmpty(value))
+					// This will fail if the string is a date, or not a boolean.
+					if (TryReadString((string) reader.Value!, out bool result))
 					{
-						throw new JsonSerializationException("Expected string, it was empty or null.");
+						return result;
 					}
 
-					if (value.Equals("true", StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
-
-					if (value.Equals("false", StringComparison.OrdinalIgnoreCase))
-					{
-						return false;
-					}
-
-					if (value.Equals("1", StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
-
-					if (value.Equals("0", StringComparison.OrdinalIgnoreCase))
-					{
-						return false;
-					}
-
+					// So for now we'll just assume it's a date.
 					return true;
 				}
 				default:
