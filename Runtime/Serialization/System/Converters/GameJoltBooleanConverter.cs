@@ -3,11 +3,11 @@
 
 using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using Hertzole.GameJolt.Serialization.Shared;
 
 namespace Hertzole.GameJolt.Serialization.System
 {
-	internal sealed class GameJoltBooleanConverter : JsonConverter<bool>
+	internal sealed class GameJoltBooleanConverter : BaseBooleanConverter
 	{
 		public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -19,53 +19,10 @@ namespace Hertzole.GameJolt.Serialization.System
 					return false;
 				case JsonTokenType.Number:
 					long number = reader.GetInt64();
-					switch (number)
-					{
-						case 0:
-							return false;
-						case 1:
-							return true;
-						default:
-							throw new JsonException($"Can't convert to boolean from {number}");
-					}
+					return ReadNumber(number);
 				case JsonTokenType.String:
 					string? value = reader.GetString();
-					if (string.IsNullOrEmpty(value))
-					{
-						throw new JsonException("Empty string is not a valid boolean.");
-					}
-
-					if (value.Equals("true", StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
-
-					if (value.Equals("false", StringComparison.OrdinalIgnoreCase))
-					{
-						return false;
-					}
-
-					if (value.Equals("0", StringComparison.OrdinalIgnoreCase))
-					{
-						return false;
-					}
-
-					if (value.Equals("1", StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
-
-					if (value.Equals("yes", StringComparison.OrdinalIgnoreCase))
-					{
-						return true;
-					}
-
-					if (value.Equals("no", StringComparison.OrdinalIgnoreCase))
-					{
-						return false;
-					}
-
-					throw new JsonException($"Invalid boolean value ({value})");
+					return ReadString(value);
 				default:
 					throw new JsonException("Invalid token type. Expected boolean, number, or string.");
 			}
