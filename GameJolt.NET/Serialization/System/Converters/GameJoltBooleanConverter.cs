@@ -18,11 +18,17 @@ namespace Hertzole.GameJolt.Serialization.System
 				case JsonTokenType.False:
 					return false;
 				case JsonTokenType.Number:
-					long number = reader.GetInt64();
-					return ReadNumber(number);
+					return ReadNumber(reader.GetInt64());
 				case JsonTokenType.String:
 					string? value = reader.GetString();
-					return ReadString(value);
+
+					if (!TryReadString(value, out bool result))
+					{
+						throw new JsonException(INVALID_STRING);
+					}
+
+					return result;
+					
 				default:
 					throw new JsonException("Invalid token type. Expected boolean, number, or string.");
 			}

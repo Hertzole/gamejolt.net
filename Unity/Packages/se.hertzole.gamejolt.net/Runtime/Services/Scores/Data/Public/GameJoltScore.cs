@@ -96,9 +96,9 @@ namespace Hertzole.GameJolt
 				hashCode = (hashCode * 397) ^ UserId.GetHashCode();
 				hashCode = (hashCode * 397) ^ Stored.GetHashCode();
 				hashCode = (hashCode * 397) ^ Score.GetHashCode();
-				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(ExtraData) ? ExtraData.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(Username) ? Username.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(GuestName) ? GuestName.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(ExtraData) ? ExtraData!.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(Username) ? Username!.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(GuestName) ? GuestName!.GetHashCode() : 0);
 				return hashCode;
 			}
 		}
