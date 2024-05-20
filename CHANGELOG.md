@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/Hertzole/gamejolt.net/compare/v1.3.1...v1.3.2) (2024-05-20)
+
+
+### Bug Fixes
+
+* nullability warnings ([8403d48](https://github.com/Hertzole/gamejolt.net/commit/8403d4811f2e3fb34e714141fc68cac1708aeb0b))
+
 ## [1.3.1](https://github.com/Hertzole/gamejolt.net/compare/v1.3.0...v1.3.1) (2024-05-18)
 
 
