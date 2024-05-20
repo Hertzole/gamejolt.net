@@ -27,7 +27,13 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 				case JsonToken.Integer:
 					return ReadNumber((long) reader.Value!);
 				case JsonToken.String:
-					return ReadString((string) reader.Value!);
+					if (!TryReadString((string) reader.Value!, out bool result))
+					{
+						throw new JsonSerializationException(INVALID_STRING);
+					}
+
+					return result;
+
 				default:
 					throw new JsonSerializationException($"Invalid token type. Expected boolean, number, or string. Got {reader.TokenType}.");
 			}
