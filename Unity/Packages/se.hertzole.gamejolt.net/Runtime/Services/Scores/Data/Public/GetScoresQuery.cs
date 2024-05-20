@@ -74,9 +74,9 @@ namespace Hertzole.GameJolt
 				hashCode = (hashCode * 397) ^ limit;
 				hashCode = (hashCode * 397) ^ betterThan.GetHashCode();
 				hashCode = (hashCode * 397) ^ worseThan.GetHashCode();
-				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(username) ? username.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(userToken) ? userToken.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(guest) ? guest.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(username) ? username!.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(userToken) ? userToken!.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (!string.IsNullOrEmpty(guest) ? guest!.GetHashCode() : 0);
 				return hashCode;
 			}
 		}
