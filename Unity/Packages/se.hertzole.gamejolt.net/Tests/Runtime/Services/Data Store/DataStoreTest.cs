@@ -44,5 +44,23 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(caught, Is.True);
 		}
+        
+        [Test]
+        public void GetStringOperationString()
+		{
+			Assert.That(GameJoltDataStore.GetStringOperation(StringOperation.Append), Is.EqualTo("append"));
+			Assert.That(GameJoltDataStore.GetStringOperation(StringOperation.Prepend), Is.EqualTo("prepend"));
+		}
+
+		[Test]
+		public void GetNumberOperation()
+		{
+			Assert.That(GameJoltDataStore.GetNumberOperation(NumericOperation.Add), Is.EqualTo("add"));
+			Assert.That(GameJoltDataStore.GetNumberOperation(NumericOperation.Subtract), Is.EqualTo("subtract"));
+			Assert.That(GameJoltDataStore.GetNumberOperation(NumericOperation.Multiply), Is.EqualTo("multiply"));
+			Assert.That(GameJoltDataStore.GetNumberOperation(NumericOperation.Divide), Is.EqualTo("divide"));
+			Assert.That(GameJoltDataStore.GetNumberOperation(NumericOperation.Append), Is.EqualTo("append"));
+			Assert.That(GameJoltDataStore.GetNumberOperation(NumericOperation.Prepend), Is.EqualTo("prepend"));
+		}
 	}
 }

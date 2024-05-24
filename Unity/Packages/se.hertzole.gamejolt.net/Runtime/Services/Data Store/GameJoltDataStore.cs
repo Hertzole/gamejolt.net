@@ -778,9 +778,9 @@ namespace Hertzole.GameJolt
 			switch (operation)
 			{
 				case StringOperation.Append:
-					return "prepend";
-				case StringOperation.Prepend:
 					return "append";
+				case StringOperation.Prepend:
+					return "prepend";
 				default:
 					throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
 			}
