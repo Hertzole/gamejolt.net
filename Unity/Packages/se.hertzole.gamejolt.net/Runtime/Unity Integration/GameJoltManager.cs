@@ -27,7 +27,7 @@ namespace Hertzole.GameJolt
 
 			// This is used in OnDestroy to only close the session if this is the main instance.
 			isMainInstance = true;
-            
+
 			DontDestroyOnLoad(gameObject);
 
 			instance = this;
@@ -91,10 +91,16 @@ namespace Hertzole.GameJolt
 			if (GameJoltSettings.AutoCloseSessions && GameJoltAPI.Sessions.IsSessionOpen)
 			{
 				// Don't pass the destroyCancellationToken here, we want to close the session no matter what.
-				GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
-				if (result.HasError)
+				// We also check on the server if the session is open, as it might have been closed by the server.
+				GameJoltResult<bool> sessionOpen = await GameJoltAPI.Sessions.CheckAsync();
+				if (!sessionOpen.HasError && sessionOpen.Value)
 				{
-					Debug.LogError("Failed to close session: " + result.Exception);
+					// Don't pass the destroyCancellationToken here, we want to close the session no matter what.
+					GameJoltResult result = await GameJoltAPI.Sessions.CloseAsync();
+					if (result.HasError)
+					{
+						Debug.LogError("Failed to close session: " + result.Exception);
+					}
 				}
 			}
 
@@ -202,6 +208,18 @@ namespace Hertzole.GameJolt
 		{
 			while (GameJoltAPI.IsInitialized)
 			{
+				GameJoltResult<bool> isSessionOpen = await GameJoltAPI.Sessions.CheckAsync(cancellationToken);
+				if (!isSessionOpen.HasError && !isSessionOpen.Value)
+				{
+					// Session was closed by server. Try to reopen it.
+					GameJoltResult openResult = await GameJoltAPI.Sessions.OpenAsync(cancellationToken);
+					if (openResult.HasError)
+					{
+						Debug.LogError("Failed to reopen session: " + openResult.Exception);
+						break;
+					}
+				}
+
 				await GameJoltAPI.Sessions.PingAsync(GameJoltSettings.PingStatus, cancellationToken);
 				await Task.Delay(TimeSpan.FromSeconds(GameJoltSettings.PingInterval), cancellationToken);
 			}

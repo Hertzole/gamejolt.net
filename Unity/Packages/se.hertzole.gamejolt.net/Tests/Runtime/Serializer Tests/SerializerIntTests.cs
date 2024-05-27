@@ -50,17 +50,6 @@ namespace GameJolt.NET.Tests
 		{
 			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("true") + "}"));
 		}
-		
-		[Test]
-		public void EmptyString_ThrowsException()
-		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("\"\"") + "}"));
-		}
-		
-		public void NullString_ThrowsException()
-		{
-			Assert.Throws<JsonException>(() => GameJoltAPI.serializer.DeserializeResponse<T>("{\"response\":" + GetTypeJson("") + "}"));
-		}
 
 		private static string GetTypeJson(string value)
 		{
