@@ -21,6 +21,11 @@ namespace Hertzole.GameJolt.Serialization.System
 					return Convert.ToInt32(reader.GetDouble());
 
 				case JsonTokenType.String:
+					if (string.IsNullOrEmpty(reader.GetString()))
+					{
+						return -1;
+					}
+					
 					if (int.TryParse(reader.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int result))
 					{
 						return result;
