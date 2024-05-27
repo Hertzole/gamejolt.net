@@ -31,7 +31,7 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 
 					if (string.IsNullOrEmpty(stringValue))
 					{
-						throw new JsonSerializationException("Value cannot be null or empty.");
+						return -1;
 					}
 
 					if (int.TryParse(stringValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
