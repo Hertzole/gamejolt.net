@@ -13,8 +13,10 @@ objDir="${sourceDir}/obj"
 binDir="${sourceDir}/bin"
 
 testsSourceDir="GameJolt.NET.Tests"
+testsEditorSourceDir="${testsSourceDir}/Unity/Editor"
 
 testsRuntimeDestinationDir="${destinationDir}/Tests/Runtime"
+testsEditorDestinationDir="${destinationDir}/Tests/Editor"
 
 testsObjDir="${testsSourceDir}/obj"
 testsBinDir="${testsSourceDir}/bin"
@@ -64,7 +66,7 @@ echo "| Copying tests files... |"
 echo "|------------------------|"
 
 find "$testsSourceDir" -name "*.cs" | while IFS= read -r file; do
-    if [[ $file == *"$testsObjDir"* ]] || [[ $file == *"$testsBinDir"* ]]; then
+    if [[ $file == *"$testsObjDir"* ]] || [[ $file == *"$testsBinDir"* ]] || [[ $file == *"$testsEditorSourceDir"* ]]; then
         echo "SKIPPING '$file'"
         continue
     fi
@@ -72,6 +74,27 @@ find "$testsSourceDir" -name "*.cs" | while IFS= read -r file; do
     relativePath="${file#$testsSourceDir}"
 
     targetPath="${testsRuntimeDestinationDir}/${relativePath}"
+
+    # Create parent directories if they don't exist
+    mkdir -p "$(dirname "$targetPath")"
+
+    cp "$file" "$targetPath"
+    echo "COPIED '$file' TO '$targetPath'"
+done
+
+echo "|-------------------------------|"
+echo "| Copying editor tests files... |"
+echo "|-------------------------------|"
+
+find "$testsEditorSourceDir" -name "*.cs" | while IFS= read -r file; do
+    if [[ $file == *"$testsObjDir"* ]] || [[ $file == *"$testsBinDir"* ]]; then
+        echo "SKIPPING '$file'"
+        continue
+    fi
+
+    relativePath="${file#$testsEditorSourceDir}"
+
+    targetPath="${testsEditorDestinationDir}/${relativePath}"
 
     # Create parent directories if they don't exist
     mkdir -p "$(dirname "$targetPath")"
