@@ -262,6 +262,38 @@ namespace GameJolt.NET.Tests
 				return GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync();
 			}
 		}
+
+		[Test]
+		public async Task Query_GuestUser_Success()
+		{
+			const string json = "{\"response\":{\"success\":\"true\",\"scores\":[{\"score\":\"527 points!\",\"sort\":\"527\",\"extra_data\":\"this is some extra data\",\"user\":\"\",\"user_id\":\"\",\"guest\":\"guest user\",\"stored\":\"2 days ago\",\"stored_timestamp\":1716581984}]}}";
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.ENDPOINT))
+				{
+					return FromResult(json);
+				}
+
+				return FromResult("");
+			});
+			
+			var result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("guest user").BetterThan(0).WorseThan(0).GetAsync();
+			
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(result.Value, Is.Not.Null);
+			Assert.That(result.Value!.Length, Is.EqualTo(1));
+			Assert.That(result.Value[0].Score, Is.EqualTo("527 points!"));
+			Assert.That(result.Value[0].Sort, Is.EqualTo(527));
+			Assert.That(result.Value[0].ExtraData, Is.EqualTo("this is some extra data"));
+			Assert.That(result.Value[0].UserId, Is.Null);
+			Assert.That(result.Value[0].Username, Is.EqualTo(string.Empty));
+			Assert.That(result.Value[0].GuestName, Is.EqualTo("guest user"));
+			Assert.That(result.Value[0].Stored, Is.EqualTo(DateTimeHelper.FromUnixTimestamp(1716581984)));
+		}
 		
 		[Test]
 		public void ScoreDisplayName_Username()
