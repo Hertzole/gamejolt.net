@@ -340,6 +340,11 @@ namespace GameJolt.NET.Tests.Unity
 					return FromResult(serializer.Serialize(new Response(true, null)));
 				}
 
+				if (arg.Contains("sessions/check"))
+				{
+					return FromResult(serializer.SerializeResponse(new Response(true, null)));
+				}
+
 				return FromResult("");
 			});
 
