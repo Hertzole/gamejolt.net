@@ -1,4 +1,6 @@
-﻿#if UNITY_2021_1_OR_NEWER
+﻿#if UNITY_64
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -11,159 +13,89 @@ namespace Hertzole.GameJolt
 	public sealed class GameJoltSettings : ScriptableObject
 	{
 		[SerializeField]
-		private int gameId = default;
+		internal int gameId = default;
 		[SerializeField]
-		private string privateGameKey = default;
+		internal string privateGameKey = default;
 		[SerializeField]
-		private bool autoInitialize = true;
+		internal bool autoInitialize = true;
 		[SerializeField]
-		private bool autoShutdown = true;
+		internal bool autoShutdown = true;
 		[SerializeField]
-		private bool autoSignInFromWeb = true;
+		internal bool autoSignInFromWeb = true;
 		[SerializeField]
-		private bool autoSignInFromClient = true;
+		internal bool autoSignInFromClient = true;
 
 		[SerializeField]
-		private bool autoStartSessions = true;
+		internal bool autoStartSessions = true;
 		[SerializeField]
-		private bool autoCloseSessions = true;
+		internal bool autoCloseSessions = true;
 		[SerializeField]
-		private bool autoPingSessions = true;
+		internal bool autoPingSessions = true;
 		[SerializeField]
-		private SessionStatus pingStatus = SessionStatus.Active;
+		internal SessionStatus pingStatus = SessionStatus.Active;
 		[SerializeField]
-		private float pingInterval = 30f;
+		internal float pingInterval = 30f;
 
 		private static GameJoltSettings instance;
 
 		public static int GameId
 		{
 			get { return Instance.gameId; }
-			set
-			{
-				if (Instance.gameId != value)
-				{
-					Instance.gameId = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.gameId, value); }
 		}
 
 		public static string PrivateGameKey
 		{
 			get { return Instance.privateGameKey; }
-			set
-			{
-				if (Instance.privateGameKey != value)
-				{
-					Instance.privateGameKey = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.privateGameKey, value); }
 		}
 
 		public static bool AutoInitialize
 		{
 			get { return Instance.autoInitialize; }
-			set
-			{
-				if (Instance.autoInitialize != value)
-				{
-					Instance.autoInitialize = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoInitialize, value); }
 		}
 
 		public static bool AutoShutdown
 		{
 			get { return Instance.autoShutdown; }
-			set
-			{
-				if (Instance.autoShutdown != value)
-				{
-					Instance.autoShutdown = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoShutdown, value); }
 		}
 
 		public static bool AutoSignInFromWeb
 		{
 			get { return Instance.autoSignInFromWeb; }
-			set
-			{
-				if (Instance.autoSignInFromWeb != value)
-				{
-					Instance.autoSignInFromWeb = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoSignInFromWeb, value); }
 		}
 
 		public static bool AutoSignInFromClient
 		{
 			get { return Instance.autoSignInFromClient; }
-			set
-			{
-				if (Instance.autoSignInFromClient != value)
-				{
-					Instance.autoSignInFromClient = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoSignInFromClient, value); }
 		}
 
 		public static bool AutoStartSessions
 		{
 			get { return Instance.autoStartSessions; }
-			set
-			{
-				if (Instance.autoStartSessions != value)
-				{
-					Instance.autoStartSessions = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoStartSessions, value); }
 		}
 
 		public static bool AutoCloseSessions
 		{
 			get { return Instance.autoCloseSessions; }
-			set
-			{
-				if (Instance.autoCloseSessions != value)
-				{
-					Instance.autoCloseSessions = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoCloseSessions, value); }
 		}
 
 		public static bool AutoPingSessions
 		{
 			get { return Instance.autoPingSessions; }
-			set
-			{
-				if (Instance.autoPingSessions != value)
-				{
-					Instance.autoPingSessions = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.autoPingSessions, value); }
 		}
 
 		public static SessionStatus PingStatus
 		{
 			get { return Instance.pingStatus; }
-			set
-			{
-				if (Instance.pingStatus != value)
-				{
-					Instance.pingStatus = value;
-					Instance.EditorSave();
-				}
-			}
+			set { SetValue(ref Instance.pingStatus, value); }
 		}
 
 		public static float PingInterval
@@ -177,31 +109,31 @@ namespace Hertzole.GameJolt
 					Debug.LogWarning($"Ping interval must be between 1 and 120 seconds. Clamping value to {v}");
 				}
 
-				if (Mathf.Abs(Instance.pingInterval - v) > float.Epsilon)
-				{
-					Instance.pingInterval = v;
-					Instance.EditorSave();
-				}
+				SetValue(ref Instance.pingInterval, v, (a, b) => Mathf.Abs(a - b) > float.Epsilon);
 			}
 		}
 
 #if UNITY_EDITOR
+		internal const string AUTO_SIGN_IN_KEY = "GameJolt.NET.AutoSignIn";
+		internal const string SIGN_IN_USERNAME_KEY = "GameJolt.NET.SignInUsername";
+		internal const string SIGN_IN_TOKEN_KEY = "GameJolt.NET.SignInToken";
+
 		public static bool AutoSignIn
 		{
-			get { return EditorPrefs.GetBool("GameJolt.NET.AutoSignIn", false); }
-			set { EditorPrefs.SetBool("GameJolt.NET.AutoSignIn", value); }
+			get { return EditorPrefs.GetBool(AUTO_SIGN_IN_KEY, false); }
+			set { EditorPrefs.SetBool(AUTO_SIGN_IN_KEY, value); }
 		}
 
 		public static string SignInUsername
 		{
-			get { return EditorPrefs.GetString("GameJolt.NET.SignInUsername", string.Empty); }
-			set { EditorPrefs.SetString("GameJolt.NET.SignInUsername", value); }
+			get { return EditorPrefs.GetString(SIGN_IN_USERNAME_KEY, string.Empty); }
+			set { EditorPrefs.SetString(SIGN_IN_USERNAME_KEY, value); }
 		}
 
 		public static string SignInToken
 		{
-			get { return EditorPrefs.GetString("GameJolt.NET.SignInToken", string.Empty); }
-			set { EditorPrefs.SetString("GameJolt.NET.SignInToken", value); }
+			get { return EditorPrefs.GetString(SIGN_IN_TOKEN_KEY, string.Empty); }
+			set { EditorPrefs.SetString(SIGN_IN_TOKEN_KEY, value); }
 		}
 #endif
 
@@ -221,6 +153,17 @@ namespace Hertzole.GameJolt
 #else
 				return instance;
 #endif
+			}
+		}
+
+		private static void SetValue<T>(ref T field, T value, Func<T, T, bool> comparer = null)
+		{
+			bool changed = comparer?.Invoke(field, value) ?? !EqualityComparer<T>.Default.Equals(field, value);
+
+			if (changed)
+			{
+				field = value;
+				Instance.EditorSave();
 			}
 		}
 

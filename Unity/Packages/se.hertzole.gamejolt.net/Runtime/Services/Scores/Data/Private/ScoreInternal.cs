@@ -90,7 +90,7 @@ namespace Hertzole.GameJolt
 
 		public GameJoltScore ToPublicScore()
 		{
-			return new GameJoltScore(sort, score, extraData, username, userId, guestName, DateTimeHelper.FromUnixTimestamp(storedTimestamp));
+			return new GameJoltScore(sort, score, extraData, username, userId < 0 ? null : userId, guestName, DateTimeHelper.FromUnixTimestamp(storedTimestamp));
 		}
 
 		public override string ToString()

@@ -1,4 +1,4 @@
-﻿#if UNITY_2021_1_OR_NEWER && UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.IO;
 using UnityEditorInternal;
@@ -9,7 +9,7 @@ namespace Hertzole.GameJolt
 {
 	internal static class SettingsHelper
 	{
-		private const string ROOT_FOLDER = "ProjectSettings/Packages/" + PACKAGE_NAME;
+		internal const string ROOT_FOLDER = "ProjectSettings/Packages/" + PACKAGE_NAME;
 		internal const string PACKAGE_NAME = "se.hertzole.gamejolt.net";
 		internal const string SETTING_PATH = ROOT_FOLDER + "/GameJoltSettings.asset";
 
@@ -20,14 +20,7 @@ namespace Hertzole.GameJolt
 				Directory.CreateDirectory(ROOT_FOLDER);
 			}
 
-			try
-			{
-				InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { settings }, SETTING_PATH, true);
-			}
-			catch (Exception e)
-			{
-				Debug.LogException(e);
-			}
+			InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { settings }, SETTING_PATH, true);
 		}
 
 		public static GameJoltSettings Load()
@@ -42,7 +35,7 @@ namespace Hertzole.GameJolt
 				}
 				catch (Exception)
 				{
-					Debug.LogError("Could not load project settings. Settings will be reset.");
+					Debug.LogError("Could not load Game Jolt project settings. Settings will be reset.");
 					settings = null;
 				}
 			}
@@ -57,7 +50,7 @@ namespace Hertzole.GameJolt
 			return settings;
 		}
 
-		private static void RemoveFile(string path)
+		internal static void RemoveFile(string path)
 		{
 			if (!File.Exists(path))
 			{

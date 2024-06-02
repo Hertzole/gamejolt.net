@@ -1,0 +1,27 @@
+{
+    "name": "GameJolt.NET.Tests.Editor",
+    "rootNamespace": "GameJolt.NET.Tests.Editor",
+    "references": [
+        "GUID:9a88817da2cdeb94388ab1c4165583ac",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:ca851cb0f53a9a2418ea8b5ed9b11639",
+        "GUID:ae8ddd73dff537d40b082a1c5191f6fd"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll",
+        "Bogus.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

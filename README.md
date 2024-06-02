@@ -197,14 +197,15 @@ Use scores to create leaderboards for your game.
 #### Submit Score
 
 ```csharp
+int tableId = 1234;
 int sort = 123;
 string score = sort + " coins";
 string extraData = "Level 1"; // Optional
 
 // As the current user
-await GameJoltAPI.Scores.SubmitScoreAsync(sort, score, extraData);
+await GameJoltAPI.Scores.SubmitScoreAsync(tableId, sort, score, extraData);
 // As a guest
-await GameJoltAPI.Scores.SubmitScoreAsync("Guest Name", sort, score, extraData);
+await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(tableId, "Guest Name", sort, score, extraData);
 ```
 
 #### Get Scores
