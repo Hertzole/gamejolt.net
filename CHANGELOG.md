@@ -1,3 +1,12 @@
+## [1.3.4](https://github.com/Hertzole/gamejolt.net/compare/v1.3.3...v1.3.4) (2024-06-02)
+
+
+### Bug Fixes
+
+* scoreboard query not handling guest users ([2b42af2](https://github.com/Hertzole/gamejolt.net/commit/2b42af21587fb6b65206ee94b7b6ff70f3a575a0))
+* **Unity:** integration not being active below 2021.1 ([2d46bbf](https://github.com/Hertzole/gamejolt.net/commit/2d46bbf098d228700db26f3bdddf0dd71e76ae9e))
+* **Unity:** session not staying open if game is in the background ([81f6255](https://github.com/Hertzole/gamejolt.net/commit/81f62551a00526e21c599b85efd2b96601aa0889))
+
 ## [1.3.3](https://github.com/Hertzole/gamejolt.net/compare/v1.3.2...v1.3.3) (2024-05-24)
 
 
