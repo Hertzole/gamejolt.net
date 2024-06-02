@@ -1,4 +1,4 @@
-﻿#if UNITY_2021_1_OR_NEWER
+﻿#if UNITY_64
 using System;
 using System.IO;
 using System.Text;
