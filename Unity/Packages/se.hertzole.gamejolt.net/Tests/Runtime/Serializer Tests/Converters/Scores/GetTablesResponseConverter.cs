@@ -23,7 +23,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 			string expected = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("tables");
 				sb.AppendArray(tables, WriteTable, true);
 			});
@@ -43,7 +43,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			TableInternal[]? tables1 = tables;
 			string json = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("tables", randomCapitalize);
 				sb.AppendArray(tables1, WriteTable);
 			});
@@ -72,18 +72,18 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			{
 				if (beforeTables)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra", randomCapitalize);
 					sb.AppendStringValue("extra data");
 				}
 
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("tables", randomCapitalize);
 				sb.AppendArray(tables1, WriteTable);
 
 				if (!beforeTables)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra", randomCapitalize);
 					sb.AppendStringValue("extra data");
 				}
@@ -106,19 +106,19 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 		private static void WriteTable(StringBuilder builder, TableInternal table)
 		{
-			builder.Append("{");
+			builder.Append('{');
 			builder.AppendJsonPropertyName("id");
 			builder.Append(table.id);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("name");
 			builder.AppendStringValue(table.name);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("description");
 			builder.AppendStringValue(table.description);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("primary");
 			builder.Append(table.isPrimary.ToString().ToLowerInvariant());
-			builder.Append("}");
+			builder.Append('}');
 		}
 	}
 }

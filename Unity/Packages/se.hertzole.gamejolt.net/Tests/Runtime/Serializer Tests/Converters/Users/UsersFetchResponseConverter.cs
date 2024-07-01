@@ -42,7 +42,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 				}
 				else
 				{
-					sb.Append("[");
+					sb.Append('[');
 					for (int i = 0; i < users.Length; i++)
 					{
 						sb.Append("{\"id\":");
@@ -72,10 +72,10 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 						sb.Append("\"}");
 						if (i < users.Length - 1)
 						{
-							sb.Append(",");
+							sb.Append(',');
 						}
 					}
-					sb.Append("]");
+					sb.Append(']');
 				}
 			});
 			

@@ -14,10 +14,10 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			string json = Serialize(friendId);
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 			sb.AppendJsonPropertyName("friend_id");
 			sb.Append(friendId.id);
-			sb.Append("}");
+			sb.Append('}');
 
 			Assert.That(json, Is.EqualTo(sb.ToString()));
 		}
@@ -28,10 +28,10 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			int id = faker.Random.Int();
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 			sb.AppendJsonPropertyName("friend_id", randomCapitalize);
 			sb.Append(id);
-			sb.Append("}");
+			sb.Append('}');
 
 			string json = sb.ToString();
 
@@ -46,24 +46,24 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			int id = faker.Random.Int();
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 			if (beforeId)
 			{
 				sb.AppendJsonPropertyName("extra_property", randomCapitalize);
 				sb.AppendStringValue(faker.Lorem.Sentence());
-				sb.Append(",");
+				sb.Append(',');
 			}
 
 			sb.AppendJsonPropertyName("friend_id", randomCapitalize);
 			sb.Append(id);
 			if (!beforeId)
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("extra_property", randomCapitalize);
 				sb.AppendStringValue(faker.Lorem.Sentence());
 			}
 
-			sb.Append("}");
+			sb.Append('}');
 
 			string json = sb.ToString();
 

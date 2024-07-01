@@ -203,7 +203,7 @@ namespace Hertzole.GameJolt
 					builder.Append(worseThan.Value);
 				}
 
-				builder.Append(")");
+				builder.Append(')');
 
 				return builder.ToString();
 			}

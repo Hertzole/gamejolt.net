@@ -24,7 +24,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 			string expected = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("scores");
 				sb.AppendArray(scores, WriteScore, true);
 			});
@@ -46,7 +46,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			ScoreInternal[]? scores1 = scores;
 			string json = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("scores", randomCapitalize);
 				sb.AppendArray(scores1, WriteScore);
 			});
@@ -77,18 +77,18 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			{
 				if (beforeScores)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra", randomCapitalize);
 					sb.AppendStringValue("extra data");
 				}
 
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("scores", randomCapitalize);
 				sb.AppendArray(scores1, WriteScore);
 
 				if (!beforeScores)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra", randomCapitalize);
 					sb.AppendStringValue("extra data");
 				}
@@ -106,31 +106,31 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 		private static void WriteScore(StringBuilder builder, ScoreInternal score)
 		{
-			builder.Append("{");
+			builder.Append('{');
 			builder.AppendJsonPropertyName("sort");
 			builder.Append(score.sort);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("score");
 			builder.AppendStringValue(score.score);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("extra_data");
 			builder.AppendStringValue(score.extraData);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("user");
 			builder.AppendStringValue(score.username);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("user_id");
 			builder.Append(score.userId);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("guest");
 			builder.AppendStringValue(score.guestName);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("stored_timestamp");
 			builder.Append(score.storedTimestamp);
-			builder.Append(",");
+			builder.Append(',');
 			builder.AppendJsonPropertyName("stored");
 			builder.AppendStringValue(score.stored);
-			builder.Append("}");
+			builder.Append('}');
 		}
 	}
 }

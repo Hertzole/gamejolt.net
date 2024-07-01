@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 
 namespace Hertzole.GameJolt
 {
@@ -8,7 +9,7 @@ namespace Hertzole.GameJolt
 	///     A result that can either be a value or an exception.
 	/// </summary>
 	/// <typeparam name="T">The type of the value</typeparam>
-	public readonly struct GameJoltResult<T>
+	public readonly struct GameJoltResult<T> : IEquatable<GameJoltResult<T>>
 	{
 		/// <summary>
 		///     Returns true if the result has an error.
@@ -64,12 +65,57 @@ namespace Hertzole.GameJolt
 		{
 			return new GameJoltResult<T>(result);
 		}
+
+		/// <summary>
+		///     Determines whether the specified object instances are considered equal.
+		/// </summary>
+		/// <param name="other">The object to compare with the current instance.</param>
+		/// <returns><c>true</c> if the objects are considered equal; otherwise, <c>false</c>.</returns>
+		public bool Equals(GameJoltResult<T> other)
+		{
+			return HasError == other.HasError && Equals(Exception, other.Exception) && EqualityComparer<T?>.Default.Equals(Value, other.Value);
+		}
+
+		/// <summary>
+		///     Determines whether the specified object instances are considered equal.
+		/// </summary>
+		/// <param name="obj">The object to compare with the current instance.</param>
+		/// <returns><c>true</c> if the objects are considered equal; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object? obj)
+		{
+			return obj is GameJoltResult<T> other && Equals(other);
+		}
+
+		/// <summary>
+		///     Returns the hash code for this instance.
+		/// </summary>
+		/// <returns>A hash code for the current result.</returns>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = HasError.GetHashCode();
+				hashCode = (hashCode * 397) ^ (Exception != null ? Exception.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (Value != null ? EqualityComparer<T>.Default.GetHashCode(Value) : 0);
+				return hashCode;
+			}
+		}
+
+		public static bool operator ==(GameJoltResult<T> left, GameJoltResult<T> right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GameJoltResult<T> left, GameJoltResult<T> right)
+		{
+			return !left.Equals(right);
+		}
 	}
 
 	/// <summary>
 	///     A result that can contain an exception.
 	/// </summary>
-	public readonly struct GameJoltResult
+	public readonly struct GameJoltResult : IEquatable<GameJoltResult>
 	{
 		/// <summary>
 		///     Returns true if the result has an error.
@@ -117,6 +163,44 @@ namespace Hertzole.GameJolt
 		public static GameJoltResult Success()
 		{
 			return new GameJoltResult(false);
+		}
+
+		/// <summary>
+		///     Determines whether the specified object instances are considered equal.
+		/// </summary>
+		/// <param name="other">The object to compare with the current instance.</param>
+		/// <returns><c>true</c> if the objects are considered equal; otherwise, <c>false</c>.</returns>
+		public bool Equals(GameJoltResult other)
+		{
+			return HasError == other.HasError && Equals(Exception, other.Exception);
+		}
+
+		/// <summary>
+		///     Determines whether the specified object instances are considered equal.
+		/// </summary>
+		/// <param name="obj">The object to compare with the current instance.</param>
+		/// <returns><c>true</c> if the objects are considered equal; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object? obj)
+		{
+			return obj is GameJoltResult other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (HasError.GetHashCode() * 397) ^ (Exception != null ? Exception.GetHashCode() : 0);
+			}
+		}
+
+		public static bool operator ==(GameJoltResult left, GameJoltResult right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(GameJoltResult left, GameJoltResult right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }
