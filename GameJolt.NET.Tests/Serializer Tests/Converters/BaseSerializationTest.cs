@@ -11,17 +11,17 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 	{
 		protected readonly Faker faker = new Faker();
 
-		protected string Serialize<T>(T data)
+		protected static string Serialize<T>(T data)
 		{
 			return GameJoltAPI.serializer.Serialize(data);
 		}
 
-		protected T Deserialize<T>(string json)
+		protected static T Deserialize<T>(string json)
 		{
 			return GameJoltAPI.serializer.Deserialize<T>(json);
 		}
 
-		protected string WriteExpectedResponse(bool success, string? message, Action<StringBuilder> writeExpected)
+		protected static string WriteExpectedResponse(bool success, string? message, Action<StringBuilder> writeExpected)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder? sb))
 			{
