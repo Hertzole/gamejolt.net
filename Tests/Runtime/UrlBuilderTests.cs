@@ -13,19 +13,19 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public void EndsWithSlash_WithSlash_ReturnsTrue()
 		{
-			Assert.IsTrue(GameJoltUrlBuilder.EndsWithSlash(new StringBuilder("test/")));
+			Assert.That(GameJoltUrlBuilder.EndsWithSlash(new StringBuilder("test/")), Is.True);
 		}
 		
 		[Test]
 		public void EndsWithSlash_WithoutSlash_ReturnsFalse()
 		{
-			Assert.IsFalse(GameJoltUrlBuilder.EndsWithSlash(new StringBuilder("test")));
+			Assert.That(GameJoltUrlBuilder.EndsWithSlash(new StringBuilder("test")), Is.False);
 		}
 		
 		[Test]
 		public void EndsWithSlash_Empty_ReturnsFalse()
 		{
-			Assert.IsFalse(GameJoltUrlBuilder.EndsWithSlash(new StringBuilder()));
+			Assert.That(GameJoltUrlBuilder.EndsWithSlash(new StringBuilder()), Is.False);
 		}
 		
 		[Test]

@@ -10,6 +10,8 @@ namespace GameJolt.NET.Tests
 {
 	public class TrophiesTest : BaseTest
 	{
+		private static readonly int[] trophyIds = new int[] { 0, 1 };
+		
 		[Test]
 		public async Task GetTrophies_Authenticated_ReturnsTrophies()
 		{
@@ -33,7 +35,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length > 0, Is.True);
+			Assert.That(result.Value!.Length, Is.GreaterThan(0));
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
@@ -88,7 +90,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length > 0, Is.True);
+			Assert.That(result.Value!.Length, Is.GreaterThan(0));
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
@@ -120,7 +122,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length > 0, Is.True);
+			Assert.That(result.Value!.Length, Is.GreaterThan(0));
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
@@ -153,7 +155,7 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length > 0, Is.True);
+			Assert.That(result.Value!.Length, Is.GreaterThan(0));
 			Assert.That(result.Value[0].Id, Is.EqualTo(trophy1.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy1.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy1.description));
@@ -253,8 +255,8 @@ namespace GameJolt.NET.Tests
 			
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length, Is.EqualTo(3));
-			Assert.That(result.Value[0].Id, Is.EqualTo(trophies[0].id));
+			Assert.That(result.Value, Has.Length.EqualTo(3));
+			Assert.That(result.Value![0].Id, Is.EqualTo(trophies[0].id));
 			Assert.That(result.Value[1].Id, Is.EqualTo(trophies[1].id));
 			Assert.That(result.Value[2].Id, Is.EqualTo(trophies[2].id));
 		}
@@ -560,7 +562,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(new[] { 0, 1 }), url =>
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(trophyIds), url =>
 			{
 				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id=0,1"));
 			});

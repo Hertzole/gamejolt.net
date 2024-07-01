@@ -21,14 +21,14 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 			string expected = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("friends");
 				sb.AppendArray(friends, (builder, friend) =>
 				{
-					builder.Append("{");
+					builder.Append('{');
 					builder.AppendJsonPropertyName("friend_id");
 					builder.Append(friend.id);
-					builder.Append("}");
+					builder.Append('}');
 				}, true); // Serializers write [] instead of null for null arrays.
 			});
 
@@ -47,14 +47,14 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			FriendId[]? friends1 = friends;
 			string json = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName(randomCapitalize ? "friends".RandomCapitalize() : "friends");
 				sb.AppendArray(friends1, (builder, friend) =>
 				{
-					builder.Append("{");
+					builder.Append('{');
 					builder.AppendJsonPropertyName("friend_id");
 					builder.Append(friend.id);
-					builder.Append("}");
+					builder.Append('}');
 				});
 			});
 
@@ -83,24 +83,24 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			{
 				if (beforeData)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra");
 					sb.AppendStringValue(faker.Lorem.Word());
 				}
 
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName(randomCapitalize ? "friends".RandomCapitalize() : "friends");
 				sb.AppendArray(friends1, (builder, friend) =>
 				{
-					builder.Append("{");
+					builder.Append('{');
 					builder.AppendJsonPropertyName("friend_id");
 					builder.Append(friend.id);
-					builder.Append("}");
+					builder.Append('}');
 				});
 
 				if (!beforeData)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra");
 					sb.AppendStringValue(faker.Lorem.Word());
 				}

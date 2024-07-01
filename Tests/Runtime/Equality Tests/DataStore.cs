@@ -1,4 +1,5 @@
-﻿using Hertzole.GameJolt;
+﻿using System;
+using Hertzole.GameJolt;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests.Equality
@@ -35,9 +36,9 @@ namespace GameJolt.NET.Tests.Equality
 		public void GetKeysResponse()
 		{
 			TestEquality((a, b) => a == b, (a, b) => a != b,
-				new GetKeysResponse(true, "message", new DataKey[0]),
-				new GetKeysResponse(false, "message", new DataKey[0]),
-				new GetKeysResponse(true, "message2", new DataKey[0]),
+				new GetKeysResponse(true, "message", Array.Empty<DataKey>()),
+				new GetKeysResponse(false, "message", Array.Empty<DataKey>()),
+				new GetKeysResponse(true, "message2", Array.Empty<DataKey>()),
 				new GetKeysResponse(true, "message", new[] { new DataKey("key") }),
 				new GetKeysResponse(true, "message", new[] { new DataKey("key"), new DataKey("key2") }));
 
