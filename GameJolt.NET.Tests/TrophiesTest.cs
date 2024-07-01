@@ -10,6 +10,8 @@ namespace GameJolt.NET.Tests
 {
 	public class TrophiesTest : BaseTest
 	{
+		private static readonly int[] trophyIds = new int[] { 0, 1 };
+		
 		[Test]
 		public async Task GetTrophies_Authenticated_ReturnsTrophies()
 		{
@@ -560,7 +562,7 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(new[] { 0, 1 }), url =>
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(trophyIds), url =>
 			{
 				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id=0,1"));
 			});
