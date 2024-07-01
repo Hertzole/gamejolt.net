@@ -255,8 +255,8 @@ namespace GameJolt.NET.Tests
 			
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length, Is.EqualTo(3));
-			Assert.That(result.Value[0].Id, Is.EqualTo(trophies[0].id));
+			Assert.That(result.Value, Has.Length.EqualTo(3));
+			Assert.That(result.Value![0].Id, Is.EqualTo(trophies[0].id));
 			Assert.That(result.Value[1].Id, Is.EqualTo(trophies[1].id));
 			Assert.That(result.Value[2].Id, Is.EqualTo(trophies[2].id));
 		}
