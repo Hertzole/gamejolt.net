@@ -127,47 +127,47 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			bool unknownBefore = false)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 
 			if (hasUnknownType && unknownBefore)
 			{
 				sb.AppendJsonPropertyName("unknown_field", randomCapitalize);
 				sb.AppendStringValue("hehehehe");
-				sb.Append(",");
+				sb.Append(',');
 			}
 
 			sb.AppendJsonPropertyName("sort", randomCapitalize);
 			sb.Append(sort);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("score", randomCapitalize);
 			sb.AppendStringValue(score, writeNull);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("extra_data", randomCapitalize);
 			sb.AppendStringValue(extraData, writeNull);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("user", randomCapitalize);
 			sb.AppendStringValue(username, writeNull);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("user_id", randomCapitalize);
 			sb.Append(userId);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("guest", randomCapitalize);
 			sb.AppendStringValue(guestName, writeNull);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("stored_timestamp", randomCapitalize);
 			sb.Append(storedTimestamp);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("stored", randomCapitalize);
 			sb.AppendStringValue(stored, writeNull);
 
 			if (hasUnknownType && !unknownBefore)
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("unknown_field", randomCapitalize);
 				sb.AppendStringValue("hehehehe");
 			}
 
-			sb.Append("}");
+			sb.Append('}');
 
 			return sb.ToString();
 		}

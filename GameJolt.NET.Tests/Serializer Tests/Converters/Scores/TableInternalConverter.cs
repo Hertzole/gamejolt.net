@@ -84,35 +84,35 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			bool unknownBefore = false)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 
 			if (hasUnknownType && unknownBefore)
 			{
 				sb.AppendJsonPropertyName("unknown");
 				sb.AppendStringValue("unknown");
-				sb.Append(",");
+				sb.Append(',');
 			}
 
 			sb.AppendJsonPropertyName("id", randomCapitalize);
 			sb.Append(id);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("name", randomCapitalize);
 			sb.AppendStringValue(name, writeNull);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("description", randomCapitalize);
 			sb.AppendStringValue(description, writeNull);
-			sb.Append(",");
+			sb.Append(',');
 			sb.AppendJsonPropertyName("primary", randomCapitalize);
 			sb.Append(isPrimary ? "true" : "false");
 
 			if (hasUnknownType && !unknownBefore)
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("unknown");
 				sb.AppendStringValue("unknown");
 			}
 
-			sb.Append("}");
+			sb.Append('}');
 			return sb.ToString();
 		}
 	}

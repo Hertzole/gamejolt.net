@@ -32,7 +32,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 				writeExpected.Invoke(sb);
 
-				sb.Append("}");
+				sb.Append('}');
 
 				return sb.ToString();
 			}

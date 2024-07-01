@@ -20,7 +20,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 			string expected = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("rank");
 				sb.Append(rank);
 			});
@@ -36,13 +36,13 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 			string json = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("rank", randomCapitalize);
 				if (stringRank)
 				{
-					sb.Append("\"");
+					sb.Append('\"');
 					sb.Append(rank);
-					sb.Append("\"");
+					sb.Append('\"');
 				}
 				else
 				{
@@ -71,18 +71,18 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			{
 				if (beforeRank)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra_property", randomCapitalize);
 					sb.AppendStringValue(faker.Lorem.Sentence());
 				}
 
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("rank", randomCapitalize);
 				if (stringRank)
 				{
-					sb.Append("\"");
+					sb.Append('\"');
 					sb.Append(rank);
-					sb.Append("\"");
+					sb.Append('\"');
 				}
 				else
 				{
@@ -91,7 +91,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 
 				if (!beforeRank)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra_property", randomCapitalize);
 					sb.AppendStringValue(faker.Lorem.Sentence());
 				}

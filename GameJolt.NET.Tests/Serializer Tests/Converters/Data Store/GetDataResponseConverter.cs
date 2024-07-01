@@ -20,7 +20,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			
 			string expected = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName("data");
 				sb.AppendStringValue(data);
 			});
@@ -37,7 +37,7 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			string? data1 = data;
 			string json = WriteExpectedResponse(success, message, sb =>
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName(randomCapitalize ? "data".RandomCapitalize() : "data");
 				dataInitialization.AppendToBuilder(sb, data1);
 			});
@@ -62,18 +62,18 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			{
 				if (beforeData)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra");
 					sb.AppendStringValue(faker.Lorem.Sentence());
 				}
 				
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName(randomCapitalize ? "data".RandomCapitalize() : "data");
 				dataInitialization.AppendToBuilder(sb, data1);
 				
 				if (!beforeData)
 				{
-					sb.Append(",");
+					sb.Append(',');
 					sb.AppendJsonPropertyName("extra");
 					sb.AppendStringValue(faker.Lorem.Sentence());
 				}

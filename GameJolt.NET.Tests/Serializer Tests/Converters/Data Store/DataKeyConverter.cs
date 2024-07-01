@@ -27,10 +27,10 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			string? key = keyInitialization.GetData();
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 			sb.AppendJsonPropertyName(randomCapitalize ? "key".RandomCapitalize() : "key");
 			keyInitialization.AppendToBuilder(sb, key);
-			sb.Append("}");
+			sb.Append('}');
 			
 			string json = sb.ToString();
 			
@@ -47,13 +47,13 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			string? key = keyInitialization.GetData();
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
+			sb.Append('{');
 
 			if (beforeKey)
 			{
 				sb.AppendJsonPropertyName(randomCapitalize ? "extra".RandomCapitalize() : "extra");
 				sb.AppendStringValue(faker.Lorem.Sentence());
-				sb.Append(",");
+				sb.Append(',');
 			}
 			
 			sb.AppendJsonPropertyName(randomCapitalize ? "key".RandomCapitalize() : "key");
@@ -61,12 +61,12 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 			
 			if (!beforeKey)
 			{
-				sb.Append(",");
+				sb.Append(',');
 				sb.AppendJsonPropertyName(randomCapitalize ? "extra".RandomCapitalize() : "extra");
 				sb.AppendStringValue(faker.Lorem.Sentence());
 			}
 			
-			sb.Append("}");
+			sb.Append('}');
 			
 			string json = sb.ToString();
 			
