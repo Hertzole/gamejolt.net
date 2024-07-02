@@ -35,8 +35,8 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length, Is.GreaterThan(0));
-			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
+			Assert.That(result.Value, Has.Length.GreaterThan(0));
+			Assert.That(result.Value![0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
 			Assert.That(result.Value[0].Difficulty, Is.EqualTo(trophy.difficulty));
@@ -90,8 +90,8 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length, Is.GreaterThan(0));
-			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
+			Assert.That(result.Value, Has.Length.GreaterThan(0));
+			Assert.That(result.Value![0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
 			Assert.That(result.Value[0].Difficulty, Is.EqualTo(trophy.difficulty));
@@ -122,8 +122,8 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length, Is.GreaterThan(0));
-			Assert.That(result.Value[0].Id, Is.EqualTo(trophy.id));
+			Assert.That(result.Value, Has.Length.GreaterThan(0));
+			Assert.That(result.Value![0].Id, Is.EqualTo(trophy.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy.description));
 			Assert.That(result.Value[0].Difficulty, Is.EqualTo(trophy.difficulty));
@@ -155,8 +155,8 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value!.Length, Is.GreaterThan(0));
-			Assert.That(result.Value[0].Id, Is.EqualTo(trophy1.id));
+			Assert.That(result.Value, Has.Length.GreaterThan(0));
+			Assert.That(result.Value![0].Id, Is.EqualTo(trophy1.id));
 			Assert.That(result.Value[0].Title, Is.EqualTo(trophy1.title));
 			Assert.That(result.Value[0].Description, Is.EqualTo(trophy1.description));
 			Assert.That(result.Value[0].Difficulty, Is.EqualTo(trophy1.difficulty));
