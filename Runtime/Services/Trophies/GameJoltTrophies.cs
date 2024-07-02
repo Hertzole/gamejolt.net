@@ -131,33 +131,7 @@ namespace Hertzole.GameJolt
 					builder.Append(getAchieved.Value ? "true" : "false");
 				}
 
-				if (trophyIds != null)
-				{
-					bool addComma = false;
-
-					builder.Append("&trophy_id=");
-					int i = 0;
-
-					foreach (int trophyId in trophyIds)
-					{
-						if (addComma)
-						{
-							builder.Append(',');
-						}
-						else
-						{
-							addComma = true;
-						}
-
-						builder.Append(trophyId);
-						i++;
-
-						if (i >= idLength && idLength >= 0)
-						{
-							break;
-						}
-					}
-				}
+				WriteTrophyIds(trophyIds, idLength, builder);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				FetchTrophiesResponse response = serializer.DeserializeResponse<FetchTrophiesResponse>(json);
@@ -175,6 +149,39 @@ namespace Hertzole.GameJolt
 				}
 
 				return GameJoltResult<GameJoltTrophy[]>.Success(trophies);
+			}
+		}
+
+		private static void WriteTrophyIds(IEnumerable<int>? trophyIds, int idLength, StringBuilder builder)
+		{
+			if (trophyIds == null)
+			{
+				return;
+			}
+			
+			bool addComma = false;
+
+			builder.Append("&trophy_id=");
+			int i = 0;
+
+			foreach (int trophyId in trophyIds)
+			{
+				if (addComma)
+				{
+					builder.Append(',');
+				}
+				else
+				{
+					addComma = true;
+				}
+
+				builder.Append(trophyId);
+				i++;
+
+				if (i >= idLength && idLength >= 0)
+				{
+					break;
+				}
 			}
 		}
 

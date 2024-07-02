@@ -6,29 +6,29 @@ namespace Hertzole.GameJolt
 	internal readonly struct PoolHandle<T> : IDisposable, IEquatable<PoolHandle<T>> where T : class
 	{
 		private readonly ObjectPool<T> pool;
-		private readonly T obj;
+		private readonly T item;
 
-		public PoolHandle(ObjectPool<T> pool, T obj)
+		public PoolHandle(ObjectPool<T> pool, T item)
 		{
 			this.pool = pool;
-			this.obj = obj;
+			this.item = item;
 		}
 
 		public bool Equals(PoolHandle<T> other)
 		{
-			return ReferenceEquals(pool, other.pool) && EqualityComparer<T>.Default.Equals(obj, other.obj);
+			return ReferenceEquals(pool, other.pool) && EqualityComparer<T>.Default.Equals(item, other.item);
 		}
 
-		public override bool Equals(object otherObj)
+		public override bool Equals(object obj)
 		{
-			return otherObj is PoolHandle<T> other && Equals(other);
+			return obj is PoolHandle<T> other && Equals(other);
 		}
 
 		public override int GetHashCode()
 		{
 			unchecked
 			{
-				return ((pool != null ? pool.GetHashCode() : 0) * 397) ^ (obj != null ? obj.GetHashCode() : 0);
+				return ((pool != null ? pool.GetHashCode() : 0) * 397) ^ (item != null ? item.GetHashCode() : 0);
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace Hertzole.GameJolt
 
 		public void Dispose()
 		{
-			pool.Return(obj);
+			pool.Return(item);
 		}
 	}
 }
