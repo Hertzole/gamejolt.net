@@ -5,21 +5,23 @@ using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
-	public class FriendsTest : BaseTest
+	public sealed class FriendsTest : BaseTest
 	{
+		private static readonly FriendId[] friends =
+		{
+			new FriendId(0),
+			new FriendId(1)
+		};
+
 		[Test]
 		public async Task Fetch_Authenticated_Success()
 		{
 			await AuthenticateAsync();
 
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(_ =>
-			{
-				return FromResult(serializer.SerializeResponse(new FetchFriendsResponse(true, null, new[]
-				{
-					new FriendId(0),
-					new FriendId(1)
-				})));
-			});
+			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, friends);
+			string expectedJson = serializer.SerializeResponse(expectedResponse);
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(expectedJson);
 
 			GameJoltResult<int[]> result = await GameJoltAPI.Friends.GetFriendsAsync();
 
@@ -36,8 +38,10 @@ namespace GameJolt.NET.Tests
 		{
 			await AuthenticateAsync();
 
-			GameJoltAPI.webClient.GetStringAsync("", default)
-			           .ReturnsForAnyArgs(_ => FromResult(serializer.SerializeResponse(new FetchFriendsResponse(true, null, null))));
+			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, null);
+			string expectedJson = serializer.SerializeResponse(expectedResponse);
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(expectedJson);
 
 			GameJoltResult<int[]> result = await GameJoltAPI.Friends.GetFriendsAsync();
 
@@ -50,14 +54,10 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Fetch_NotAuthenticated_Fail()
 		{
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(_ =>
-			{
-				return FromResult(serializer.SerializeResponse(new FetchFriendsResponse(false, null, new[]
-				{
-					new FriendId(0),
-					new FriendId(1)
-				})));
-			});
+			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(false, null, friends);
+			string expectedJson = serializer.SerializeResponse(expectedResponse);
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(expectedJson);
 
 			GameJoltResult<int[]> result = await GameJoltAPI.Friends.GetFriendsAsync();
 
