@@ -1,4 +1,6 @@
-﻿#if !NET6_0_OR_GREATER && !FORCE_SYSTEM_JSON
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if !NET6_0_OR_GREATER && !FORCE_SYSTEM_JSON
 #nullable enable
 
 using System;
@@ -59,3 +61,4 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

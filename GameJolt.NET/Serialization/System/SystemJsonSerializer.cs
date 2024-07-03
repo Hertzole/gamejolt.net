@@ -1,4 +1,6 @@
-﻿#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -65,3 +67,4 @@ namespace Hertzole.GameJolt
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

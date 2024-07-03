@@ -41,6 +41,10 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Force System Json' ">
         <DefineConstants>FORCE_SYSTEM_JSON</DefineConstants>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)' == 'Disable GameJolt' ">
+        <DefineConstants>DISABLE_GAMEJOLT</DefineConstants>
+    </PropertyGroup>
 
     <ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0')) == false Or '$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023'">
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>

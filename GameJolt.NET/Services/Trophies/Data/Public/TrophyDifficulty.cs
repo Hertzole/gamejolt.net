@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     The difficulty of a trophy.
@@ -23,3 +25,4 @@
 		Platinum = 3
 	}
 }
+#endif // DISABLE_GAMEJOLT

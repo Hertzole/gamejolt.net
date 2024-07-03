@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System.Security.Cryptography;
 using System.Text;
 #if NET5_0_OR_GREATER
 using System;
@@ -78,3 +80,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	public sealed class GameJoltInvalidDataStoreKeyException : GameJoltException
 	{
@@ -7,3 +9,4 @@
 		public GameJoltInvalidDataStoreKeyException(string message) : base(message) { }
 	}
 }
+#endif // DISABLE_GAMEJOLT

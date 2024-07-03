@@ -1,4 +1,6 @@
-﻿#if UNITY_64
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if UNITY_64
 using Bogus;
 using Hertzole.GameJolt;
 using NUnit.Framework;
@@ -231,3 +233,4 @@ namespace GameJolt.NET.Tests.Unity
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

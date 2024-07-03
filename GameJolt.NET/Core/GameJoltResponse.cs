@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System;
 using System.Collections.Generic;
 #if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using System.Text.Json.Serialization;
@@ -44,3 +46,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

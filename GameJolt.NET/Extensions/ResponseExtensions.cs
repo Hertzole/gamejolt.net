@@ -1,4 +1,6 @@
-﻿#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_3_OR_NEWER || NET5_0_OR_GREATER
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_3_OR_NEWER || NET5_0_OR_GREATER
 #define NULLABLE_ATTRIBUTES
 #endif
 #nullable enable
@@ -196,3 +198,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

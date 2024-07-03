@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 using Hertzole.GameJolt.Serialization.Shared;
@@ -138,3 +140,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

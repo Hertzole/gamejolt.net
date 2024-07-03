@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -12,3 +14,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

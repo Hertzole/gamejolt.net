@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     A string operation to perform on string data in <see cref="GameJoltDataStore" />.
@@ -17,3 +19,4 @@
 		Prepend = 1
 	}
 }
+#endif // DISABLE_GAMEJOLT

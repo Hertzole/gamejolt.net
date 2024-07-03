@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System;
 using System.Text;
 using Bogus;
 using Hertzole.GameJolt;
@@ -57,3 +59,4 @@ namespace GameJolt.NET.Tests.Equality
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System;
 
 namespace Hertzole.GameJolt
 {
@@ -9,3 +11,4 @@ namespace Hertzole.GameJolt
 		public GameJoltException(string message) : base(message) { }
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 #if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
@@ -128,3 +130,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿#if UNITY_2021_1_OR_NEWER
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if UNITY_2021_1_OR_NEWER
 using System.Net.Http;
 using System.Threading;
 using UnityEngine.Networking;
@@ -80,3 +82,4 @@ namespace Hertzole.GameJolt
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

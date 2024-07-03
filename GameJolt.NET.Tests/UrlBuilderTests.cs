@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System.Security.Cryptography;
 using System.Text;
 using Bogus;
 using Hertzole.GameJolt;
@@ -81,3 +83,4 @@ namespace GameJolt.NET.Tests
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT
