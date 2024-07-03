@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using System;
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
 using Hertzole.GameJolt.Serialization.System;

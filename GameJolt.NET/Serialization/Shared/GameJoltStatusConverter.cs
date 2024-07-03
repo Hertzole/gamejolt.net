@@ -1,5 +1,5 @@
 ﻿using System;
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using BaseConverter = Hertzole.GameJolt.Serialization.System.GameJoltEnumConverter<Hertzole.GameJolt.UserStatus>;
 #else
 using BaseConverter = Hertzole.GameJolt.Serialization.Newtonsoft.GameJoltEnumConverter<Hertzole.GameJolt.UserStatus>;

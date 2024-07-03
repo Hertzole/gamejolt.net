@@ -8,7 +8,7 @@
 
         <LangVersion>9</LangVersion>
 
-        <Configurations>Debug;Release;Unity;Unity 2023</Configurations>
+        <Configurations>Debug;Release;Unity;Unity 2023;Force System Json;Disable GameJolt</Configurations>
 
         <Platforms>AnyCPU</Platforms>
         <InvariantGlobalization>true</InvariantGlobalization>

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using System;
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using BaseConverter = System.Text.Json.Serialization.JsonConverter<bool>;
 using JsonSerializationException = System.Text.Json.JsonException;
 #else

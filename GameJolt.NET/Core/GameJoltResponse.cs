@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using System.Text.Json.Serialization;
 #endif
 
@@ -10,7 +10,7 @@ namespace Hertzole.GameJolt
 	{
 		public readonly T response;
 
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 		[JsonConstructor]
 #endif
 		public GameJoltResponse(T response)
