@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	internal interface IGameJoltSerializer
 	{
@@ -35,3 +37,4 @@
 		T Deserialize<T>(string value);
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿#if UNITY_EDITOR
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if UNITY_EDITOR
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
@@ -131,3 +133,4 @@ namespace Hertzole.GameJolt.Editor
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

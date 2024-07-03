@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System.Text;
 using GameJolt.NET.Tests.Extensions;
 using Hertzole.GameJolt;
 using NUnit.Framework;
@@ -73,3 +75,4 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿#if UNITY_64
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if UNITY_64
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -184,3 +186,4 @@ namespace Hertzole.GameJolt
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

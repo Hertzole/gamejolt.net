@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -569,3 +571,4 @@ strings
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

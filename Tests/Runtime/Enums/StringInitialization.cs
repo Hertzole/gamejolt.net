@@ -1,4 +1,6 @@
-﻿namespace GameJolt.NET.Tests.Enums
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace GameJolt.NET.Tests.Enums
 {
 	public enum StringInitialization
 	{
@@ -7,3 +9,4 @@
 		Null
 	}
 }
+#endif // DISABLE_GAMEJOLT

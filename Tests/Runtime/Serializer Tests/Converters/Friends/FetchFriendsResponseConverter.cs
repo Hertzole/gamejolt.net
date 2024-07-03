@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 using GameJolt.NET.Tests.Enums;
@@ -117,3 +119,4 @@ namespace GameJolt.NET.Tests.Serialization.Converters
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

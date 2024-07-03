@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 namespace Hertzole.GameJolt
 {
@@ -9,3 +11,4 @@ namespace Hertzole.GameJolt
 		string? Message { get; }
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	public sealed class GameJoltInvalidTrophyException : GameJoltException
 	{
@@ -8,3 +10,4 @@
 		internal const string INCORRECT_ID_MESSAGE = "Incorrect trophy ID.";
 	}
 }
+#endif // DISABLE_GAMEJOLT

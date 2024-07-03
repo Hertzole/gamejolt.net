@@ -1,4 +1,6 @@
-﻿#if UNITY_64 // Just to make sure it works in any modern Unity version
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if UNITY_64 // Just to make sure it works in any modern Unity version
 #nullable enable
 using System;
 using System.IO;
@@ -424,3 +426,4 @@ namespace GameJolt.NET.Tests.Unity
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT

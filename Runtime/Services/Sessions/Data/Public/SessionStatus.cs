@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     A session status used in <see cref="GameJoltSessions.PingAsync" />.
@@ -15,3 +17,4 @@
 		Active = 1
 	}
 }
+#endif // DISABLE_GAMEJOLT

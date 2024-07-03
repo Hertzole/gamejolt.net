@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 using System.Text;
@@ -170,3 +172,4 @@ namespace GameJolt.NET.Tests.ToString
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

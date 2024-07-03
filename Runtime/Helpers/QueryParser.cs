@@ -1,4 +1,6 @@
-﻿#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
 #define USE_SPANS
 #endif
 #nullable enable
@@ -122,3 +124,4 @@ namespace Hertzole.GameJolt
 #endif
 	}
 }
+#endif // DISABLE_GAMEJOLT

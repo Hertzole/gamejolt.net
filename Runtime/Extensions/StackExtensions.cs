@@ -1,4 +1,6 @@
-﻿#if !NETSTANDARD2_1_OR_GREATER && !NET5_0_OR_GREATER
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if !NETSTANDARD2_1_OR_GREATER && !NET5_0_OR_GREATER
 #nullable enable
 using System.Collections.Generic;
 
@@ -20,3 +22,4 @@ namespace Hertzole.GameJolt
 	}
 }
 #endif
+#endif // DISABLE_GAMEJOLT
