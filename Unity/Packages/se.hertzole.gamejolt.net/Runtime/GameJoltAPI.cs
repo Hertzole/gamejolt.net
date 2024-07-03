@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 
@@ -202,7 +204,7 @@ namespace Hertzole.GameJolt
 
 		internal static IGameJoltSerializer GetSerializer()
 		{
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 			return new SystemJsonSerializer();
 #else
 			return new NewtonsoftJsonSerializer();
@@ -219,3 +221,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     The type of a user.
@@ -23,3 +25,4 @@
 		Administrator = 3
 	}
 }
+#endif // DISABLE_GAMEJOLT

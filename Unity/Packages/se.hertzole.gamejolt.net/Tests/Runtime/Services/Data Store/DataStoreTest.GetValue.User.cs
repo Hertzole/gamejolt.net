@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+using System;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
@@ -335,3 +337,4 @@ namespace GameJolt.NET.Tests
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

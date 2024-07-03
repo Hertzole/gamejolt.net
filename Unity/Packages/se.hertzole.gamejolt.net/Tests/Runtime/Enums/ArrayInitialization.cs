@@ -1,4 +1,6 @@
-﻿namespace GameJolt.NET.Tests.Enums
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace GameJolt.NET.Tests.Enums
 {
 	public enum ArrayInitialization
 	{
@@ -7,3 +9,4 @@
 		NullArray = 2
 	}
 }
+#endif // DISABLE_GAMEJOLT

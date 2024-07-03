@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	public sealed class GameJoltInvalidUserException : GameJoltException
 	{
@@ -7,3 +9,4 @@
 		internal const string MESSAGE = "No such user could be found.";
 	}
 }
+#endif // DISABLE_GAMEJOLT

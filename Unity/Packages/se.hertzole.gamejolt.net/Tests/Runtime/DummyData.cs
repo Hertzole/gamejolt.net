@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 
 using System;
 using Bogus;
@@ -77,3 +79,4 @@ namespace GameJolt.NET.Tests
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

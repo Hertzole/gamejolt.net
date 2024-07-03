@@ -1,4 +1,6 @@
-﻿#if NET6_0_OR_GREATER
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if NET6_0_OR_GREATER
 using JsonException = System.Text.Json.JsonException;
 #else
 using JsonException = Newtonsoft.Json.JsonSerializationException;
@@ -83,3 +85,4 @@ namespace GameJolt.NET.Tests
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#nullable enable
 using System;
 using Hertzole.GameJolt;
 using NUnit.Framework;
@@ -18,3 +20,4 @@ namespace GameJolt.NET.Tests.Exceptions
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

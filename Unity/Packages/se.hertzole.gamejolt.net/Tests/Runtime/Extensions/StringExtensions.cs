@@ -1,4 +1,6 @@
-﻿namespace GameJolt.NET.Tests.Extensions
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace GameJolt.NET.Tests.Extensions
 {
 	public static class StringExtensions
 	{
@@ -31,3 +33,4 @@
 		}
 	}
 }
+#endif // DISABLE_GAMEJOLT

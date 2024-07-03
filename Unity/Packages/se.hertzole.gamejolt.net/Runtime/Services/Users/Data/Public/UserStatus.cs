@@ -1,4 +1,6 @@
-﻿namespace Hertzole.GameJolt
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+namespace Hertzole.GameJolt
 {
 	/// <summary>
 	///     The status of a user.
@@ -15,3 +17,4 @@
 		Banned = 10
 	}
 }
+#endif // DISABLE_GAMEJOLT
