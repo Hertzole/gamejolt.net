@@ -394,6 +394,13 @@ GameJolt.NET has a Unity integration that takes care of most of the background w
 
 ![Unity Project Settings](https://github.com/Hertzole/gamejolt.net/assets/5569364/0c172e5f-956d-43c7-8563-024264bff521)
 
+## 🔀 Extra Conditional Defines
+
+GameJolt.NET has some extra conditional defines that you can use to customize the behavior of the API. These are only applied if you have direct access to the source code. This will always be the case when it's installed as a Unity package.
+
+`DISABLE_GAMEJOLT` removes all GameJolt code from the project. This is useful if you want to build your game without GameJolt integration.
+
+`FORCE_SYSTEM_JSON` forces the API to use the `System.Text.Json` serializer instead of the default `Newtonsoft.Json`. This can be used if you install `System.Text.Json` as a [NuGet package](https://www.nuget.org/packages/System.Text.Json/) and want to use that instead.
 
 ## 💻 Development
 
