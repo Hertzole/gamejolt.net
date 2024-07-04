@@ -178,7 +178,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="ArgumentException">Returned if the credentials file is invalid.</exception>
 		public async Task<GameJoltResult> AuthenticateFromCredentialsFileAsync(string[] lines, CancellationToken cancellationToken = default)
 		{
-			if (lines.Length < 3)
+			if (lines == null || lines.Length < 3)
 			{
 				return GameJoltResult.Error(new ArgumentException("Invalid credentials file.", nameof(lines)));
 			}

@@ -248,6 +248,16 @@ strings
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
 		}
+		
+		[Test]
+		public async Task Authenticate_CredentialsFile_NullLines_Failure()
+		{
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync((string[]) null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
+		}
 
 		[Test]
 		public async Task Fetch_ValidUsername_Success()
