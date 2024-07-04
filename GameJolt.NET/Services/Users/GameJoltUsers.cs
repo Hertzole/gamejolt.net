@@ -146,6 +146,11 @@ namespace Hertzole.GameJolt
 		/// <exception cref="ArgumentException">Returned if the credentials file is invalid.</exception>
 		public Task<GameJoltResult> AuthenticateFromCredentialsFileAsync(string gjCredentials, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrWhiteSpace(gjCredentials))
+			{
+				return Task.FromResult(GameJoltResult.Error(new ArgumentException("Invalid credentials file.", nameof(gjCredentials))));
+			}
+			
 			string[] lines = Array.Empty<string>();
 
 			// We may need to split on \r\n instead of just \n. So we try both.
