@@ -22,12 +22,14 @@ namespace Hertzole.GameJolt.Serialization.Newtonsoft
 		{
 			reader.Read();
 
-			switch (reader.TokenType)
+			if (reader.TokenType == JsonToken.Integer)
 			{
-				case JsonToken.Integer:
-					return (long) reader.Value!;
-				case JsonToken.Float:
-					return Convert.ToInt64((double) reader.Value!);
+				return (long) reader.Value!;
+			}
+			
+			if (reader.TokenType == JsonToken.Float)
+			{
+				return Convert.ToInt64((double) reader.Value!);
 			}
 
 			string? stringValue = reader.Value as string;
