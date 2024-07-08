@@ -222,7 +222,7 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception, errorIfUnlocked))
+				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception!, errorIfUnlocked))
 				{
 					return GameJoltResult.Error(exception!);
 				}
