@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+
 #else
 using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
 #endif
@@ -160,7 +161,7 @@ namespace Hertzole.GameJolt
 			{
 				return;
 			}
-			
+
 			bool addComma = false;
 
 			builder.Append("&trophy_id=");
@@ -241,7 +242,7 @@ namespace Hertzole.GameJolt
 		///     Removes an unlocked trophy for the current user. This method requires the current user to be authenticated.
 		/// </summary>
 		/// <param name="trophyId">The ID of the trophy to remove.</param>
-		/// /// <param name="errorIfNotUnlocked">
+		/// <param name="errorIfNotUnlocked">
 		///     If true, the result will not be successful and will have an error if the user hasn't
 		///     unlocked the trophy.
 		/// </param>
@@ -249,7 +250,7 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
-		/// /// <exception cref="GameJoltTrophyException">
+		/// <exception cref="GameJoltTrophyException">
 		///     Returned if the user hasn't unlocked this trophy and
 		///     <c>errorIfNotUnlocked</c> is <c>true</c>.
 		/// </exception>
