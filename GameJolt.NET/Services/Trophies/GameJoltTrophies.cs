@@ -123,8 +123,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(ENDPOINT);
-				builder.Append("?username=");
+				builder.Append(ENDPOINT + "?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
@@ -213,8 +212,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(ADD_ENDPOINT);
-				builder.Append("?username=");
+				builder.Append(ADD_ENDPOINT + "?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
@@ -263,8 +261,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(REMOVE_ENDPOINT);
-				builder.Append("?username=");
+				builder.Append(REMOVE_ENDPOINT + "?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
@@ -274,7 +271,7 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception) && ShouldReturnError(exception, errorIfNotUnlocked))
+				if (response.TryGetException(out Exception? exception) && ShouldReturnError(exception!, errorIfNotUnlocked))
 				{
 					return GameJoltResult.Error(exception!);
 				}
