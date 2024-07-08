@@ -1,22 +1,3 @@
-# [1.4.0](https://github.com/Hertzole/gamejolt.net/compare/v1.3.4...v1.4.0) (2024-07-08)
-
-
-### Bug Fixes
-
-* GameJoltResult not implementing IEquatable ([f70e8f3](https://github.com/Hertzole/gamejolt.net/commit/f70e8f36e2ef40448b5e92ff9725145fc18a9c2f))
-* no error if AuthenticateFromCredentialsFileAsync is called with null array ([353c243](https://github.com/Hertzole/gamejolt.net/commit/353c243003bfac1420d4964d230f63e1e5b8f764))
-* no error if AuthenticateFromCredentialsFileAsync is called with null/empty strings ([b78a821](https://github.com/Hertzole/gamejolt.net/commit/b78a8218ac483fbf593e973bc6b2ff304c1fc01c))
-* no validation for urls in AuthenticateFromUrlAsync ([ce63c85](https://github.com/Hertzole/gamejolt.net/commit/ce63c85e429aa1e10f3f36102199401a4cba6395))
-* PoolHandle not implementing IEquatable ([97e2e08](https://github.com/Hertzole/gamejolt.net/commit/97e2e0801a9d1f92c56945de10e4707936f97e94))
-* use Append(char) instead of Append(string) where applicable ([2a40aec](https://github.com/Hertzole/gamejolt.net/commit/2a40aec2bd31f679129553e012c94c59db6b59fa))
-
-
-### Features
-
-* `DISABLE_GAMEJOLT` define ([daeb7f4](https://github.com/Hertzole/gamejolt.net/commit/daeb7f4e5db09f3cb5ba47064da95fc55343b9a3))
-* `FORCE_SYSTEM_JSON` define ([f3db9ba](https://github.com/Hertzole/gamejolt.net/commit/f3db9bafdbc6c27b96832ce38995e798301a4477))
-* trimming and AOT support ([3227e8e](https://github.com/Hertzole/gamejolt.net/commit/3227e8eebc0e74b44db479b1e1615e9bdda67065))
-
 ## [1.3.4](https://github.com/Hertzole/gamejolt.net/compare/v1.3.3...v1.3.4) (2024-06-02)
 
 
