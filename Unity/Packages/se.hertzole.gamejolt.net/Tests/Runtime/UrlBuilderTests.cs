@@ -63,10 +63,14 @@ namespace GameJolt.NET.Tests
 		
 		private static byte[] GetHash(string input)
 		{
+#if NET7_0_OR_GREATER
+			return MD5.HashData(Encoding.UTF8.GetBytes(input));
+#else
 			using (MD5 md5 = MD5.Create())
 			{
 				return md5.ComputeHash(Encoding.UTF8.GetBytes(input));
 			}
+#endif
 		}
 		
 		private static string GetHashString(string input)
