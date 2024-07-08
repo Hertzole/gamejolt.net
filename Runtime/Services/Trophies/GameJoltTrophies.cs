@@ -222,14 +222,9 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception))
+				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception, errorIfUnlocked))
 				{
-					// If the trophy is already unlocked, we don't want to throw an exception, unless the user wants an error.
-					// If the exception is not a GameJoltTrophyException, we want to return it.
-					if ((exception is GameJoltTrophyException && errorIfUnlocked) || exception is not GameJoltTrophyException)
-					{
-						return GameJoltResult.Error(exception!);
-					}
+					return GameJoltResult.Error(exception!);
 				}
 
 				return GameJoltResult.Success();
@@ -271,26 +266,26 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception) && ShouldReturnError(exception!, errorIfNotUnlocked))
+				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception!, errorIfNotUnlocked))
 				{
 					return GameJoltResult.Error(exception!);
 				}
 
 				return GameJoltResult.Success();
 			}
-
-			static bool ShouldReturnError(in Exception exception, in bool errorIfNotUnlocked)
+		}
+		
+		private static bool ShouldTrophyReturnError(in Exception exception, in bool errorIfNotUnlocked)
+		{
+			// If the trophy is not unlocked, we don't want to throw an exception, unless the user wants an error.
+			// If it isn't unlocked, a GameJoltTrophyException will be thrown.
+			if (exception is GameJoltTrophyException && errorIfNotUnlocked)
 			{
-				// If the trophy is not unlocked, we don't want to throw an exception, unless the user wants an error.
-				// If it isn't unlocked, a GameJoltTrophyException will be thrown.
-				if (exception is GameJoltTrophyException && errorIfNotUnlocked)
-				{
-					return true;
-				}
-				
-				// If the exception is not a GameJoltTrophyException, we want to return it.
-				return exception is not GameJoltTrophyException;
+				return true;
 			}
+				
+			// If the exception is not a GameJoltTrophyException, we want to return it.
+			return exception is not GameJoltTrophyException;
 		}
 	}
 }

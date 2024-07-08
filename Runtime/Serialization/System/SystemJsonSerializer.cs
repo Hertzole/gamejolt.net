@@ -7,6 +7,11 @@ using System.Text.Json.Serialization;
 
 namespace Hertzole.GameJolt
 {
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
+		Justification = "Options are provided at runtime which includes (de)serializers for all types..")]
+	[UnconditionalSuppressMessage("Trimming",
+		"IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code",
+		Justification = "Options are provided at runtime which includes (de)serializers for all types.")]
 	internal sealed partial class SystemJsonSerializer : IGameJoltSerializer
 	{
 		private static readonly JsonSerializerOptions options = CreateOptions();

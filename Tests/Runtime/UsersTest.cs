@@ -179,6 +179,26 @@ strings
 		}
 
 		[Test]
+		public async Task Authenticate_NullUrl_Failure()
+		{
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync((Uri) null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
+		}
+		
+		[Test]
+		public async Task Authenticate_NullUrlString_Failure()
+		{
+			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync((string) null!);
+
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
+		}
+
+		[Test]
 		[TestCase(CREDENTIALS_NORMAL)]
 		[TestCase(CREDENTIALS_LONG)]
 		public async Task Authenticate_CredentialsFile_Success(string credentials)

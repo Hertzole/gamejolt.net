@@ -108,8 +108,15 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
+		/// <exception cref="ArgumentNullException">Returned if <c>url</c> is null or white space.</exception>
+		/// <exception cref="ArgumentException">Returned if <c>url</c> is invalid.</exception>
 		public Task<GameJoltResult> AuthenticateFromUrlAsync(string url, CancellationToken cancellationToken = default)
 		{
+			if (string.IsNullOrWhiteSpace(url))
+			{
+				return Task.FromResult(GameJoltResult.Error(new ArgumentNullException(nameof(url))));
+			}
+			
 			return AuthenticateFromUrlAsync(new Uri(url), cancellationToken);
 		}
 
@@ -121,8 +128,15 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
+		/// <exception cref="ArgumentNullException">Returned if <c>url</c> is null.</exception>
+		/// <exception cref="ArgumentException">Returned if <c>url</c> is invalid.</exception>
 		public async Task<GameJoltResult> AuthenticateFromUrlAsync(Uri url, CancellationToken cancellationToken = default)
 		{
+			if (url == null)
+			{
+				return GameJoltResult.Error(new ArgumentNullException(nameof(url)));
+			}
+			
 			if ((url.Host.EndsWith("gamejolt.com", StringComparison.OrdinalIgnoreCase) || url.Host.EndsWith("gamejolt.net", StringComparison.OrdinalIgnoreCase))
 			    && QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
 			    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
