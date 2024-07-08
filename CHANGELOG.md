@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/Hertzole/gamejolt.net/compare/v1.4.0...v1.4.1) (2024-07-08)
+
+
+### Reverts
+
+* Revert "chore(release): 1.4.0 [skip ci]" ([4441b70](https://github.com/Hertzole/gamejolt.net/commit/4441b706cacf5bab06195c92230c1f066e8ee2c8))
+
 ## [1.3.4](https://github.com/Hertzole/gamejolt.net/compare/v1.3.3...v1.3.4) (2024-06-02)
 
 
