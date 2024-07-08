@@ -152,8 +152,7 @@ namespace Hertzole.GameJolt
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(GET_RANK_ENDPOINT);
-				builder.Append("?sort=");
+				builder.Append(GET_RANK_ENDPOINT + "?sort=");
 				builder.Append(score);
 				builder.Append("&table_id=");
 				builder.Append(tableId);
