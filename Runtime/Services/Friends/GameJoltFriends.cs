@@ -43,8 +43,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
-				sb.Append(ENDPOINT);
-				sb.Append("?username=");
+				sb.Append(ENDPOINT + "?username=");
 				sb.Append(users.myUsername);
 				sb.Append("&user_token=");
 				sb.Append(users.myToken);
