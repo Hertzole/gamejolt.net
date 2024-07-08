@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+
 #else
 using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
 #endif
@@ -122,8 +123,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(ENDPOINT);
-				builder.Append("?username=");
+				builder.Append(ENDPOINT + "?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
@@ -160,7 +160,7 @@ namespace Hertzole.GameJolt
 			{
 				return;
 			}
-			
+
 			bool addComma = false;
 
 			builder.Append("&trophy_id=");
@@ -212,8 +212,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(ADD_ENDPOINT);
-				builder.Append("?username=");
+				builder.Append(ADD_ENDPOINT + "?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
@@ -241,7 +240,7 @@ namespace Hertzole.GameJolt
 		///     Removes an unlocked trophy for the current user. This method requires the current user to be authenticated.
 		/// </summary>
 		/// <param name="trophyId">The ID of the trophy to remove.</param>
-		/// /// <param name="errorIfNotUnlocked">
+		/// <param name="errorIfNotUnlocked">
 		///     If true, the result will not be successful and will have an error if the user hasn't
 		///     unlocked the trophy.
 		/// </param>
@@ -249,7 +248,7 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
-		/// /// <exception cref="GameJoltTrophyException">
+		/// <exception cref="GameJoltTrophyException">
 		///     Returned if the user hasn't unlocked this trophy and
 		///     <c>errorIfNotUnlocked</c> is <c>true</c>.
 		/// </exception>
@@ -262,8 +261,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
-				builder.Append(REMOVE_ENDPOINT);
-				builder.Append("?username=");
+				builder.Append(REMOVE_ENDPOINT + "?username=");
 				builder.Append(users.myUsername);
 				builder.Append("&user_token=");
 				builder.Append(users.myToken);
@@ -273,17 +271,25 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception))
+				if (response.TryGetException(out Exception? exception) && ShouldReturnError(exception!, errorIfNotUnlocked))
 				{
-					// If the trophy is not unlocked, we don't want to throw an exception, unless the user wants an error.
-					// If the exception is not a GameJoltTrophyException, we want to return it.
-					if ((exception is GameJoltTrophyException && errorIfNotUnlocked) || exception is not GameJoltTrophyException)
-					{
-						return GameJoltResult.Error(exception!);
-					}
+					return GameJoltResult.Error(exception!);
 				}
 
 				return GameJoltResult.Success();
+			}
+
+			static bool ShouldReturnError(in Exception exception, in bool errorIfNotUnlocked)
+			{
+				// If the trophy is not unlocked, we don't want to throw an exception, unless the user wants an error.
+				// If it isn't unlocked, a GameJoltTrophyException will be thrown.
+				if (exception is GameJoltTrophyException && errorIfNotUnlocked)
+				{
+					return true;
+				}
+				
+				// If the exception is not a GameJoltTrophyException, we want to return it.
+				return exception is not GameJoltTrophyException;
 			}
 		}
 	}

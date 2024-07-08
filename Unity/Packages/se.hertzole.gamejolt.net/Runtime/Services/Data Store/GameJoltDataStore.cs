@@ -196,8 +196,7 @@ namespace Hertzole.GameJolt
 
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
-				sb.Append(SET_ENDPOINT);
-				sb.Append("?key=");
+				sb.Append(SET_ENDPOINT + "?key=");
 				sb.Append(key);
 				sb.Append("&data=");
 				sb.Append(data);
@@ -260,8 +259,7 @@ namespace Hertzole.GameJolt
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
-				sb.Append(REMOVE_ENDPOINT);
-				sb.Append("?key=");
+				sb.Append(REMOVE_ENDPOINT + "?key=");
 				sb.Append(key);
 
 				if (!string.IsNullOrEmpty(username))
@@ -408,8 +406,7 @@ namespace Hertzole.GameJolt
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
-				sb.Append(UPDATE_ENDPOINT);
-				sb.Append("?key=");
+				sb.Append(UPDATE_ENDPOINT + "?key=");
 				sb.Append(key);
 
 				if (!string.IsNullOrEmpty(username))
@@ -670,8 +667,7 @@ namespace Hertzole.GameJolt
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
-				sb.Append(FETCH_ENDPOINT);
-				sb.Append("?key=");
+				sb.Append(FETCH_ENDPOINT + "?key=");
 				sb.Append(key);
 
 				if (!string.IsNullOrEmpty(username))
