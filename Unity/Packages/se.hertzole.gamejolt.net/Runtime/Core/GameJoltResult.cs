@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -88,10 +89,7 @@ namespace Hertzole.GameJolt
 			return obj is GameJoltResult<T> other && Equals(other);
 		}
 
-		/// <summary>
-		///     Returns the hash code for this instance.
-		/// </summary>
-		/// <returns>A hash code for the current result.</returns>
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -103,14 +101,52 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltResult<T> left, GameJoltResult<T> right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltResult<T> left, GameJoltResult<T> right)
 		{
 			return !left.Equals(right);
+		}
+
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
+		public override string ToString()
+		{
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GameJoltResult<T>) + " (" + nameof(HasError) + ": ");
+				builder.Append(HasError);
+				builder.Append(", " + nameof(Exception) + ": ");
+				builder.Append(Exception);
+				builder.Append(", " + nameof(Value) + ": ");
+				builder.Append(Value);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
 		}
 	}
 
@@ -187,6 +223,7 @@ namespace Hertzole.GameJolt
 			return obj is GameJoltResult other && Equals(other);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -195,14 +232,50 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltResult left, GameJoltResult right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltResult left, GameJoltResult right)
 		{
 			return !left.Equals(right);
+		}
+
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
+		public override string ToString()
+		{
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GameJoltResult) + " (" + nameof(HasError) + ": ");
+				builder.Append(HasError);
+				builder.Append(", " + nameof(Exception) + ": ");
+				builder.Append(Exception);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
 		}
 	}
 }

@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -76,6 +77,7 @@ namespace Hertzole.GameJolt
 			Stored = stored;
 		}
 
+		/// <inheritdoc />
 		public bool Equals(GameJoltScore other)
 		{
 			return Sort == other.Sort && UserId == other.UserId && Stored.Equals(other.Stored) &&
@@ -85,11 +87,13 @@ namespace Hertzole.GameJolt
 			       EqualityHelper.StringEquals(GuestName, other.GuestName);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			return obj is GameJoltScore other && Equals(other);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -105,20 +109,60 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltScore" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltScore" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltScore" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltScore left, GameJoltScore right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltScore" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltScore" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltScore" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltScore left, GameJoltScore right)
 		{
 			return !left.Equals(right);
 		}
 
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
-			return
-				$"{nameof(GameJoltScore)} ({nameof(Sort)}: {Sort}, {nameof(Score)}: {Score}, {nameof(ExtraData)}: {ExtraData}, {nameof(Username)}: {Username}, {nameof(UserId)}: {UserId}, {nameof(GuestName)}: {GuestName}, {nameof(Stored)}: {Stored})";
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GameJoltScore) + " (" + nameof(Sort) + ": ");
+				builder.Append(Sort);
+				builder.Append(", " + nameof(Score) + ": ");
+				builder.Append(Score);
+				builder.Append(", " + nameof(ExtraData) + ": ");
+				builder.Append(ExtraData);
+				builder.Append(", " + nameof(Username) + ": ");
+				builder.Append(Username);
+				builder.Append(", " + nameof(UserId) + ": ");
+				builder.Append(UserId);
+				builder.Append(", " + nameof(GuestName) + ": ");
+				builder.Append(GuestName);
+				builder.Append(", " + nameof(Stored) + ": ");
+				builder.Append(Stored);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
 		}
 	}
 }
