@@ -1,3 +1,12 @@
+## [1.4.2](https://github.com/Hertzole/gamejolt.net/compare/v1.4.1...v1.4.2) (2024-10-14)
+
+
+### Bug Fixes
+
+* missing ToString on GameJoltResult ([68d2afb](https://github.com/Hertzole/gamejolt.net/commit/68d2afbf36c47730075d0b609a85dcde34934aa2))
+* missing xml docs on certain types ([91b7ede](https://github.com/Hertzole/gamejolt.net/commit/91b7ede65730026ab8da69c0b1a57e7a72595b82))
+* xml docs not being included in nuget package ([82ccb71](https://github.com/Hertzole/gamejolt.net/commit/82ccb71854d4aff6eb1531b6c6da2fdfb56521cf))
+
 ## [1.4.1](https://github.com/Hertzole/gamejolt.net/compare/v1.4.0...v1.4.1) (2024-07-08)
 
 
