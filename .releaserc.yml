@@ -3,8 +3,7 @@ plugins:
   - '@semantic-release/release-notes-generator'
   - '@semantic-release/commit-analyzer'
   - - '@semantic-release/exec'
-    - prepareCmd: "sed -i -e '/AssemblyVersion/s/>.*</>${nextRelease.version}</'
-        GameJolt.NET/GameJolt.NET.csproj"
+    - prepareCmd: "sed -i -e '/AssemblyVersion/s/>.*</>${nextRelease.version}</' GameJolt.NET/GameJolt.NET.csproj; sed -i -e '/<Version>/s/>.*</>${nextRelease.version}</' GameJolt.NET/GameJolt.NET.csproj"
   - - '@semantic-release/changelog'
     - changelogFile: 'CHANGELOG.md'
   - - '@semantic-release/npm'
