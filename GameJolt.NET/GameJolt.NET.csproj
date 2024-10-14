@@ -7,7 +7,6 @@
         <AssemblyVersion>1.4.1</AssemblyVersion>
         <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <Configurations>Debug;Release;Unity;Unity 2023;Force System Json;Disable GameJolt</Configurations>
-        <Platforms>AnyCPU</Platforms>
         <IsTrimmable>true</IsTrimmable>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
         <IsAotCompatible>true</IsAotCompatible>
@@ -18,20 +17,28 @@
         <Title>GameJolt.NET</Title>
         <Authors>Hertzole</Authors>
         <Company>Hertzole</Company>
+        <Version>1.4.1</Version>
         <Description>A modern .NET wrapper around the Game Jolt Game API.</Description>
         <PackageProjectUrl>https://github.com/Hertzole/gamejolt.net</PackageProjectUrl>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <RepositoryUrl>https://github.com/Hertzole/gamejolt.net</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>gamejolt game jolt</PackageTags>
         <PackageReadmeFile>README_nuget.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\README.md" Pack="true" PackagePath="\"/>
         <None Include="..\README_nuget.md" Pack="true" PackagePath="\"/>
         <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
+        <None Include="bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml" Pack="true" PackagePath="\"/>
     </ItemGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <DocumentationFile>bin\Release\GameJolt.NET.xml</DocumentationFile>
+    </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023' ">
         <DefineConstants>TRACE,UNITY_EDITOR,UNITY_2021_1_OR_NEWER,UNITY_64</DefineConstants>
