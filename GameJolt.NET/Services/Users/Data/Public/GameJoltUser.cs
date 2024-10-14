@@ -83,6 +83,7 @@ namespace Hertzole.GameJolt
 			OnlineNow = onlineNow;
 		}
 
+		/// <inheritdoc />
 		public bool Equals(GameJoltUser other)
 		{
 			return Id == other.Id && Type == other.Type && Status == other.Status && SignedUp.Equals(other.SignedUp) &&
@@ -94,11 +95,13 @@ namespace Hertzole.GameJolt
 			       EqualityHelper.StringEquals(UserDescription, other.UserDescription);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			return obj is GameJoltUser other && Equals(other);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -118,16 +121,38 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltUser" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltUser" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltUser" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltUser left, GameJoltUser right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltUser" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltUser" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltUser" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltUser left, GameJoltUser right)
 		{
 			return !left.Equals(right);
 		}
 
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))

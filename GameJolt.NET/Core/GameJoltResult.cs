@@ -88,10 +88,7 @@ namespace Hertzole.GameJolt
 			return obj is GameJoltResult<T> other && Equals(other);
 		}
 
-		/// <summary>
-		///     Returns the hash code for this instance.
-		/// </summary>
-		/// <returns>A hash code for the current result.</returns>
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -103,11 +100,29 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltResult<T> left, GameJoltResult<T> right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltResult<T> left, GameJoltResult<T> right)
 		{
 			return !left.Equals(right);
@@ -187,6 +202,7 @@ namespace Hertzole.GameJolt
 			return obj is GameJoltResult other && Equals(other);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -195,11 +211,29 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltResult left, GameJoltResult right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltResult{T}" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltResult{T}" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltResult left, GameJoltResult right)
 		{
 			return !left.Equals(right);

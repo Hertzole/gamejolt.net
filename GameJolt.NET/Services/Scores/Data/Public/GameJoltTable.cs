@@ -34,17 +34,20 @@ namespace Hertzole.GameJolt
 			IsPrimary = isPrimary;
 		}
 
+		/// <inheritdoc />
 		public bool Equals(GameJoltTable other)
 		{
 			return Id == other.Id && IsPrimary == other.IsPrimary &&
 			       EqualityHelper.StringEquals(Name, other.Name) && EqualityHelper.StringEquals(Description, other.Description);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object obj)
 		{
 			return obj is GameJoltTable other && Equals(other);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -57,16 +60,38 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltTable" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltTable" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltTable" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GameJoltTable left, GameJoltTable right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltTable" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GameJoltTable" /> to compare.</param>
+		/// <param name="right">The second <see cref="GameJoltTable" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GameJoltTable left, GameJoltTable right)
 		{
 			return !left.Equals(right);
 		}
 
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
 			return
