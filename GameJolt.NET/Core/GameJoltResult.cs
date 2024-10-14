@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -127,6 +128,26 @@ namespace Hertzole.GameJolt
 		{
 			return !left.Equals(right);
 		}
+
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
+		public override string ToString()
+		{
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GameJoltResult<T>) + " (" + nameof(HasError) + ": ");
+				builder.Append(HasError);
+				builder.Append(", " + nameof(Exception) + ": ");
+				builder.Append(Exception);
+				builder.Append(", " + nameof(Value) + ": ");
+				builder.Append(Value);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
+		}
 	}
 
 	/// <summary>
@@ -237,6 +258,24 @@ namespace Hertzole.GameJolt
 		public static bool operator !=(GameJoltResult left, GameJoltResult right)
 		{
 			return !left.Equals(right);
+		}
+
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
+		public override string ToString()
+		{
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GameJoltResult) + " (" + nameof(HasError) + ": ");
+				builder.Append(HasError);
+				builder.Append(", " + nameof(Exception) + ": ");
+				builder.Append(Exception);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
 		}
 	}
 }
