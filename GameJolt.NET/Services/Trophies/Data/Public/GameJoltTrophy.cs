@@ -1,6 +1,7 @@
 ﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
 
 using System;
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -108,8 +109,24 @@ namespace Hertzole.GameJolt
 		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
-			return
-				$"{nameof(GameJoltTrophy)} ({nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Description)}: {Description}, {nameof(Difficulty)}: {Difficulty}, {nameof(ImageUrl)}: {ImageUrl}, {nameof(HasAchieved)}: {HasAchieved})";
+			using (StringBuilderPool.Rent(out StringBuilder builder))
+			{
+				builder.Append(nameof(GameJoltTrophy) + " (" + nameof(Id) + ": ");
+				builder.Append(Id);
+				builder.Append(", " + nameof(Title) + ": ");
+				builder.Append(Title);
+				builder.Append(", " + nameof(Description) + ": ");
+				builder.Append(Description);
+				builder.Append(", " + nameof(Difficulty) + ": ");
+				builder.Append(Difficulty);
+				builder.Append(", " + nameof(ImageUrl) + ": ");
+				builder.Append(ImageUrl);
+				builder.Append(", " + nameof(HasAchieved) + ": ");
+				builder.Append(HasAchieved);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
 		}
 	}
 }

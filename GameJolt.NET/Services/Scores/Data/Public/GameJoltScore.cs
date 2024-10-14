@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Text;
 
 namespace Hertzole.GameJolt
 {
@@ -142,8 +143,26 @@ namespace Hertzole.GameJolt
 		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
-			return
-				$"{nameof(GameJoltScore)} ({nameof(Sort)}: {Sort}, {nameof(Score)}: {Score}, {nameof(ExtraData)}: {ExtraData}, {nameof(Username)}: {Username}, {nameof(UserId)}: {UserId}, {nameof(GuestName)}: {GuestName}, {nameof(Stored)}: {Stored})";
+			using (StringBuilderPool.Rent(out StringBuilder? builder))
+			{
+				builder.Append(nameof(GameJoltScore) + " (" + nameof(Sort) + ": ");
+				builder.Append(Sort);
+				builder.Append(", " + nameof(Score) + ": ");
+				builder.Append(Score);
+				builder.Append(", " + nameof(ExtraData) + ": ");
+				builder.Append(ExtraData);
+				builder.Append(", " + nameof(Username) + ": ");
+				builder.Append(Username);
+				builder.Append(", " + nameof(UserId) + ": ");
+				builder.Append(UserId);
+				builder.Append(", " + nameof(GuestName) + ": ");
+				builder.Append(GuestName);
+				builder.Append(", " + nameof(Stored) + ": ");
+				builder.Append(Stored);
+				builder.Append(')');
+
+				return builder.ToString();
+			}
 		}
 	}
 }
