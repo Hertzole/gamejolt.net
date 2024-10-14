@@ -54,6 +54,7 @@ namespace Hertzole.GameJolt
 			this.worseThan = worseThan;
 		}
 
+		/// <inheritdoc />
 		public bool Equals(GetScoresQuery other)
 		{
 			return tableId == other.tableId && limit == other.limit && betterThan == other.betterThan && worseThan == other.worseThan &&
@@ -63,11 +64,13 @@ namespace Hertzole.GameJolt
 			       ReferenceEquals(scores, other.scores);
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object? obj)
 		{
 			return obj is GetScoresQuery other && Equals(other);
 		}
 
+		/// <inheritdoc />
 		public override int GetHashCode()
 		{
 			unchecked
@@ -83,11 +86,29 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GetScoresQuery" /> are equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GetScoresQuery" /> to compare.</param>
+		/// <param name="right">The second <see cref="GetScoresQuery" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same result; otherwise,
+		///     <c>false</c>.
+		/// </returns>
 		public static bool operator ==(GetScoresQuery left, GetScoresQuery right)
 		{
 			return left.Equals(right);
 		}
 
+		/// <summary>
+		///     Determines whether two specified instances of <see cref="GameJoltTable" /> are not equal.
+		/// </summary>
+		/// <param name="left">The first <see cref="GetScoresQuery" /> to compare.</param>
+		/// <param name="right">The second <see cref="GetScoresQuery" /> to compare.</param>
+		/// <returns>
+		///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same result;
+		///     otherwise, <c>false</c>.
+		/// </returns>
 		public static bool operator !=(GetScoresQuery left, GetScoresQuery right)
 		{
 			return !left.Equals(right);
@@ -96,21 +117,21 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Gets scores for a specific table. Default is the primary score table.
 		/// </summary>
-		/// <param name="tableId">The ID of the score table.</param>
+		/// <param name="targetTableId">The ID of the score table.</param>
 		/// <returns>The query.</returns>
-		public GetScoresQuery ForTable(int tableId)
+		public GetScoresQuery ForTable(int targetTableId)
 		{
-			return new GetScoresQuery(scores, tableId, limit, username, userToken, guest, betterThan, worseThan);
+			return new GetScoresQuery(scores, targetTableId, limit, username, userToken, guest, betterThan, worseThan);
 		}
 
 		/// <summary>
 		///     The number of scores to return. Default is 10. The maximum is 100.
 		/// </summary>
-		/// <param name="limit">The number of scores you'd like to return.</param>
+		/// <param name="queryLimit">The number of scores you'd like to return.</param>
 		/// <returns>The query.</returns>
-		public GetScoresQuery Limit(int limit)
+		public GetScoresQuery Limit(int queryLimit)
 		{
-			return new GetScoresQuery(scores, tableId, limit, username, userToken, guest, betterThan, worseThan);
+			return new GetScoresQuery(scores, tableId, queryLimit, username, userToken, guest, betterThan, worseThan);
 		}
 
 		/// <summary>
@@ -162,6 +183,10 @@ namespace Hertzole.GameJolt
 			return await scores!.GetScoresAsync(this, cancellationToken);
 		}
 
+		/// <summary>
+		///     Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
 		public override string ToString()
 		{
 			using (StringBuilderPool.Rent(out StringBuilder? builder))
