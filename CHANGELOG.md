@@ -1,3 +1,20 @@
+# [1.5.0](https://github.com/Hertzole/gamejolt.net/compare/v1.4.2...v1.5.0) (2024-12-04)
+
+
+### Bug Fixes
+
+* GameJoltSettings not being included when batch building in Unity ([b06d150](https://github.com/Hertzole/gamejolt.net/commit/b06d15072b27edb4c4eafce53c3c3e2656a0334d))
+
+
+### Features
+
+* allow for editing settings with GameJolt disabled ([cc6772f](https://github.com/Hertzole/gamejolt.net/commit/cc6772f8d925111b5bf2ca384822fdefb680ceb5))
+
+
+### Reverts
+
+* GameJoltSettings meta guid ([bb0207f](https://github.com/Hertzole/gamejolt.net/commit/bb0207f81a5a60e297884b4e6fd900fa8f994212))
+
 ## [1.4.2](https://github.com/Hertzole/gamejolt.net/compare/v1.4.1...v1.4.2) (2024-10-14)
 
 
