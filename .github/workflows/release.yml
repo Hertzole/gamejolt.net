@@ -30,9 +30,6 @@ jobs:
           dotnet clean
           dotnet restore
           dotnet build -c Release
-      
-      - name: Pack NuGet Package
-        run: dotnet pack -c Release -p:VERSION=${{ steps.semantic.outputs.new_release_version }} -o output
 
       - name: Release
         id: semantic
@@ -107,6 +104,16 @@ jobs:
         if: steps.semantic.outputs.new_release_published == 'true'
         run: |
           git checkout master
+
+      # Because github actions and linux can not be trusted
+      - name: Build again
+        run: |
+          dotnet clean
+          dotnet restore
+          dotnet build -c Release
+
+      - name: Pack NuGet Package
+        run: dotnet pack -c Release -p:VERSION=${{ steps.semantic.outputs.new_release_version }} -o output
 
       - name: Add NuGet Source
         if: steps.semantic.outputs.new_release_published == 'true'
