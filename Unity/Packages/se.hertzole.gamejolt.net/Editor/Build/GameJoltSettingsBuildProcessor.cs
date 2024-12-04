@@ -1,11 +1,12 @@
-﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
-
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+
+// NOTE: This always runs, even if GameJolt is disabled. This is because Unity does not handle conditional compilation symbols very well when building for multiple platforms.
+// For more information, see the notice in GameJoltSettings.cs.
 
 namespace Hertzole.GameJolt.Editor
 {
@@ -14,16 +15,22 @@ namespace Hertzole.GameJolt.Editor
 		private bool removeFromPreloadedAssets;
 
 		private GameJoltSettings settingsInstance;
-		
-		private const string SETTING_PATH = "Assets/" + SettingsHelper.PACKAGE_NAME + "_GameJoltSettings.asset";
 
 		public int callbackOrder
 		{
 			get { return -1_000_000; }
 		}
 
+		private const string SETTING_PATH = "Assets/" + SettingsHelper.PACKAGE_NAME + "_GameJoltSettings.asset";
+
 		public void OnPreprocessBuild(BuildReport report)
 		{
+			// Don't do anything if the DISABLE_GAMEJOLT define is set.
+			if (PlayerSettingsHelper.ContainsDefine("DISABLE_GAMEJOLT"))
+			{
+				return;
+			}
+
 			Application.logMessageReceivedThreaded += OnGetLog;
 
 			removeFromPreloadedAssets = false;
@@ -63,6 +70,12 @@ namespace Hertzole.GameJolt.Editor
 
 		public void OnPostprocessBuild(BuildReport report)
 		{
+			// Don't do anything if the DISABLE_GAMEJOLT define is set.
+			if (PlayerSettingsHelper.ContainsDefine("DISABLE_GAMEJOLT"))
+			{
+				return;
+			}
+
 			Application.logMessageReceivedThreaded -= OnGetLog;
 
 			RemoveInstance();
@@ -132,5 +145,4 @@ namespace Hertzole.GameJolt.Editor
 		}
 	}
 }
-#endif
-#endif // DISABLE_GAMEJOLT
+#endif // UNITY_EDITOR
