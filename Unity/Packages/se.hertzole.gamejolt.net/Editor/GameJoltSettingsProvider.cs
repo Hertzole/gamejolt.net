@@ -1,6 +1,4 @@
-﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
-
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -57,6 +55,11 @@ namespace Hertzole.GameJolt.Editor
 			float oLabelWidth = EditorGUIUtility.labelWidth;
 			EditorGUIUtility.labelWidth = 250;
 
+#if DISABLE_GAMEJOLT
+			EditorGUILayout.HelpBox("GameJolt is current disabled due to the DISABLE_GAMEJOLT define.", MessageType.Warning);
+			EditorGUILayout.Space();
+#endif
+
 			GUILayout.Label(Labels.gameSettings, EditorStyles.boldLabel);
 			int field = EditorGUILayout.IntField(Labels.gameId, GameJoltSettings.GameId);
 
@@ -78,8 +81,9 @@ namespace Hertzole.GameJolt.Editor
 
 			EditorGUILayout.Space();
 			GUILayout.Label(Labels.editorSettings, EditorStyles.boldLabel);
-			
-			EditorGUILayout.HelpBox("These settings are only used in the editor and will only be saved for you. They are not shared with anyone else.", MessageType.Info);
+
+			EditorGUILayout.HelpBox("These settings are only used in the editor and will only be saved for you. They are not shared with anyone else.",
+				MessageType.Info);
 
 			GameJoltSettings.AutoSignIn = EditorGUILayout.Toggle(Labels.autoSignIn, GameJoltSettings.AutoSignIn);
 			bool oEnabled = GUI.enabled;
@@ -116,5 +120,4 @@ namespace Hertzole.GameJolt.Editor
 		}
 	}
 }
-#endif
-#endif // DISABLE_GAMEJOLT
+#endif // UNITY_EDITOR
