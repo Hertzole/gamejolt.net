@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Hertzole/gamejolt.net/compare/v1.5.0...v1.5.1) (2024-12-04)
+
+
+### Bug Fixes
+
+* nuget publish ([d5b222c](https://github.com/Hertzole/gamejolt.net/commit/d5b222c7e909bef5478fb9655f9946eb35561446))
+
 # [1.5.0](https://github.com/Hertzole/gamejolt.net/compare/v1.4.2...v1.5.0) (2024-12-04)
 
 
