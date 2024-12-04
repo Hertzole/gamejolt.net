@@ -1,8 +1,6 @@
 <div align="center">
 <img src="https://github.com/Hertzole/gamejolt.net/assets/5569364/c2574e9a-2ab8-4e35-8c00-994f6cf07fd7" alt="GameJolt.NET Logo">
 <h4>A modern C# wrapper around the GameJolt Game API for .NET and Unity</h4>
-<img src="https://img.shields.io/github/actions/workflow/status/hertzole/gamejolt.net/test.yml?style=flat&logo=.net&label=.NET%20Tests">
-<img src="https://img.shields.io/github/actions/workflow/status/hertzole/gamejolt.net/unity.yml?style=flat&logo=unity&label=Unity%20Tests">
 <a href="https://gamejolt.com/game-api"><img src="https://img.shields.io/badge/Game_Jolt_API-v1.2-%23CCFF00?style=flat&logo=gamejolt"></a>
 <br>
 <a href="https://github.com/sponsors/Hertzole"><img src="https://img.shields.io/badge/Sponsor_me-GitHub-%23EA4AAA?style=flat&logo=githubsponsors" alt="Sponsor me on github badge"></a>
@@ -11,7 +9,7 @@
 <a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=sqale_rating" alt="Sonarcloud maintainability"></a>
 <a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=bugs" alt="Sonarcloud bugs"></a>
 <a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=code_smells" alt="Sonarcloud code smells"></a>
-<a href="https://sonarcloud.io/project/overview?id=hertzole_gamejolt-net"><img src="https://sonarcloud.io/api/project_badges/measure?project=hertzole_gamejolt-net&metric=coverage" alt="Sonarcloud code coverage"></a>
+<a href="https://hertzole.github.io/gamejolt.net"><img src="https://raw.githubusercontent.com/Hertzole/gamejolt.net/develop/docs/badge_linecoverage.svg" alt="Code coverage"></a>
 </div>
 
 ## 🔨 Getting Started
@@ -199,14 +197,15 @@ Use scores to create leaderboards for your game.
 #### Submit Score
 
 ```csharp
+int tableId = 1234;
 int sort = 123;
 string score = sort + " coins";
 string extraData = "Level 1"; // Optional
 
 // As the current user
-await GameJoltAPI.Scores.SubmitScoreAsync(sort, score, extraData);
+await GameJoltAPI.Scores.SubmitScoreAsync(tableId, sort, score, extraData);
 // As a guest
-await GameJoltAPI.Scores.SubmitScoreAsync("Guest Name", sort, score, extraData);
+await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(tableId, "Guest Name", sort, score, extraData);
 ```
 
 #### Get Scores
@@ -350,6 +349,8 @@ GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(id
 
 #### OpenUPM (Recommended)
 
+The minimum Unity version for GameJolt.NET is 2021.3.
+
 You can install the package through [OpenUPM](https://openupm.com/) by using the [OpenUPM CLI](https://github.com/openupm/openupm-cli#openupm-cli).
 
 ```bash
@@ -370,13 +371,36 @@ If you don't have the CLI installed, you can follow these steps:
 7. Paste `se.hertzole.gamejolt.net` into name 
 8. Click `Add`
 
+#### Unity Package Manager
+
+You can install the package through the Unity Package Manager.
+
+1. Open `Window/Package Manager`
+2. Click the `+` in the top left corner
+3. Select `Add package from git URL...`
+4. Paste `https://github.com/Hertzole/gamejolt.net.git#develop`
+
 ### .NET Project
 
-You can install the package through NuGet.
+You can install the package through NuGet. GameJolt.NET supports .NET Standard 2.0/2.1 and .NET 5.0+.
 
 ```bash
-dotnet add package Hertzole.GameJolt.Net
+dotnet add package GameJolt.Net
 ```
+
+## 🎮 Unity Integration
+
+GameJolt.NET has a Unity integration that takes care of most of the background work for you, like handling sessions and authentication. It also has a page in the project settings to help you customize the behavior of the integration.
+
+![Unity Project Settings](https://github.com/Hertzole/gamejolt.net/assets/5569364/0c172e5f-956d-43c7-8563-024264bff521)
+
+## 🔀 Extra Conditional Defines
+
+GameJolt.NET has some extra conditional defines that you can use to customize the behavior of the API. These are only applied if you have direct access to the source code. This will always be the case when it's installed as a Unity package.
+
+`DISABLE_GAMEJOLT` removes all GameJolt code from the project. This is useful if you want to build your game without GameJolt integration.
+
+`FORCE_SYSTEM_JSON` forces the API to use the `System.Text.Json` serializer instead of the default `Newtonsoft.Json`. This can be used if you install `System.Text.Json` as a [NuGet package](https://www.nuget.org/packages/System.Text.Json/) and want to use that instead.
 
 ## 💻 Development
 
