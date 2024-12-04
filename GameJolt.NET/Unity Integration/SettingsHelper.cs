@@ -1,6 +1,4 @@
-﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
-
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.IO;
 using UnityEditorInternal;
@@ -9,6 +7,8 @@ using Object = UnityEngine.Object;
 
 namespace Hertzole.GameJolt
 {
+	// This class is always included, even if GameJolt is disabled due to being needed in GameJoltSettings.
+	// For more information, see notice in GameJoltSettings.cs.
 	internal static class SettingsHelper
 	{
 		internal const string ROOT_FOLDER = "ProjectSettings/Packages/" + PACKAGE_NAME;
@@ -69,5 +69,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
-#endif
-#endif // DISABLE_GAMEJOLT
+#endif // UNITY_EDITOR

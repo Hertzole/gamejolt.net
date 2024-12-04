@@ -1,18 +1,18 @@
-﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+﻿#if UNITY_64 // Only to make sure this is used in Unity
+#if UNITY_EDITOR || !DISABLE_GAMEJOLT
+#define ENABLE_GAMEJOLT // Always enable GameJolt in the editor so it can be worked on without switching platform. Disable it in the build if needed.
+#endif // UNITY_EDITOR || !DISABLE_GAMEJOLT
 
-#if UNITY_64
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Hertzole.GameJolt
 {
-	public sealed class GameJoltSettings : ScriptableObject
+#if ENABLE_GAMEJOLT
+	partial class GameJoltSettings
 	{
 		[SerializeField]
 		internal int gameId = default;
@@ -37,8 +37,6 @@ namespace Hertzole.GameJolt
 		internal SessionStatus pingStatus = SessionStatus.Active;
 		[SerializeField]
 		internal float pingInterval = 30f;
-
-		private static GameJoltSettings instance;
 
 		public static int GameId
 		{
@@ -115,49 +113,6 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-#if UNITY_EDITOR
-		internal const string AUTO_SIGN_IN_KEY = "GameJolt.NET.AutoSignIn";
-		internal const string SIGN_IN_USERNAME_KEY = "GameJolt.NET.SignInUsername";
-		internal const string SIGN_IN_TOKEN_KEY = "GameJolt.NET.SignInToken";
-
-		public static bool AutoSignIn
-		{
-			get { return EditorPrefs.GetBool(AUTO_SIGN_IN_KEY, false); }
-			set { EditorPrefs.SetBool(AUTO_SIGN_IN_KEY, value); }
-		}
-
-		public static string SignInUsername
-		{
-			get { return EditorPrefs.GetString(SIGN_IN_USERNAME_KEY, string.Empty); }
-			set { EditorPrefs.SetString(SIGN_IN_USERNAME_KEY, value); }
-		}
-
-		public static string SignInToken
-		{
-			get { return EditorPrefs.GetString(SIGN_IN_TOKEN_KEY, string.Empty); }
-			set { EditorPrefs.SetString(SIGN_IN_TOKEN_KEY, value); }
-		}
-#endif
-
-		internal static GameJoltSettings Instance
-		{
-			get
-			{
-#if UNITY_EDITOR
-				if (instance != null)
-				{
-					return instance;
-				}
-
-				instance = SettingsHelper.Load();
-				instance.hideFlags = HideFlags.HideAndDontSave;
-				return instance;
-#else
-				return instance;
-#endif
-			}
-		}
-
 		private static void SetValue<T>(ref T field, T value, Func<T, T, bool> comparer = null)
 		{
 			bool changed = comparer?.Invoke(field, value) ?? !EqualityComparer<T>.Default.Equals(field, value);
@@ -169,13 +124,6 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-#if !UNITY_EDITOR
-		private void OnEnable()
-		{
-			instance = this;
-		}
-#endif
-
 		[Conditional("UNITY_EDITOR")]
 		private void EditorSave()
 		{
@@ -184,6 +132,6 @@ namespace Hertzole.GameJolt
 #endif
 		}
 	}
+#endif // ENABLE_GAMEJOLT
 }
-#endif
-#endif // DISABLE_GAMEJOLT
+#endif // UNITY_64

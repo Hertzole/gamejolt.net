@@ -1,4 +1,4 @@
-﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+﻿#if !DISABLE_GAMEJOLT || UNITY_EDITOR // Disables all GameJolt-related code. Also include in Unity editor because it's needed for the settings.
 
 namespace Hertzole.GameJolt
 {
