@@ -22,3 +22,4 @@ MonoBehaviour:
   autoCloseSessions: 0
   autoPingSessions: 0
   pingStatus: 1
+  pingInterval: 30

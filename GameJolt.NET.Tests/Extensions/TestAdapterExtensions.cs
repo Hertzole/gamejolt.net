@@ -22,16 +22,46 @@ namespace GameJolt.NET.Tests.Extensions
 
 			if (!string.IsNullOrEmpty(test.ClassName))
 			{
-				Type? type = Assembly.GetExecutingAssembly().GetType(test.ClassName);
-				if (type == null)
-				{
-					return false;
-				}
-				
-				return type.GetCustomAttribute<SkipInitializationAttribute>() != null;
+				Type? type = FindType(test.ClassName);
+
+				return type?.GetCustomAttribute<SkipInitializationAttribute>() != null;
 			}
 
 			return false;
+		}
+
+		private static Type? FindType(string name)
+		{
+			// Try the executing assembly for quickest results.
+			Type? type = Assembly.GetExecutingAssembly().GetType(name);
+			if (type != null)
+			{
+				return type;
+			}
+
+			// Try the entry assembly if it's not the same as the executing assembly.
+			Assembly? entryAssembly = Assembly.GetEntryAssembly();
+			if (entryAssembly != null && entryAssembly != Assembly.GetExecutingAssembly())
+			{
+				type = entryAssembly.GetType(name);
+				if (type != null)
+				{
+					return type;
+				}
+			}
+
+			// Try all loaded assemblies.
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				type = assembly.GetType(name);
+				if (type != null)
+				{
+					return type;
+				}
+			}
+
+			// No type was found.
+			return null;
 		}
 	}
 }
