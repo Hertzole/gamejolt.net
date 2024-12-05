@@ -8,6 +8,7 @@ using GameJolt.NET.Tests.Extensions;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 using StringTask = System.Threading.Tasks.ValueTask<string>;
 
@@ -21,11 +22,8 @@ namespace GameJolt.NET.Tests
 	public abstract class BaseTest
 	{
 		internal static readonly IGameJoltSerializer serializer = GameJoltAPI.serializer;
-
 		protected string Username { get; set; } = null!;
-
 		protected string Token { get; set; } = null!;
-
 #if UNITY_64
 		private float originalPingInterval;
 #if UNITY_EDITOR
@@ -33,7 +31,6 @@ namespace GameJolt.NET.Tests
 		private string? originalSignInToken;
 #endif
 #endif
-
 		[SetUp]
 		public async Task Setup()
 		{
@@ -81,6 +78,8 @@ namespace GameJolt.NET.Tests
 		[TearDown]
 		public async Task TearDown()
 		{
+			await PreTearDownAsync();
+
 			if (GameJoltAPI.IsInitialized)
 			{
 				GameJoltAPI.Shutdown();
@@ -109,6 +108,11 @@ namespace GameJolt.NET.Tests
 
 			// Reset the web client to the default one so that we don't use the fake one in other tests.
 			GameJoltAPI.webClient = GameJoltAPI.GetWebClient();
+		}
+
+		protected virtual Task PreTearDownAsync()
+		{
+			return Task.CompletedTask;
 		}
 
 		protected virtual Task OnTearDownAsync()
@@ -198,7 +202,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception!.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UNKNOWN_FATAL_ERROR : errorMessage));
 			Assert.That(result.Exception, Is.TypeOf<TException>());
 		}
-		
+
 		internal static async Task AssertErrorAsync<TResponse, TException>(Func<TResponse> createResponse,
 			Func<Task<GameJoltResult>> getResult,
 			string errorMessage = "") where TResponse : struct, IResponse where TException : Exception
@@ -212,6 +216,26 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception!.Message, Is.EqualTo(string.IsNullOrEmpty(errorMessage) ? GameJoltException.UNKNOWN_FATAL_ERROR : errorMessage));
 			Assert.That(result.Exception, Is.TypeOf<TException>());
+		}
+
+		protected static async Task AssertTimeout<TActual>(Func<TActual> actual, IResolveConstraint expression, string message, TimeSpan timeout)
+		{
+			DateTime start = DateTime.Now;
+
+			while (DateTime.Now - start < timeout)
+			{
+				IConstraint? constraint = expression.Resolve();
+				ConstraintResult? result = constraint.ApplyTo(actual.Invoke());
+
+				if (result.IsSuccess)
+				{
+					return;
+				}
+
+				await Task.Delay(50);
+			}
+
+			Assert.That(actual, expression, message);
 		}
 	}
 }
