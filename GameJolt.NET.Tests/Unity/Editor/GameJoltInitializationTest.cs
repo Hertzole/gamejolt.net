@@ -9,6 +9,7 @@ namespace GameJolt.NET.Tests.Unity.Editor
 	[SkipInitialization]
 	public class GameJoltInitializationTest : BaseEditorTest
 	{
+#if UNITY_INCLUDE_TESTS
 		protected override Task OnSetupAsync()
 		{
 			// Makes sure the initialization DOES run even if we're running tests.
@@ -21,6 +22,7 @@ namespace GameJolt.NET.Tests.Unity.Editor
 			GameJoltInitialization.ReturnIfTestRunning = true;
 			return base.OnTearDownAsync();
 		}
+#endif // UNITY_INCLUDE_TESTS
 
 		[Test]
 		public async Task EnterPlayMode_Initializes()
