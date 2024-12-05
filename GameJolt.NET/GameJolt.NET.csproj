@@ -4,7 +4,7 @@
         <LangVersion>9</LangVersion>
         <Nullable>disable</Nullable>
         <RootNamespace>GameJolt</RootNamespace>
-        <AssemblyVersion>1.5.1</AssemblyVersion>
+        <AssemblyVersion>1.6.0</AssemblyVersion>
         <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <Configurations>Debug;Release;Unity;Unity 2023;Force System Json;Disable GameJolt</Configurations>
         <IsTrimmable>true</IsTrimmable>
@@ -17,7 +17,7 @@
         <Title>GameJolt.NET</Title>
         <Authors>Hertzole</Authors>
         <Company>Hertzole</Company>
-        <Version>1.5.1</Version>
+        <Version>1.6.0</Version>
         <Description>A modern .NET wrapper around the Game Jolt Game API.</Description>
         <PackageProjectUrl>https://github.com/Hertzole/gamejolt.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Hertzole/gamejolt.net</RepositoryUrl>

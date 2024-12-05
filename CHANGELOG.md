@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/Hertzole/gamejolt.net/compare/v1.5.1...v1.6.0) (2024-12-05)
+
+
+### Features
+
+* new background GameJoltManager for Unity ([fa77d4f](https://github.com/Hertzole/gamejolt.net/commit/fa77d4f5bdea859f9cc5eff11f8e5c93760dfb77))
+
 ## [1.5.1](https://github.com/Hertzole/gamejolt.net/compare/v1.5.0...v1.5.1) (2024-12-04)
 
 
