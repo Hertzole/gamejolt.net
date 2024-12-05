@@ -13,13 +13,13 @@ namespace GameJolt.NET.Tests.Unity.Editor
 		protected override Task OnSetupAsync()
 		{
 			// Makes sure the initialization DOES run even if we're running tests.
-			GameJoltInitialization.ReturnIfTestRunning = false;
+			GameJoltInitialization.ReturnIfTestIsRunning = false;
 			return base.OnSetupAsync();
 		}
 
 		protected override Task OnTearDownAsync()
 		{
-			GameJoltInitialization.ReturnIfTestRunning = true;
+			GameJoltInitialization.ReturnIfTestIsRunning = true;
 			return base.OnTearDownAsync();
 		}
 #endif // UNITY_INCLUDE_TESTS
