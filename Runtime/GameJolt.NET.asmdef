@@ -7,10 +7,17 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "Newtonsoft.Json.dll"
+        "Newtonsoft.Json.dll",
+        "nunit.framework.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.ext.nunit",
+            "expression": "",
+            "define": "GAMEJOLT_UNITY_TESTS"
+        }
+    ],
     "noEngineReferences": false
 }
