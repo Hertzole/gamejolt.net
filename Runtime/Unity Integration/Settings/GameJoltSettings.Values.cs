@@ -1,4 +1,4 @@
-﻿#if UNITY_64 // Only to make sure this is used in Unity
+﻿#if GAMEJOLT_UNITY // Only to make sure this is used in Unity
 #if UNITY_EDITOR || !DISABLE_GAMEJOLT
 #define ENABLE_GAMEJOLT // Always enable GameJolt in the editor so it can be worked on without switching platform. Disable it in the build if needed.
 #endif // UNITY_EDITOR || !DISABLE_GAMEJOLT
@@ -134,4 +134,4 @@ namespace Hertzole.GameJolt
 	}
 #endif // ENABLE_GAMEJOLT
 }
-#endif // UNITY_64
+#endif // GAMEJOLT_UNITY
