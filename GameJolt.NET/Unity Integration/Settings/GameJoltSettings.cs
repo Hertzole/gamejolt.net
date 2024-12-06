@@ -1,4 +1,4 @@
-﻿#if UNITY_64
+﻿#if GAMEJOLT_UNITY
 using System.Diagnostics;
 using UnityEngine;
 
@@ -48,4 +48,4 @@ namespace Hertzole.GameJolt
 #endif
 	}
 }
-#endif // UNITY_64
+#endif // GAMEJOLT_UNITY

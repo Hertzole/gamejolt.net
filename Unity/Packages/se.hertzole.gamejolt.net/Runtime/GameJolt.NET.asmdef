@@ -17,6 +17,11 @@
             "name": "com.unity.ext.nunit",
             "expression": "",
             "define": "GAMEJOLT_UNITY_TESTS"
+        },
+        {
+            "name": "Unity",
+            "expression": "2021.3",
+            "define": "GAMEJOLT_UNITY"
         }
     ],
     "noEngineReferences": false

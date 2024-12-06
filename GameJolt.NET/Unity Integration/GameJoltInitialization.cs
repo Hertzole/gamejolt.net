@@ -1,4 +1,4 @@
-﻿#if UNITY_64 && !DISABLE_GAMEJOLT
+﻿#if GAMEJOLT_UNITY && !DISABLE_GAMEJOLT
 using System;
 using System.Threading;
 using UnityEngine;
@@ -56,4 +56,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
-#endif // UNITY_64 && !DISABLE_GAMEJOLT
+#endif // GAMEJOLT_UNITY && !DISABLE_GAMEJOLT
