@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && GAMEJOLT_UNITY
 using System;
 using System.IO;
 using UnityEditorInternal;
@@ -69,4 +69,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
-#endif // UNITY_EDITOR
+#endif // UNITY_EDITOR && GAMEJOLT_UNITY

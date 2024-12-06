@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && GAMEJOLT_UNITY
 using UnityEditor;
 
 namespace Hertzole.GameJolt
@@ -27,4 +27,4 @@ namespace Hertzole.GameJolt
 		internal const string SIGN_IN_TOKEN_KEY = "GameJolt.NET.SignInToken";
 	}
 }
-#endif // UNITY_EDITOR
+#endif // UNITY_EDITOR && GAMEJOLT_UNITY
