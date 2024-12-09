@@ -1,3 +1,16 @@
+# [1.7.0](https://github.com/Hertzole/gamejolt.net/compare/v1.6.0...v1.7.0) (2024-12-09)
+
+
+### Bug Fixes
+
+* game jolt manager editor not being removed ([18072f3](https://github.com/Hertzole/gamejolt.net/commit/18072f3bf8c8123efa96d705333842a191868354))
+* unity integration not working in non 64-bit scenarios ([7658ee7](https://github.com/Hertzole/gamejolt.net/commit/7658ee7d6e208c8ade843fefd063ba77a3c2d284))
+
+
+### Features
+
+* submit scores using uint ([2e25758](https://github.com/Hertzole/gamejolt.net/commit/2e257584ec7f75a4b74af904d4e1af141cf364b5))
+
 # [1.6.0](https://github.com/Hertzole/gamejolt.net/compare/v1.5.1...v1.6.0) (2024-12-05)
 
 
