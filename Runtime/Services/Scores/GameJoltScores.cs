@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +50,34 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
+			uint sort,
+			string score,
+			string extraData = "",
+			CancellationToken cancellationToken = default)
+		{
+			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			{
+				return result;
+			}
+
+			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
+				cancellationToken);
+		}
+
+		/// <summary>
+		///     Submits a score for the current user. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="tableId">The ID of the score table to submit to.</param>
+		/// <param name="sort">
+		///     The numerical sorting value associated with the score. All sorting will be based on this number. The
+		///     value can not be less than 0.
+		/// </param>
+		/// <param name="score">This is a string value associated with the score.</param>
+		/// <param name="extraData">If there's any extra data you would like to store as a string, you can use this field.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			int sort,
 			string score,
 			string extraData = "",
@@ -59,7 +88,8 @@ namespace Hertzole.GameJolt
 				return result;
 			}
 
-			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort, score, extraData, cancellationToken);
+			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
+				cancellationToken);
 		}
 
 		/// <summary>
@@ -75,19 +105,45 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
+			uint sort,
+			string score,
+			string extraData = "",
+			CancellationToken cancellationToken = default)
+		{
+			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
+				cancellationToken);
+		}
+
+		/// <summary>
+		///     Submits a score for the current user. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="tableId">The ID of the score table to submit to.</param>
+		/// <param name="guestName">The name of the guest to submit the score for.</param>
+		/// <param name="sort">
+		///     The numerical sorting value associated with the score. All sorting will be based on this number. The
+		///     value can not be less than 0.
+		/// </param>
+		/// <param name="score">This is a string value associated with the score.</param>
+		/// <param name="extraData">If there's any extra data you would like to store as a string, you can use this field.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
+		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
+			string guestName,
 			int sort,
 			string score,
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
-			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort, score, extraData, cancellationToken);
+			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
+				cancellationToken);
 		}
 
 		private async GameJoltResultTask SubmitScoreInternalAsync(int? tableId,
 			string? username,
 			string? token,
 			string? guestName,
-			int sort,
+			string sort,
 			string score,
 			string extraData,
 			CancellationToken cancellationToken)
