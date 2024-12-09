@@ -2,6 +2,7 @@
 
 #nullable enable
 
+using System;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
@@ -12,7 +13,7 @@ namespace GameJolt.NET.Tests
 	public class ScoresTest : BaseTest
 	{
 		[Test]
-		public async Task SubmitScore_Authenticated_Success()
+		public async Task SubmitScore_Authenticated_Success([Values(0, (uint) 0)] object value)
 		{
 			await AuthenticateAsync();
 
@@ -28,14 +29,27 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
-			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
+			GameJoltResult result;
+
+			if (value is int intValue)
+			{
+				result = await GameJoltAPI.Scores.SubmitScoreAsync(0, intValue, "0", "Extra Data");
+			}
+			else if (value is uint uintValue)
+			{
+				result = await GameJoltAPI.Scores.SubmitScoreAsync(0, uintValue, "0", "Extra Data");
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
-		public async Task SubmitScoreAsGuest_Success()
+		public async Task SubmitScoreAsGuest_Success([Values(0, (uint) 0)] object value)
 		{
 			await AuthenticateAsync();
 
@@ -51,16 +65,42 @@ namespace GameJolt.NET.Tests
 				return FromResult("");
 			});
 
-			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", 0, "0", "Extra Data");
+			GameJoltResult result;
+
+			if (value is int intValue)
+			{
+				result = await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", intValue, "0", "Extra Data");
+			}
+			else if (value is uint uintValue)
+			{
+				result = await GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", uintValue, "0", "Extra Data");
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 		}
 
 		[Test]
-		public async Task SubmitScore_NotAuthenticated_Fail()
+		public async Task SubmitScore_NotAuthenticated_Fail([Values(0, (uint) 0)] object value)
 		{
-			GameJoltResult result = await GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
+			GameJoltResult result;
+
+			if (value is int intValue)
+			{
+				result = await GameJoltAPI.Scores.SubmitScoreAsync(0, intValue, "0", "Extra Data");
+			}
+			else if (value is uint uintValue)
+			{
+				result = await GameJoltAPI.Scores.SubmitScoreAsync(0, uintValue, "0", "Extra Data");
+			}
+			else
+			{
+				throw new NotSupportedException();
+			}
 
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
@@ -79,7 +119,7 @@ namespace GameJolt.NET.Tests
 			{
 				return new Response(false, GameJoltInvalidTableException.MESSAGE);
 			}
-			
+
 			Task<GameJoltResult> GetResult()
 			{
 				return GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", "Extra Data");
@@ -107,7 +147,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.EqualTo(0));
 		}
-		
+
 		[Test]
 		public async Task GetRank_Error_Fail()
 		{
@@ -118,7 +158,7 @@ namespace GameJolt.NET.Tests
 			{
 				return new GetScoreRankResponse(false, GameJoltInvalidTableException.MESSAGE, 0);
 			}
-			
+
 			Task<GameJoltResult<int>> GetResult()
 			{
 				return GameJoltAPI.Scores.GetRankAsync(0, 0);
@@ -156,7 +196,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Value[0].Description, Is.EqualTo(table.description));
 			Assert.That(result.Value[0].IsPrimary, Is.EqualTo(table.isPrimary));
 		}
-		
+
 		[Test]
 		public async Task GetTables_Error_Fail()
 		{
@@ -167,7 +207,7 @@ namespace GameJolt.NET.Tests
 			{
 				return new GetTablesResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
 			}
-			
+
 			Task<GameJoltResult<GameJoltTable[]>> GetResult()
 			{
 				return GameJoltAPI.Scores.GetTablesAsync();
@@ -247,7 +287,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value, Is.Empty);
 		}
-		
+
 		[Test]
 		public async Task Query_Error_Fail()
 		{
@@ -258,7 +298,7 @@ namespace GameJolt.NET.Tests
 			{
 				return new GetScoresResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
 			}
-			
+
 			Task<GameJoltResult<GameJoltScore[]>> GetResult()
 			{
 				return GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync();
@@ -268,7 +308,8 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Query_GuestUser_Success()
 		{
-			const string json = "{\"response\":{\"success\":\"true\",\"scores\":[{\"score\":\"527 points!\",\"sort\":\"527\",\"extra_data\":\"this is some extra data\",\"user\":\"\",\"user_id\":\"\",\"guest\":\"guest user\",\"stored\":\"2 days ago\",\"stored_timestamp\":1716581984}]}}";
+			const string json =
+				"{\"response\":{\"success\":\"true\",\"scores\":[{\"score\":\"527 points!\",\"sort\":\"527\",\"extra_data\":\"this is some extra data\",\"user\":\"\",\"user_id\":\"\",\"guest\":\"guest user\",\"stored\":\"2 days ago\",\"stored_timestamp\":1716581984}]}}";
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -281,9 +322,10 @@ namespace GameJolt.NET.Tests
 
 				return FromResult("");
 			});
-			
-			var result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("guest user").BetterThan(0).WorseThan(0).GetAsync();
-			
+
+			GameJoltResult<GameJoltScore[]> result =
+				await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("guest user").BetterThan(0).WorseThan(0).GetAsync();
+
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
@@ -296,7 +338,7 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Value[0].GuestName, Is.EqualTo("guest user"));
 			Assert.That(result.Value[0].Stored, Is.EqualTo(DateTimeHelper.FromUnixTimestamp(1716581984)));
 		}
-		
+
 		[Test]
 		public void ScoreDisplayName_Username()
 		{
@@ -331,81 +373,84 @@ namespace GameJolt.NET.Tests
 		public async Task SubmitScore_ValidUrl(string extraData)
 		{
 			await AuthenticateAsync();
-			
+
 			await TestUrlAsync(() => GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", extraData),
 				url =>
 				{
-					if(string.IsNullOrEmpty(extraData))
+					if (string.IsNullOrEmpty(extraData))
 					{
-						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?username={Username}&user_token={Token}&score=0&sort=0&table_id=0"));
+						Assert.That(url,
+							Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT +
+							               $"?username={Username}&user_token={Token}&score=0&sort=0&table_id=0"));
 					}
 					else
 					{
-						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?username={Username}&user_token={Token}&score=0&sort=0&extra_data={extraData}&table_id=0"));
+						Assert.That(url,
+							Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT +
+							               $"?username={Username}&user_token={Token}&score=0&sort=0&extra_data={extraData}&table_id=0"));
 					}
 				});
 		}
-		
+
 		[Test]
 		[TestCase("")]
 		[TestCase("Extra Data")]
 		public async Task SubmitScoreAsGuest_ValidUrl(string extraData)
 		{
 			await AuthenticateAsync();
-			
+
 			await TestUrlAsync(() => GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", 0, "0", extraData),
 				url =>
 				{
-					if(string.IsNullOrEmpty(extraData))
+					if (string.IsNullOrEmpty(extraData))
 					{
-						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?guest=Guest&score=0&sort=0&table_id=0"));
+						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + "?guest=Guest&score=0&sort=0&table_id=0"));
 					}
 					else
 					{
-						Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT + $"?guest=Guest&score=0&sort=0&extra_data={extraData}&table_id=0"));
+						Assert.That(url,
+							Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ADD_ENDPOINT +
+							               $"?guest=Guest&score=0&sort=0&extra_data={extraData}&table_id=0"));
 					}
 				});
 		}
-		
+
 		[Test]
 		public async Task GetRank_ValidUrl()
 		{
 			await TestUrlAsync(() => GameJoltAPI.Scores.GetRankAsync(0, 0),
-				url =>
-				{
-					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.GET_RANK_ENDPOINT + "?sort=0&table_id=0"));
-				});
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.GET_RANK_ENDPOINT + "?sort=0&table_id=0")); });
 		}
 
 		[Test]
 		public async Task GetTables_ValidUrl()
 		{
 			await TestUrlAsync(() => GameJoltAPI.Scores.GetTablesAsync(),
-				url =>
-				{
-					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.GET_TABLES_ENDPOINT));
-				});
+				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.GET_TABLES_ENDPOINT)); });
 		}
-		
+
 		[Test]
 		public async Task GetScores_ValidUrl()
 		{
 			await AuthenticateAsync();
-			
+
 			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync(),
 				url =>
 				{
-					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + $"?table_id=0&limit=0&username={Username}&user_token={Token}&better_than=0&worse_than=0"));
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT +
+						               $"?table_id=0&limit=0&username={Username}&user_token={Token}&better_than=0&worse_than=0"));
 				});
 		}
-		
+
 		[Test]
 		public async Task GetScoresGuest_ValidUrl()
 		{
 			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("test").BetterThan(0).WorseThan(0).GetAsync(),
 				url =>
 				{
-					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&guest=test&better_than=0&worse_than=0"));
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&guest=test&better_than=0&worse_than=0"));
 				});
 		}
 	}
