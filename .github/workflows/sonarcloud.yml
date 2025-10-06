@@ -42,7 +42,7 @@ jobs:
           fetch-depth: 0
 
       - name: Cache library
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v4
         with:
           path: ./Unity/Library
           key: ${{ inputs.cache_key }}
@@ -64,7 +64,7 @@ jobs:
 
       - name: Install scanner
         run: |
-          dotnet tool install dotnet-sonarscanner --tool-path .
+          dotnet tool install dotnet-sonarscanner --version 10.4.1 --tool-path . 
 
       - name: Generate Solution
         run: unity-editor -nographics -logFile /dev/stdout -customBuildName Unity -projectPath ./Unity/ -executeMethod GitTools.Solution.Sync -quit
@@ -103,9 +103,9 @@ jobs:
             /o:hertzole \
             /k:hertzole_gamejolt-net \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.token="${{ secrets.sonar_token }}" \
+            /d:sonar.login="${{ secrets.sonar_token }}" \
             /d:sonar.cs.nunit.reportsPaths="TestResults/unity/**.xml" \
             /d:sonar.cs.vstest.reportsPaths="TestResults/net/TestResults.trx" \
             /d:sonar.cs.opencover.reportsPaths="Coverage/unity/**.xml","TestResults/**opencover.xml"
           dotnet build
-          ./dotnet-sonarscanner end /d:sonar.token="${{ secrets.sonar_token }}"
+          ./dotnet-sonarscanner end /d:sonar.login="${{ secrets.sonar_token }}"

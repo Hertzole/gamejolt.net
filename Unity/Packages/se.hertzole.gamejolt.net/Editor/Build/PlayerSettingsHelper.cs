@@ -29,10 +29,14 @@ namespace Hertzole.GameJolt.Editor
 			}
 
 #if UNITY_6000_0_OR_NEWER
-			// Get for the active build profile.
-			foreach (string s in BuildProfile.GetActiveBuildProfile().scriptingDefines)
+			BuildProfile activeBuildProfile = BuildProfile.GetActiveBuildProfile();
+			if (activeBuildProfile != null)
 			{
-				defines.Add(s);
+				// Get for the active build profile.
+				foreach (string s in activeBuildProfile.scriptingDefines)
+				{
+					defines.Add(s);
+				}
 			}
 #endif
 

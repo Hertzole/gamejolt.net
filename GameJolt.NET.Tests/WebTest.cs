@@ -20,6 +20,7 @@ namespace GameJolt.NET.Tests
 		private readonly IGameJoltWebClient webClient = GameJoltAPI.GetWebClient();
 
 		[Test]
+		[Retry(10)] // Retry up to 10 times in case of network issues.
 		public async Task SendRequest_Success()
 		{
 			string? str = await webClient.GetStringAsync("https://httpbin.org/get", default);
@@ -30,6 +31,7 @@ namespace GameJolt.NET.Tests
 		[Test]
 		[TestCase(404)]
 		[TestCase(500)]
+		[Retry(10)] // Retry up to 10 times in case of network issues.
 		public async Task SendRequest_Fail(int errorCode)
 		{
 			bool caught = false;
@@ -48,6 +50,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[Retry(10)] // Retry up to 10 times in case of network issues.
 		public async Task SendRequest_Cancel([Values] bool beforeRequest)
 		{
 			CancellationTokenSource cancelSource = new CancellationTokenSource();

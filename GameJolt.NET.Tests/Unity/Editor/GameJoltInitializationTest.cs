@@ -1,4 +1,6 @@
-﻿#if UNITY_EDITOR
+﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
+
+#if UNITY_EDITOR
 using System.Threading.Tasks;
 using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
@@ -53,3 +55,4 @@ namespace GameJolt.NET.Tests.Unity.Editor
 	}
 }
 #endif // UNITY_EDITOR
+#endif // DISABLE_GAMEJOLT

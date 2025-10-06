@@ -38,12 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         unity-version:
-          - 2021.3.36f1
-          - 2022.1.24f1
-          - 2022.2.21f1
-          - 2022.3.22f1
-          - 2023.1.20f1
-          - 2023.2.16f1
+          - 6000.0.58f2
     secrets:
       unity_license: ${{ secrets.UNITY_LICENSE }}
       unity_email: ${{ secrets.UNITY_EMAIL }}
@@ -74,5 +69,5 @@ jobs:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
     with:
       cache_key: LibraryFolder
-      unity_container: unityci/editor:ubuntu-2022.3.15f1-base-3.0.0
+      unity_container: unityci/editor:ubuntu-2022.3.62f2-base-3.1.0
       net_test_reports: ${{ needs.net_test.outputs.test_results }}
