@@ -38,11 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         unity-version:
-          - 2021.3.45f2
-          - 2022.3.62f2
-          - 2023.2.22f1
           - 6000.0.58f2
-          - 6000.2.6f2
     secrets:
       unity_license: ${{ secrets.UNITY_LICENSE }}
       unity_email: ${{ secrets.UNITY_EMAIL }}
