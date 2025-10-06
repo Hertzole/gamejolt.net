@@ -18,6 +18,7 @@
         <Authors>Hertzole</Authors>
         <Company>Hertzole</Company>
         <Version>1.6.0</Version>
+        <PackageId>GameJolt.NET</PackageId>
         <Description>A modern .NET wrapper around the Game Jolt Game API.</Description>
         <PackageProjectUrl>https://github.com/Hertzole/gamejolt.net</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Hertzole/gamejolt.net</RepositoryUrl>
@@ -27,6 +28,10 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
     </PropertyGroup>
 
     <ItemGroup>
@@ -74,6 +79,13 @@
 
     <ItemGroup>
         <Reference Include="$(UnityEditorPath)" Private="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
     <!-- Build events -->
