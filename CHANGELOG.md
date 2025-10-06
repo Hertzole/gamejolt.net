@@ -1,3 +1,11 @@
+## [1.7.1](https://github.com/Hertzole/gamejolt.net/compare/v1.7.0...v1.7.1) (2025-10-06)
+
+
+### Bug Fixes
+
+* !DISABLE_GAMEJOLT not removing unity editor tests ([a615b16](https://github.com/Hertzole/gamejolt.net/commit/a615b1623c5a0c26e3fbe77e72d826e51a47e164))
+* trying to get null build profile ([e3fc9b6](https://github.com/Hertzole/gamejolt.net/commit/e3fc9b668f32636b34b1eb67111f279e0caaea93)), closes [#7](https://github.com/Hertzole/gamejolt.net/issues/7)
+
 # [1.7.0](https://github.com/Hertzole/gamejolt.net/compare/v1.6.0...v1.7.0) (2024-12-09)
 
 
