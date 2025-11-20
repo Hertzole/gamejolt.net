@@ -1,28 +1,26 @@
 ﻿#if GAMEJOLT_UNITY && !DISABLE_GAMEJOLT
 using System;
 using System.Threading;
+using Hertzole.GameJolt.PlayerLoop;
 using UnityEngine;
-#if UNITY_INCLUDE_TESTS
-using NUnit.Framework;
-using NUnit.Framework.Internal;
-#endif // UNITY_INCLUDE_TESTS
 
 namespace Hertzole.GameJolt
 {
-	internal static class GameJoltInitialization
-	{
-		internal static GameJoltManager manager;
-		private static readonly Action onQuitting = OnApplicationQuit;
+    internal static class GameJoltInitialization
+    {
+        internal static GameJoltManager manager;
 
-		internal static CancellationTokenSource exitTokenSource;
+        internal static CancellationTokenSource exitTokenSource;
+
+        private static readonly Action onQuit = OnQuit;
 
 #if UNITY_INCLUDE_TESTS
-		internal static bool ReturnIfTestIsRunning { get; set; } = true;
+        internal static bool ReturnIfTestIsRunning { get; set; } = true;
 #endif
 
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-		private static void Initialize()
-		{
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Initialize()
+        {
 #if UNITY_INCLUDE_TESTS && GAMEJOLT_NET_TESTS_DONT_RUN_INITIALIZATION
 			// Don't run this if we're running tests as it will interfere with the tests.
 			if (ReturnIfTestIsRunning)
@@ -31,29 +29,30 @@ namespace Hertzole.GameJolt
 			}
 #endif // UNITY_INCLUDE_TESTS
 
-			exitTokenSource = new CancellationTokenSource();
+            GameJoltPlayerLoop.RegisterPlayerLoops();
+            GameJoltPlayerLoop.OnDecommissioning -= onQuit;
+            GameJoltPlayerLoop.OnDecommissioning += onQuit;
 
-			manager = new GameJoltManager(exitTokenSource.Token);
+            exitTokenSource = new CancellationTokenSource();
 
-			Application.quitting -= onQuitting;
-			Application.quitting += onQuitting;
+            manager = new GameJoltManager(exitTokenSource.Token);
 
-			InitializeGameJolt();
-		}
+            InitializeGameJolt();
+        }
 
-		private static void InitializeGameJolt()
-		{
-			manager.InitializeGameJolt();
-		}
+        private static void InitializeGameJolt()
+        {
+            manager.InitializeGameJolt();
+        }
 
-		private static void OnApplicationQuit()
-		{
-			Application.quitting -= onQuitting;
+        private static void OnQuit()
+        {
+            GameJoltPlayerLoop.OnDecommissioning -= onQuit;
 
-			exitTokenSource.Cancel();
-			manager.Dispose();
-			manager = null;
-		}
-	}
+            exitTokenSource.Cancel();
+            manager.Dispose();
+            manager = null;
+        }
+    }
 }
 #endif // GAMEJOLT_UNITY && !DISABLE_GAMEJOLT
