@@ -19,8 +19,8 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltWebClient webClient;
 		private readonly IGameJoltSerializer serializer;
 
-		internal string myUsername;
-		internal string myToken;
+		internal string? myUsername;
+		internal string? myToken;
 
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
 		private static readonly string[] credentialsSplit = { "\n", "\r\n" };
@@ -46,15 +46,6 @@ namespace Hertzole.GameJolt
 		internal const string AUTH_ENDPOINT = ENDPOINT + "auth/";
 
 		/// <summary>
-		///     Gets the current user's secret GameJolt token. This is only set if the user is authenticated. If the user is not
-		///     authenticated, this will return an empty string.
-		/// </summary>
-		public string CurrentUserToken
-		{
-			get { return myToken; }
-		}
-
-		/// <summary>
 		///     Called when the user is authenticated.
 		/// </summary>
 		public event Action<GameJoltUser>? OnUserAuthenticated;
@@ -63,9 +54,6 @@ namespace Hertzole.GameJolt
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
-
-			myUsername = string.Empty;
-			myToken = string.Empty;
 		}
 
 		/// <summary>
@@ -95,8 +83,6 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					myUsername = string.Empty;
-					myToken = string.Empty;
 					return GameJoltResult.Error(exception!);
 				}
 
@@ -130,7 +116,7 @@ namespace Hertzole.GameJolt
 			{
 				return Task.FromResult(GameJoltResult.Error(new ArgumentNullException(nameof(url))));
 			}
-
+			
 			return AuthenticateFromUrlAsync(new Uri(url), cancellationToken);
 		}
 
@@ -150,7 +136,7 @@ namespace Hertzole.GameJolt
 			{
 				return GameJoltResult.Error(new ArgumentNullException(nameof(url)));
 			}
-
+			
 			if ((url.Host.EndsWith("gamejolt.com", StringComparison.OrdinalIgnoreCase) || url.Host.EndsWith("gamejolt.net", StringComparison.OrdinalIgnoreCase))
 			    && QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
 			    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
@@ -177,7 +163,7 @@ namespace Hertzole.GameJolt
 			{
 				return Task.FromResult(GameJoltResult.Error(new ArgumentException("Invalid credentials file.", nameof(gjCredentials))));
 			}
-
+			
 			string[] lines = Array.Empty<string>();
 
 			// We may need to split on \r\n instead of just \n. So we try both.
@@ -382,8 +368,8 @@ namespace Hertzole.GameJolt
 		internal void Shutdown()
 		{
 			CurrentUser = null;
-			myUsername = string.Empty;
-			myToken = string.Empty;
+			myUsername = null;
+			myToken = null;
 			IsAuthenticated = false;
 		}
 	}
