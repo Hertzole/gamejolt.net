@@ -5,7 +5,7 @@
         <Nullable>disable</Nullable>
         <RootNamespace>GameJolt</RootNamespace>
         <AssemblyVersion>1.7.1</AssemblyVersion>
-        <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;net9.0;net10.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <Configurations>Debug;Release;Unity;Unity 2023;Force System Json;Disable GameJolt</Configurations>
         <IsTrimmable>true</IsTrimmable>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
