@@ -3,6 +3,9 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+#if NET9_0_OR_GREATER
+using System.Threading;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -12,7 +15,11 @@ namespace Hertzole.GameJolt
 		private readonly Func<T> createFunc;
 		private readonly Action<T>? onGet;
 		private readonly Action<T>? onReturn;
+#if NET9_0_OR_GREATER
+		private readonly Lock lockObject = new Lock();
+#else
 		private readonly object lockObject = new object();
+#endif
 
 		public ObjectPool(Func<T> createFunc, Action<T>? onGet = null, Action<T>? onReturn = null)
 		{
