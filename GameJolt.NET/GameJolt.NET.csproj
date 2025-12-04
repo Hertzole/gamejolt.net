@@ -17,6 +17,11 @@
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
+    <!-- When compiling for net9.0 or newer, use C# 13 language features -->
+    <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
+        <LangVersion>13</LangVersion>
+    </PropertyGroup>
+
     <PropertyGroup>
         <Title>GameJolt.NET</Title>
         <Authors>Hertzole</Authors>
