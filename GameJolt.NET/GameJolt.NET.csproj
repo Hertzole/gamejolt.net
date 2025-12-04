@@ -10,6 +10,7 @@
         <IsTrimmable>true</IsTrimmable>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
         <IsAotCompatible>true</IsAotCompatible>
+        <Deterministic>true</Deterministic>
 
     </PropertyGroup>
 
