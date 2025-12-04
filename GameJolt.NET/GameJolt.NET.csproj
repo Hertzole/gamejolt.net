@@ -11,7 +11,10 @@
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
         <IsAotCompatible>true</IsAotCompatible>
         <Deterministic>true</Deterministic>
-
+        <!-- Includes things like assembly info in pdb -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- Forces deterministic builds -->
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -31,8 +34,10 @@
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>true</IncludeSource>
+        <!-- Includes the pdb files in the symbol package -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
@@ -44,6 +49,7 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <DocumentationFile>bin\Release\GameJolt.NET.xml</DocumentationFile>
+        <Optimize>true</Optimize>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Unity' Or '$(Configuration)' == 'Unity 2023' ">
