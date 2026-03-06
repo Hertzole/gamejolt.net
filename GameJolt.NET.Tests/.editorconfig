@@ -5,4 +5,5 @@ root = true
 dotnet_diagnostic.CA2012.severity = none
 # NUnit2045: Use Assert.Multiple
 dotnet_diagnostic.NUnit2045.severity = none
+indent_style = tab
 
