@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using GameJolt.NET.Tests.Extensions;
 using Hertzole.GameJolt;
 using NSubstitute;
@@ -62,9 +63,34 @@ namespace GameJolt.NET.Tests
 
 			GameJoltAPI.webClient = Substitute.For<IGameJoltWebClient>();
 
-			if (!TestContext.CurrentContext.Test.HasSkipInitializationAttribute())
+			bool hasSkipInitialization = TestContext.CurrentContext.Test.HasAttribute<SkipInitializationAttribute>();
+			bool needsAuth = TestContext.CurrentContext.Test.HasAttribute<NeedsAuthenticationAttribute>();
+			bool doNotAuth = TestContext.CurrentContext.Test.HasAttribute<DoNotAuthenticateAttribute>();
+
+			if (!hasSkipInitialization)
 			{
 				GameJoltAPI.Initialize(0, "");
+			}
+			else if (needsAuth)
+			{
+				Assert.Fail(
+					"Test is marked with NeedsAuthentication but also SkipInitialization, which means that the test needs authentication but the API won't be initialized, causing the test to fail.");
+
+				return;
+			}
+
+			if (needsAuth && !doNotAuth)
+			{
+				await AuthenticateAsync();
+			}
+
+			if (doNotAuth)
+			{
+				Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.False, "User is authenticated when authentication should be skipped.");
+			}
+			else if (needsAuth)
+			{
+				Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User is not authenticated when authentication is required.");
 			}
 
 			await OnSetupAsync();

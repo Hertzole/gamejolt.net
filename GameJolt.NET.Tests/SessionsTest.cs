@@ -3,19 +3,19 @@
 #nullable enable
 
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
+	[NeedsAuthentication]
 	public sealed class SessionsTest : BaseTest
 	{
 		[Test]
 		public async Task Open_Authenticated_Success([Values] bool subscribeToEvent)
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -62,8 +62,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Open_AlreadyOpen_Fail()
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -105,6 +103,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task Open_NotAuthenticated_Fail()
 		{
 			string json = serializer.SerializeResponse(new Response(false, null));
@@ -143,8 +142,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Open_Error_Fail()
 		{
-			await AuthenticateAsync();
-
 			await AssertErrorAsync<Response, GameJoltSessionException>(CreateErrorResponse, GetResult, GameJoltSessionException.MESSAGE);
 			return;
 
@@ -157,8 +154,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Close_Authenticated_Success([Values] bool subscribeToEvent)
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -206,6 +201,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task Close_NotAuthenticated_Fail()
 		{
 			string json = serializer.SerializeResponse(new Response(false, null));
@@ -244,8 +240,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Close_NotOpen_Fail()
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -283,8 +277,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Close_Error_Fail()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -312,8 +304,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Ping_Authenticated_Success([Values] SessionStatus status, [Values] bool subscribeToEvent)
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -361,6 +351,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task Ping_NotAuthenticated_Fail()
 		{
 			string json = serializer.SerializeResponse(new Response(false, null));
@@ -399,8 +390,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Ping_NotOpen_Fail()
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -438,8 +427,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Ping_Error_Fail()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -467,8 +454,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Check_Authenticated_OpenSession_Success()
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(true, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -497,8 +482,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Check_Authenticated_ClosedSession_Success()
 		{
-			await AuthenticateAsync();
-
 			string json = serializer.SerializeResponse(new Response(false, null));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -522,6 +505,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task Check_NotAuthenticated_Fail()
 		{
 			string json = serializer.SerializeResponse(new Response(false, null));
@@ -548,8 +532,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Check_Error_Fail()
 		{
-			await AuthenticateAsync();
-
 			await AssertErrorAsync<Response, bool, GameJoltSessionException>(CreateErrorResponse, GetResult, GameJoltSessionException.MESSAGE);
 			return;
 
@@ -562,8 +544,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Open_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Sessions.OpenAsync(),
 				url =>
 				{
@@ -574,8 +554,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Close_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Sessions.CloseAsync(),
 				url =>
 				{
@@ -587,8 +565,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Ping_ValidUrl([Values] SessionStatus status)
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Sessions.PingAsync(status),
 				url =>
 				{
@@ -601,8 +577,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Check_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Sessions.CheckAsync(),
 				url =>
 				{
