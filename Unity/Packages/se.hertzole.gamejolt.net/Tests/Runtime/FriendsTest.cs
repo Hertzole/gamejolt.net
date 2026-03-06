@@ -1,12 +1,14 @@
 ﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
 
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
+	[NeedsAuthentication]
 	public sealed class FriendsTest : BaseTest
 	{
 		private static readonly FriendId[] friends =
@@ -18,8 +20,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Fetch_Authenticated_Success()
 		{
-			await AuthenticateAsync();
-
 			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, friends);
 			string expectedJson = serializer.SerializeResponse(expectedResponse);
 
@@ -38,8 +38,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Fetch_Authenticated_Success_NoFriends()
 		{
-			await AuthenticateAsync();
-
 			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, null);
 			string expectedJson = serializer.SerializeResponse(expectedResponse);
 
@@ -54,6 +52,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task Fetch_NotAuthenticated_Fail()
 		{
 			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(false, null, friends);
@@ -72,8 +71,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Fetch_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Friends.GetFriendsAsync(),
 				url =>
 				{
@@ -84,8 +81,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task Fetch_Error()
 		{
-			await AuthenticateAsync();
-
 			await AssertErrorAsync<FetchFriendsResponse, int[], GameJoltException>(CreateResponse, CallMethod, GameJoltException.UNKNOWN_FATAL_ERROR);
 
 			return;

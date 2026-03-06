@@ -4,18 +4,17 @@
 
 using System;
 using System.Reflection;
-using GameJolt.NET.Tests.Attributes;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests.Extensions
 {
 	internal static class TestAdapterExtensions
 	{
-		private static readonly string skipInitialization = nameof(SkipInitializationAttribute).Substring(0, nameof(SkipInitializationAttribute).Length - 9);
-
-		public static bool HasSkipInitializationAttribute(this TestContext.TestAdapter test)
+		public static bool HasAttribute<T>(this TestContext.TestAdapter test) where T : Attribute
 		{
-			if (test.Properties.ContainsKey(skipInitialization))
+			string attributeName = GetAttributeName<T>();
+
+			if (test.Properties.ContainsKey(attributeName))
 			{
 				return true;
 			}
@@ -24,10 +23,40 @@ namespace GameJolt.NET.Tests.Extensions
 			{
 				Type? type = FindType(test.ClassName);
 
-				return type?.GetCustomAttribute<SkipInitializationAttribute>() != null;
+				if (type != null)
+				{
+					// First check the method. If it has the attribute, then we don't need to check the class. If it doesn't, then we check the class.
+					if (TryGetAttribute<T>(FindMethod(type, test.MethodName)))
+					{
+						return true;
+					}
+
+					if (TryGetAttribute<T>(type))
+					{
+						return true;
+					}
+				}
 			}
 
 			return false;
+		}
+
+		private static MethodInfo? FindMethod(Type type, string? name)
+		{
+			if (string.IsNullOrEmpty(name))
+			{
+				return null;
+			}
+
+			foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+			{
+				if (method.Name == name)
+				{
+					return method;
+				}
+			}
+
+			return null;
 		}
 
 		private static Type? FindType(string name)
@@ -62,6 +91,28 @@ namespace GameJolt.NET.Tests.Extensions
 
 			// No type was found.
 			return null;
+		}
+
+		private static bool TryGetAttribute<T>(MemberInfo? type) where T : Attribute
+		{
+			if (type == null)
+			{
+				return false;
+			}
+
+			T? attribute = type.GetCustomAttribute<T>();
+			return attribute != null;
+		}
+
+		private static string GetAttributeName<T>() where T : Attribute
+		{
+			string name = typeof(T).Name;
+			if (name.EndsWith("Attribute"))
+			{
+				name = name.Substring(0, name.Length - 9);
+			}
+
+			return name;
 		}
 	}
 }

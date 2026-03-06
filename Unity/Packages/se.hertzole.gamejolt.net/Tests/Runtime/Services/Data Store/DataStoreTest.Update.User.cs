@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,10 +12,9 @@ namespace GameJolt.NET.Tests
 	partial class DataStoreTest
 	{
 		[Test]
+		[NeedsAuthentication]
 		public async Task UpdateUser_Authenticated_String_Success([Values] StringOperation operation)
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string result;
@@ -54,9 +54,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task UpdateUser_Authenticated_String_Error_Fail()
 		{
-			await AuthenticateAsync();
 			await AssertErrorAsync<UpdateDataResponse, string, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
 				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
 
@@ -74,10 +74,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task UpdateUser_Authenticated_Int_Success([Values] NumericOperation operation)
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string result;
@@ -140,9 +139,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task UpdateUser_Authenticated_Int_Error_Fail()
 		{
-			await AuthenticateAsync();
 			await AssertErrorAsync<UpdateDataResponse, int, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
 				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
 
@@ -178,12 +177,11 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
-		
+
 		[Test]
+		[NeedsAuthentication]
 		public async Task UpdateAsyncAsCurrentUser_String_ValidUrl([Values] StringOperation operation)
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("Key", "Value", operation), url =>
 			{
 				Assert.That(url, Does.StartWith(
@@ -192,10 +190,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task UpdateAsyncAsCurrentUser_Int_ValidUrl([Values] NumericOperation operation)
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.DataStore.UpdateAsCurrentUserAsync("Key", 1, operation), url =>
 			{
 				Assert.That(url, Does.StartWith(
