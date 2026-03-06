@@ -4,19 +4,19 @@
 
 using System;
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
+	[NeedsAuthentication]
 	public class ScoresTest : BaseTest
 	{
 		[Test]
 		public async Task SubmitScore_Authenticated_Success([Values(0, (uint) 0)] object value)
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -51,8 +51,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task SubmitScoreAsGuest_Success([Values(0, (uint) 0)] object value)
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -85,6 +83,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task SubmitScore_NotAuthenticated_Fail([Values(0, (uint) 0)] object value)
 		{
 			GameJoltResult result;
@@ -110,8 +109,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task SubmitScore_Error_Fail()
 		{
-			await AuthenticateAsync();
-
 			await AssertErrorAsync<Response, GameJoltInvalidTableException>(CreateResponse, GetResult, GameJoltInvalidTableException.MESSAGE);
 			return;
 
@@ -372,8 +369,6 @@ namespace GameJolt.NET.Tests
 		[TestCase("Extra Data")]
 		public async Task SubmitScore_ValidUrl(string extraData)
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Scores.SubmitScoreAsync(0, 0, "0", extraData),
 				url =>
 				{
@@ -397,8 +392,6 @@ namespace GameJolt.NET.Tests
 		[TestCase("Extra Data")]
 		public async Task SubmitScoreAsGuest_ValidUrl(string extraData)
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Scores.SubmitScoreAsGuestAsync(0, "Guest", 0, "0", extraData),
 				url =>
 				{
@@ -432,8 +425,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetScores_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync(),
 				url =>
 				{

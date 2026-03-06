@@ -4,21 +4,21 @@
 
 using System;
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
+	[NeedsAuthentication]
 	public class TrophiesTest : BaseTest
 	{
 		private static readonly int[] trophyIds = new int[] { 0, 1 };
-		
+
 		[Test]
 		public async Task GetTrophies_Authenticated_ReturnsTrophies()
 		{
-			await AuthenticateAsync();
-
 			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -47,6 +47,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task GetTrophies_NotAuthenticated_ReturnsError()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -63,17 +64,16 @@ namespace GameJolt.NET.Tests
 
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync();
 
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Value, Is.Null);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception is GameJoltAuthorizedException);
+			Assert.That(result.HasError, Is.True, "Result should have an error.");
+			Assert.That(result.Value, Is.Null, "Value should be null when there is an error.");
+			Assert.That(result.Exception, Is.Not.Null, "Exception should not be null when there is an error.");
+			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>(),
+				"Exception should be of type GameJoltAuthorizedException when not authenticated.");
 		}
 
 		[Test]
 		public async Task GetTrophies_Authenticated_Achieved_ReturnsTrophies()
 		{
-			await AuthenticateAsync();
-
 			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -104,8 +104,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophies_Authenticated_NotAchieved_ReturnsTrophies()
 		{
-			await AuthenticateAsync();
-
 			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -136,8 +134,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophies_Authenticated_Ids_ReturnsTrophies()
 		{
-			await AuthenticateAsync();
-
 			TrophyInternal trophy1 = DummyData.Trophy();
 			TrophyInternal trophy2 = DummyData.Trophy();
 
@@ -176,8 +172,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophies_Authenticated_Id_ReturnsTrophies()
 		{
-			await AuthenticateAsync();
-
 			TrophyInternal trophy = DummyData.Trophy();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -206,15 +200,16 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophies_Error_Fail()
 		{
-			await AuthenticateAsync();
-			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy[], GameJoltInvalidTrophyException>(CreateResponse, GetResult, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE);
+			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy[], GameJoltInvalidTrophyException>(CreateResponse, GetResult,
+				GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE);
+
 			return;
 
 			FetchTrophiesResponse CreateResponse()
 			{
 				return new FetchTrophiesResponse(false, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE, null);
 			}
-            
+
 			Task<GameJoltResult<GameJoltTrophy[]>> GetResult()
 			{
 				return GameJoltAPI.Trophies.GetTrophiesAsync();
@@ -231,8 +226,6 @@ namespace GameJolt.NET.Tests
 				DummyData.Trophy(),
 				DummyData.Trophy()
 			};
-		
-			await AuthenticateAsync();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -245,16 +238,16 @@ namespace GameJolt.NET.Tests
 
 				return FromResult("");
 			});
-			
+
 			int[] ids = new int[]
 			{
 				trophies[0].id,
 				trophies[1].id,
 				trophies[2].id
 			};
-			
+
 			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesInternalAsync(ids, 5, true, default);
-			
+
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value, Has.Length.EqualTo(3));
@@ -266,15 +259,16 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophy_Error_Fail()
 		{
-			await AuthenticateAsync();
-			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy, GameJoltInvalidTrophyException>(CreateResponse, GetResult, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE);
+			await AssertErrorAsync<FetchTrophiesResponse, GameJoltTrophy, GameJoltInvalidTrophyException>(CreateResponse, GetResult,
+				GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE);
+
 			return;
 
 			FetchTrophiesResponse CreateResponse()
 			{
 				return new FetchTrophiesResponse(false, GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE, null);
 			}
-			
+
 			Task<GameJoltResult<GameJoltTrophy>> GetResult()
 			{
 				return GameJoltAPI.Trophies.GetTrophyAsync(0);
@@ -284,8 +278,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophies_NoTrophies_Success()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -308,8 +300,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task UnlockTrophy_Authenticated_ReturnsSuccess()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -329,6 +319,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task UnlockTrophy_NotAuthenticated_ReturnsError()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -353,8 +344,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task UnlockTrophy_Authenticated_InvalidTrophy_ReturnsError()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -377,8 +366,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task UnlockTrophy_AlreadyUnlocked_Error()
 		{
-			await AuthenticateAsync();
-			
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -392,7 +379,7 @@ namespace GameJolt.NET.Tests
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0, true);
-			
+
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltTrophyException);
@@ -401,8 +388,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task UnlockTrophy_AlreadyUnlocked_NoError()
 		{
-			await AuthenticateAsync();
-			
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -416,7 +401,7 @@ namespace GameJolt.NET.Tests
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.UnlockTrophyAsync(0, false);
-			
+
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 		}
@@ -424,8 +409,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task RemoveTrophy_Authenticated_ReturnsSuccess()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -445,6 +428,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[DoNotAuthenticate]
 		public async Task RemoveTrophy_NotAuthenticated_ReturnsError()
 		{
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -469,8 +453,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task RemoveTrophy_Authenticated_InvalidTrophy_ReturnsError()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -493,8 +475,6 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task RemoveTrophy_NotUnlocked_ReturnsError()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -513,12 +493,10 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception is GameJoltTrophyException);
 		}
-		
+
 		[Test]
 		public async Task RemoveTrophy_NotUnlocked_NoError()
 		{
-			await AuthenticateAsync();
-			
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -532,7 +510,7 @@ namespace GameJolt.NET.Tests
 			});
 
 			GameJoltResult result = await GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(0, false);
-			
+
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 		}
@@ -540,73 +518,75 @@ namespace GameJolt.NET.Tests
 		[Test]
 		public async Task GetTrophies_ValidUrl()
 		{
-			await AuthenticateAsync();
-			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(),
+				url =>
+				{
+					Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}"));
+				});
 		}
-		
+
 		[Test]
 		public async Task GetTrophies_Achieved_ValidUrl([Values] bool achieved)
 		{
-			await AuthenticateAsync();
-			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(achieved), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&achieved={(achieved ? "true" : "false")}"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(achieved),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT +
+						               $"?username={Username}&user_token={Token}&achieved={(achieved ? "true" : "false")}"));
+				});
 		}
-		
+
 		[Test]
 		public async Task GetTrophies_Ids_ValidUrl()
 		{
-			await AuthenticateAsync();
-			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(trophyIds), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id=0,1"));
-			});
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophiesAsync(trophyIds),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id=0,1"));
+				});
 		}
-		
+
 		[Test]
 		public async Task GetTrophy_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			int id = DummyData.randomizer.Int();
-			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophyAsync(id), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
-			});
+
+			await TestUrlAsync(() => GameJoltAPI.Trophies.GetTrophyAsync(id),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
+				});
 		}
-		
+
 		[Test]
 		public async Task UnlockTrophy_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			int id = DummyData.randomizer.Int();
-			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.UnlockTrophyAsync(id), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ADD_ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
-			});
+
+			await TestUrlAsync(() => GameJoltAPI.Trophies.UnlockTrophyAsync(id),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ADD_ENDPOINT +
+						               $"?username={Username}&user_token={Token}&trophy_id={id}"));
+				});
 		}
-		
+
 		[Test]
 		public async Task RemoveUnlockedTrophy_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			int id = DummyData.randomizer.Int();
-			
-			await TestUrlAsync(() => GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(id), url =>
-			{
-				Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.REMOVE_ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id={id}"));
-			});
+
+			await TestUrlAsync(() => GameJoltAPI.Trophies.RemoveUnlockedTrophyAsync(id),
+				url =>
+				{
+					Assert.That(url,
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.REMOVE_ENDPOINT +
+						               $"?username={Username}&user_token={Token}&trophy_id={id}"));
+				});
 		}
 	}
 }
