@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/Hertzole/gamejolt.net/compare/v1.7.1...v1.8.0) (2025-12-05)
+
+
+### Bug Fixes
+
+* builds not being deterministic ([d29230e](https://github.com/Hertzole/gamejolt.net/commit/d29230eecaaef821af934b6b2cc6a141195496f4))
+* hopefully finally actually include debug symbols ([5285a1d](https://github.com/Hertzole/gamejolt.net/commit/5285a1d5963a28513a298f5257a5d8de54937db4))
+* **unity:** GameJoltAPI being shutdown before OnDisable/OnDestroy gets called ([4800089](https://github.com/Hertzole/gamejolt.net/commit/480008943e1dafb418bb649a1c547168766cf8a7))
+
+
+### Features
+
+* expose current user's token in GameJoltUsers ([bfb9f9e](https://github.com/Hertzole/gamejolt.net/commit/bfb9f9eed3a5eb00a7f48105919c37f739d2716b))
+* support for .NET 9 and .NET 10 ([bf5a07d](https://github.com/Hertzole/gamejolt.net/commit/bf5a07dd4c675d426f702a5c851ac892567b738c))
+* use .NET 9 lock in .NET 9 and later ([01abf57](https://github.com/Hertzole/gamejolt.net/commit/01abf57ff02105c08560c9516eda0909f836806b))
+
 ## [1.7.1](https://github.com/Hertzole/gamejolt.net/compare/v1.7.0...v1.7.1) (2025-10-06)
 
 
