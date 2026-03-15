@@ -1,6 +1,7 @@
 ﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
 
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -10,10 +11,9 @@ namespace GameJolt.NET.Tests
 	partial class DataStoreTest
 	{
 		[Test]
+		[NeedsAuthentication]
 		public async Task RemoveUser_Authenticated_Success()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string json = serializer.SerializeResponse(new Response(true, null));
@@ -38,9 +38,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task RemoveUser_Error_Fail()
 		{
-			await AuthenticateAsync();
 			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
 				GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE);
 
@@ -56,12 +56,11 @@ namespace GameJolt.NET.Tests
 				return GameJoltAPI.DataStore.RemoveAsCurrentUserAsync("key");
 			}
 		}
-		
+
 		[Test]
+		[NeedsAuthentication]
 		public async Task RemoveAsCurrentUser_ValidUrl()
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.DataStore.RemoveAsCurrentUserAsync("Key"), url =>
 			{
 				Assert.That(url, Does.StartWith(

@@ -3,6 +3,7 @@
 #nullable enable
 
 using System.Threading.Tasks;
+using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
 using NSubstitute;
 using NUnit.Framework;
@@ -14,10 +15,9 @@ namespace GameJolt.NET.Tests
 		[Test]
 		[TestCase("")]
 		[TestCase("*")]
+		[NeedsAuthentication]
 		public async Task GetKeysUser_Authenticated_Success(string pattern)
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -51,10 +51,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task GetKeysUser_Authenticated_Success_NoKeys()
 		{
-			await AuthenticateAsync();
-
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -74,9 +73,9 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		[NeedsAuthentication]
 		public async Task GetKeysUser_Authenticated_Error_Fail()
 		{
-			await AuthenticateAsync();
 			await AssertErrorAsync<GetKeysResponse, string[], GameJoltException>(CreateResponse, GetResult);
 			return;
 
@@ -100,14 +99,13 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>());
 		}
-		
+
 		[Test]
 		[TestCase("")]
 		[TestCase("*")]
+		[NeedsAuthentication]
 		public async Task GetKeysAsCurrentUserAsync_ValidUrl(string pattern)
 		{
-			await AuthenticateAsync();
-
 			await TestUrlAsync(() => GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync(pattern),
 				url =>
 				{
