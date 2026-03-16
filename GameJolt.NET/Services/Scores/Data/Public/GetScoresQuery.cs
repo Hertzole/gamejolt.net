@@ -200,8 +200,11 @@ namespace Hertzole.GameJolt
 		/// <param name="result">The list to add the results to. This list will be cleared before adding the results.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="result"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> GetAsync(IList<GameJoltScore> result, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNull(result, nameof(result));
+
 			return await scores!.GetScoresAsync(this, result, cancellationToken);
 		}
 

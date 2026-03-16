@@ -43,12 +43,16 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="score" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			uint sort,
 			string score,
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return result;
@@ -71,12 +75,16 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="score" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			int sort,
 			string score,
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return result;
@@ -97,6 +105,11 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="guestName" /> or <paramref name="score" /> is
+		///     <see langword="null" />.
+		/// </exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="guestName" /> or <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			uint sort,
@@ -104,6 +117,9 @@ namespace Hertzole.GameJolt
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(guestName, nameof(guestName));
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
 				cancellationToken);
 		}
@@ -122,6 +138,11 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="guestName" /> or <paramref name="score" /> is
+		///     <see langword="null" />.
+		/// </exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="guestName" /> or <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			int sort,
@@ -129,6 +150,9 @@ namespace Hertzole.GameJolt
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(guestName, nameof(guestName));
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
 				cancellationToken);
 		}
@@ -247,9 +271,10 @@ namespace Hertzole.GameJolt
 		/// <param name="result">The list to put the results in. This list will be cleared before adding the results.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="result" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult> GetTablesAsync(IList<GameJoltTable> result, CancellationToken cancellationToken = default)
 		{
-			//TODO: Guard against null.
+			Guard.IsNotNull(result, nameof(result));
 
 			return await GetTablesInternalAsync(result, cancellationToken);
 		}

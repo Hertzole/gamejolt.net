@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace GameJolt.NET.Tests
 {
 	[NeedsAuthentication]
-	public class ScoresTest : BaseTest
+	public partial class ScoresTest : BaseTest
 	{
 		[Test]
 		public async Task SubmitScore_Authenticated_Success([Values(0, (uint) 0)] object value)
