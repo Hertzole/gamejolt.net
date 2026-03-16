@@ -263,6 +263,29 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(actual, expression, message);
 		}
+
+		// Have to use our own method because Assert.ThrowsAsync stalls Unity
+		protected static async Task AssertThrowsAsync<T>(AsyncTestDelegate testDelegate) where T : Exception
+		{
+			bool caught = false;
+			try
+			{
+				await testDelegate.Invoke();
+			}
+			catch (Exception e)
+			{
+				if (e is T)
+				{
+					caught = true;
+				}
+				else
+				{
+					Assert.Fail($"Expected exception of type {typeof(T).Name} but caught exception of type {e.GetType().Name}");
+				}
+			}
+
+			Assert.That(caught, Is.True, $"Expected exception of type {typeof(T).Name} was not thrown.");
+		}
 	}
 }
 #endif // DISABLE_GAMEJOLT

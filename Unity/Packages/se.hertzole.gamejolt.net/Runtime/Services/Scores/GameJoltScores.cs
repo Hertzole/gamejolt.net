@@ -3,18 +3,12 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
-using GameJoltScoreArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
-#else
-using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
-using GameJoltScoreArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltScore[]>>;
-#endif
 
 namespace Hertzole.GameJolt
 {
@@ -49,12 +43,16 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="score" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			uint sort,
 			string score,
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return result;
@@ -77,12 +75,16 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="score" /> is <see langword="null" />.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsync(int tableId,
 			int sort,
 			string score,
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return result;
@@ -103,6 +105,11 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="guestName" /> or <paramref name="score" /> is
+		///     <see langword="null" />.
+		/// </exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="guestName" /> or <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			uint sort,
@@ -110,6 +117,9 @@ namespace Hertzole.GameJolt
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(guestName, nameof(guestName));
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
 				cancellationToken);
 		}
@@ -128,6 +138,11 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the game doesn't allow guest submissions.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="guestName" /> or <paramref name="score" /> is
+		///     <see langword="null" />.
+		/// </exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="guestName" /> or <paramref name="score" /> is whitespace.</exception>
 		public async Task<GameJoltResult> SubmitScoreAsGuestAsync(int tableId,
 			string guestName,
 			int sort,
@@ -135,11 +150,14 @@ namespace Hertzole.GameJolt
 			string extraData = "",
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(guestName, nameof(guestName));
+			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
+
 			return await SubmitScoreInternalAsync(tableId, null, null, guestName, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
 				cancellationToken);
 		}
 
-		private async GameJoltResultTask SubmitScoreInternalAsync(int? tableId,
+		private async Task<GameJoltResult> SubmitScoreInternalAsync(int? tableId,
 			string? username,
 			string? token,
 			string? guestName,
@@ -234,29 +252,31 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and a list of score tables.</returns>
 		public async Task<GameJoltResult<GameJoltTable[]>> GetTablesAsync(CancellationToken cancellationToken = default)
 		{
-			using (StringBuilderPool.Rent(out StringBuilder builder))
+			using (ListPool<GameJoltTable>.Rent(out List<GameJoltTable> buffer))
 			{
-				builder.Append(GET_TABLES_ENDPOINT);
+				GameJoltResult result = await GetTablesInternalAsync(buffer, cancellationToken);
 
-				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
-				GetTablesResponse response = serializer.DeserializeResponse<GetTablesResponse>(json);
-
-				if (response.TryGetException(out Exception? exception))
+				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltTable[]>.Error(exception!);
+					return GameJoltResult<GameJoltTable[]>.Error(result.Exception!);
 				}
 
-				Debug.Assert(response.success, "Response was successful but success was false.");
-
-				GameJoltTable[] tables = new GameJoltTable[response.tables.Length];
-
-				for (int i = 0; i < response.tables.Length; i++)
-				{
-					tables[i] = response.tables[i].ToPublicTable();
-				}
-
-				return GameJoltResult<GameJoltTable[]>.Success(tables);
+				return GameJoltResult<GameJoltTable[]>.Success(buffer.ToArray());
 			}
+		}
+
+		/// <summary>
+		///     Fetches all the available score tables for your game and adds them to the provided <paramref name="result" /> list.
+		/// </summary>
+		/// <param name="result">The list to put the results in. This list will be cleared before adding the results.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="result" /> is <see langword="null" />.</exception>
+		public async Task<GameJoltResult> GetTablesAsync(IList<GameJoltTable> result, CancellationToken cancellationToken = default)
+		{
+			Guard.IsNotNull(result, nameof(result));
+
+			return await GetTablesInternalAsync(result, cancellationToken);
 		}
 
 		/// <summary>
@@ -268,7 +288,33 @@ namespace Hertzole.GameJolt
 			return new GetScoresQuery(this);
 		}
 
-		internal async GameJoltScoreArrayTask GetScoresAsync(GetScoresQuery query, CancellationToken cancellationToken)
+		private async Task<GameJoltResult> GetTablesInternalAsync(IList<GameJoltTable> buffer, CancellationToken cancellationToken)
+		{
+			using (StringBuilderPool.Rent(out StringBuilder builder))
+			{
+				builder.Append(GET_TABLES_ENDPOINT);
+
+				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
+				GetTablesResponse response = serializer.DeserializeResponse<GetTablesResponse>(json);
+
+				if (response.TryGetException(out Exception? exception))
+				{
+					return GameJoltResult.Error(exception!);
+				}
+
+				buffer.Clear();
+				buffer.TryEnsureCapacity(response.tables.Length);
+
+				for (int i = 0; i < response.tables.Length; i++)
+				{
+					buffer.Add(response.tables[i].ToPublicTable());
+				}
+
+				return GameJoltResult.Success();
+			}
+		}
+
+		internal async Task<GameJoltResult> GetScoresAsync(GetScoresQuery query, IList<GameJoltScore> buffer, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
@@ -312,19 +358,15 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltScore[]>.Error(exception!);
+					return GameJoltResult.Error(exception!);
 				}
-
-				Debug.Assert(response.success, "Response was successful but success was false.");
-
-				GameJoltScore[] scores = response.scores.Length > 0 ? new GameJoltScore[response.scores.Length] : Array.Empty<GameJoltScore>();
 
 				for (int i = 0; i < response.scores.Length; i++)
 				{
-					scores[i] = response.scores[i].ToPublicScore();
+					buffer.Add(response.scores[i].ToPublicScore());
 				}
 
-				return GameJoltResult<GameJoltScore[]>.Success(scores);
+				return GameJoltResult.Success();
 			}
 		}
 	}

@@ -12,7 +12,7 @@ namespace GameJolt.NET.Tests.Extensions
 	public static class EnumExtensions
 	{
 		private static readonly Faker faker = new Faker();
-		
+
 		public static T[]? CreateArray<T>(this ArrayInitialization arrayInitialization, Func<Faker, T> createElement, int min = 5, int max = 10)
 		{
 			T[]? array;
@@ -58,12 +58,12 @@ namespace GameJolt.NET.Tests.Extensions
 					{
 						throw new ArgumentNullException(nameof(value));
 					}
-					
+
 					builder.AppendStringValue(value!);
 					break;
 			}
 		}
-		
+
 		public static string? GetData(this StringInitialization stringInitialization)
 		{
 			switch (stringInitialization)
@@ -75,6 +75,18 @@ namespace GameJolt.NET.Tests.Extensions
 				default:
 				case StringInitialization.Normal:
 					return faker.Lorem.Sentence();
+			}
+		}
+
+		public static string? GetData(this StringInitializationNoNormal stringInitialization)
+		{
+			switch (stringInitialization)
+			{
+				case StringInitializationNoNormal.Empty:
+					return string.Empty;
+				case StringInitializationNoNormal.Null:
+				default:
+					return null;
 			}
 		}
 	}
