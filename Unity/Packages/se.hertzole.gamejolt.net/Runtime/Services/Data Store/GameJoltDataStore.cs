@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
 using GameJoltStringTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string>>;
-using GameJoltStringArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string[]>>;
+
 #else
 using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
 using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
@@ -494,26 +495,31 @@ namespace Hertzole.GameJolt
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
 		public async Task<GameJoltResult<byte[]>> GetValueAsBytesAsync(string key, CancellationToken cancellationToken = default)
 		{
-			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken);
+			using (ListPool<byte>.Rent(out List<byte> buffer))
+			{
+				GameJoltResult result = await GetBytesValueInternalAsync(key, null, null, buffer, cancellationToken);
+				if (result.HasError)
+				{
+					return GameJoltResult<byte[]>.Error(result.Exception!);
+				}
 
-			if (result.HasError)
-			{
-				return GameJoltResult<byte[]>.Error(result.Exception!);
+				return GameJoltResult<byte[]>.Success(buffer.ToArray());
 			}
+		}
 
-			if (string.IsNullOrEmpty(result.Value))
-			{
-				return GameJoltResult<byte[]>.Success(Array.Empty<byte>());
-			}
-
-			try
-			{
-				return GameJoltResult<byte[]>.Success(Convert.FromBase64String(result.Value!));
-			}
-			catch (FormatException e)
-			{
-				return GameJoltResult<byte[]>.Error(e);
-			}
+		/// <summary>
+		///     Fetches data from the data store and puts it into the provided <paramref name="result" />. This will only fetch
+		///     data items that are accessible to everyone.
+		/// </summary>
+		/// <param name="key">The key of the data item you'd like to fetch.</param>
+		/// <param name="result">The buffer to put the data into. This will be cleared before use.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>>The result of the operation.</returns>
+		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
+		public Task<GameJoltResult> GetValueAsBytesAsync(string key, IList<byte> result, CancellationToken cancellationToken = default)
+		{
+			return GetBytesValueInternalAsync(key, null, null, result, cancellationToken);
 		}
 
 		/// <summary>
@@ -609,26 +615,43 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<byte[]>.Error(authResult.Exception!);
 			}
 
-			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
+			using (ListPool<byte>.Rent(out List<byte> buffer))
+			{
+				GameJoltResult result = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, buffer, cancellationToken);
+				if (result.HasError)
+				{
+					return GameJoltResult<byte[]>.Error(result.Exception!);
+				}
 
-			if (result.HasError)
+				return GameJoltResult<byte[]>.Success(buffer.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Fetches data from the data store as <see langword="byte" /> and adds it to the provided <paramref name="result" />
+		///     list. This will only fetch data items that are accessible to the current user.
+		/// </summary>
+		/// <param name="key">The key of the data item you'd like to fetch.</param>
+		/// <param name="result">The buffer to put the data into. This will be cleared before use.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the operation.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
+		public async Task<GameJoltResult> GetValueAsBytesAsCurrentUserAsync(string key, IList<byte> result, CancellationToken cancellationToken = default)
+		{
+			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
-				return GameJoltResult<byte[]>.Error(result.Exception!);
+				return GameJoltResult.Error(authResult.Exception!);
 			}
 
-			if (string.IsNullOrEmpty(result.Value))
+			GameJoltResult getBytesResult = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, result, cancellationToken);
+			if (getBytesResult.HasError)
 			{
-				return GameJoltResult<byte[]>.Success(Array.Empty<byte>());
+				return GameJoltResult.Error(getBytesResult.Exception!);
 			}
 
-			try
-			{
-				return GameJoltResult<byte[]>.Success(Convert.FromBase64String(result.Value!));
-			}
-			catch (FormatException e)
-			{
-				return GameJoltResult<byte[]>.Error(e);
-			}
+			return GameJoltResult.Success();
 		}
 
 		/// <summary>
@@ -696,6 +719,41 @@ namespace Hertzole.GameJolt
 			}
 		}
 
+		private async Task<GameJoltResult> GetBytesValueInternalAsync(string key,
+			string? username,
+			string? token,
+			IList<byte> buffer,
+			CancellationToken cancellationToken)
+		{
+			GameJoltResult<string> result = await GetValueInternalAsync(key, username, token, cancellationToken);
+
+			if (result.HasError)
+			{
+				return GameJoltResult.Error(result.Exception!);
+			}
+
+			if (string.IsNullOrEmpty(result.Value))
+			{
+				return GameJoltResult.Success();
+			}
+
+			if (Base64.TryConvertBase64ToBytes(result.Value, out MemoryOwner<byte> resultData))
+			{
+				buffer.Clear();
+				buffer.TryEnsureCapacity(resultData.Length);
+
+				for (int i = 0; i < resultData.Length; i++)
+				{
+					buffer.Add(resultData[i]);
+				}
+
+				resultData.Dispose();
+				return GameJoltResult.Success();
+			}
+
+			return GameJoltResult.Error(new FormatException("The value stored is not a valid Base64 string."));
+		}
+
 		/// <summary>
 		///     Fetches keys of data items from the data store. This will only fetch data items that are accessible to everyone.
 		/// </summary>
@@ -704,7 +762,29 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the operation and the keys.</returns>
 		public async Task<GameJoltResult<string[]>> GetKeysAsync(string? pattern = null, CancellationToken cancellationToken = default)
 		{
-			return await GetKeysInternalAsync(pattern, null, null, cancellationToken);
+			using (ListPool<string>.Rent(out List<string> buffer))
+			{
+				GameJoltResult result = await GetKeysInternalAsync(pattern, null, null, buffer, cancellationToken);
+				if (result.HasError)
+				{
+					return GameJoltResult<string[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<string[]>.Success(buffer.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="result" /> list.
+		///     This will only fetch data items that are accessible to everyone.
+		/// </summary>
+		/// <param name="result">The buffer to put the keys into. This will be cleared before use.</param>
+		/// <param name="pattern">Optional pattern to apply to the key names in the data store.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the operation.</returns>
+		public async Task<GameJoltResult> GetKeysAsync(IList<string> result, string? pattern = null, CancellationToken cancellationToken = default)
+		{
+			return await GetKeysInternalAsync(pattern, null, null, result, cancellationToken);
 		}
 
 		/// <summary>
@@ -722,10 +802,42 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<string[]>.Error(authResult.Exception!);
 			}
 
-			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, cancellationToken);
+			using (ListPool<string>.Rent(out List<string> buffer))
+			{
+				GameJoltResult result = await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, buffer, cancellationToken);
+				if (result.HasError)
+				{
+					return GameJoltResult<string[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<string[]>.Success(buffer.ToArray());
+			}
 		}
 
-		private async GameJoltStringArrayTask GetKeysInternalAsync(string? pattern, string? username, string? token, CancellationToken cancellationToken)
+		/// <summary>
+		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="result" /> list.
+		///     This will only fetch data items that are accessible to the current user.
+		/// </summary>
+		/// <param name="result">The buffer to put the keys into. This will be cleared before use.</param>
+		/// <param name="pattern">Optional pattern to apply to the key names in the data store.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the operation.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		public async Task<GameJoltResult> GetKeysAsCurrentUserAsync(IList<string> result, string? pattern = null, CancellationToken cancellationToken = default)
+		{
+			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			{
+				return GameJoltResult.Error(authResult.Exception!);
+			}
+
+			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, result, cancellationToken);
+		}
+
+		private async Task<GameJoltResult> GetKeysInternalAsync(string? pattern,
+			string? username,
+			string? token,
+			IList<string> buffer,
+			CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -755,19 +867,20 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<string[]>.Error(exception!);
+					return GameJoltResult.Error(exception!);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
 
-				string[] keys = result.keys.Length > 0 ? new string[result.keys.Length] : Array.Empty<string>();
+				buffer.Clear();
+				buffer.TryEnsureCapacity(result.keys.Length);
 
 				for (int i = 0; i < result.keys.Length; i++)
 				{
-					keys[i] = result.keys[i].key;
+					buffer.Add(result.keys[i].key);
 				}
 
-				return GameJoltResult<string[]>.Success(keys);
+				return GameJoltResult.Success();
 			}
 		}
 

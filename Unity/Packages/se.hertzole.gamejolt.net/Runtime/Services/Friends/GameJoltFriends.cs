@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -10,64 +11,91 @@ using System.Threading.Tasks;
 
 namespace Hertzole.GameJolt
 {
-	/// <summary>
-	///     Used to get information about the friends of the authenticated user.
-	/// </summary>
-	public sealed class GameJoltFriends
-	{
-		private readonly IGameJoltWebClient webClient;
-		private readonly IGameJoltSerializer serializer;
-		private readonly GameJoltUsers users;
+    /// <summary>
+    ///     Used to get information about the friends of the authenticated user.
+    /// </summary>
+    public sealed class GameJoltFriends
+    {
+        private readonly IGameJoltWebClient webClient;
+        private readonly IGameJoltSerializer serializer;
+        private readonly GameJoltUsers users;
 
-		internal GameJoltFriends(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
-		{
-			this.webClient = webClient;
-			this.serializer = serializer;
-			this.users = users;
-		}
+        internal GameJoltFriends(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
+        {
+            this.webClient = webClient;
+            this.serializer = serializer;
+            this.users = users;
+        }
 
-		internal const string ENDPOINT = "friends/";
+        internal const string ENDPOINT = "friends/";
 
-		/// <summary>
-		///     List all the friends of the authenticated user. This method requires the current user to be authenticated.
-		/// </summary>
-		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
-		/// <returns>The result of the request and a list of the user's friends.</returns>
-		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
-		public async Task<GameJoltResult<int[]>> GetFriendsAsync(CancellationToken cancellationToken = default)
-		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult<int[]> result))
-			{
-				return result;
-			}
+        /// <summary>
+        ///     List all the friends of the authenticated user. This method requires the current user to be authenticated.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+        /// <returns>The result of the request and a list of the user's friends.</returns>
+        /// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+        public async Task<GameJoltResult<int[]>> GetFriendsAsync(CancellationToken cancellationToken = default)
+        {
+            using (ListPool<int>.Rent(out List<int>? results))
+            {
+                GameJoltResult result = await GetFriendsInternalAsync(results, cancellationToken).ConfigureAwait(false);
+                if (result.HasError)
+                {
+                    return GameJoltResult<int[]>.Error(result.Exception!);
+                }
 
-			using (StringBuilderPool.Rent(out StringBuilder sb))
-			{
-				sb.Append(ENDPOINT + "?username=");
-				sb.Append(users.myUsername);
-				sb.Append("&user_token=");
-				sb.Append(users.myToken);
+                return GameJoltResult<int[]>.Success(results.ToArray());
+            }
+        }
 
-				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
-				FetchFriendsResponse response = serializer.DeserializeResponse<FetchFriendsResponse>(json);
+        /// <summary>
+        ///     Lists all the friends of the authenticated user and adds their IDs to the provided <paramref name="results" />
+        ///     list. This method requires the current user to be authenticated.
+        /// </summary>
+        /// <param name="results">The results buffer where the IDs will be added to.</param>
+        /// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+        /// <returns>The result of the request.</returns>
+        /// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+        public Task<GameJoltResult> GetFriendsAsync(IList<int> results, CancellationToken cancellationToken = default)
+        {
+            return GetFriendsInternalAsync(results, cancellationToken);
+        }
 
-				if (response.TryGetException(out Exception? exception))
-				{
-					return GameJoltResult<int[]>.Error(exception!);
-				}
+        private async Task<GameJoltResult> GetFriendsInternalAsync(IList<int> results, CancellationToken cancellationToken = default)
+        {
+            if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+            {
+                return result;
+            }
 
-				Debug.Assert(response.Success, "Response was successful, but Success was false.");
+            using (StringBuilderPool.Rent(out StringBuilder sb))
+            {
+                sb.Append(ENDPOINT + "?username=");
+                sb.Append(users.myUsername);
+                sb.Append("&user_token=");
+                sb.Append(users.myToken);
 
-				int[] ids = response.friends.Length > 0 ? new int[response.friends.Length] : Array.Empty<int>();
+                string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(sb), cancellationToken);
+                FetchFriendsResponse response = serializer.DeserializeResponse<FetchFriendsResponse>(json);
 
-				for (int i = 0; i < response.friends.Length; i++)
-				{
-					ids[i] = response.friends[i].id;
-				}
+                if (response.TryGetException(out Exception? exception))
+                {
+                    return GameJoltResult.Error(exception!);
+                }
 
-				return GameJoltResult<int[]>.Success(ids);
-			}
-		}
-	}
+                Debug.Assert(response.Success, "Response was successful, but Success was false.");
+
+                results.Clear();
+                results.TryEnsureCapacity(response.friends.Length);
+                for (int i = 0; i < response.friends.Length; i++)
+                {
+                    results.Add(response.friends[i].id);
+                }
+
+                return GameJoltResult.Success();
+            }
+        }
+    }
 }
 #endif // DISABLE_GAMEJOLT

@@ -6,21 +6,29 @@ using System.Collections.Generic;
 
 namespace Hertzole.GameJolt
 {
-	internal static class EnumerableExtensions
-	{
-		public static string ToCommaSeparatedString<T>(this IEnumerable<T>? array)
-		{
-			if (array == null)
-			{
-				return string.Empty;
-			}
+    internal static class EnumerableExtensions
+    {
+        public static string ToCommaSeparatedString<T>(this IEnumerable<T>? array)
+        {
+            if (array == null)
+            {
+                return string.Empty;
+            }
 
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-			return string.Join(',', array);
+            return string.Join(',', array);
 #else
 			return string.Join(",", array);
 #endif
-		}
-	}
+        }
+
+        public static void TryEnsureCapacity<T>(this IList<T> list, int capacity)
+        {
+            if (list is List<T> concreteList)
+            {
+                concreteList.EnsureCapacity(capacity);
+            }
+        }
+    }
 }
 #endif // DISABLE_GAMEJOLT
