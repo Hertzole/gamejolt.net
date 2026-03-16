@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -180,7 +181,28 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and a list of scores.</returns>
 		public async Task<GameJoltResult<GameJoltScore[]>> GetAsync(CancellationToken cancellationToken = default)
 		{
-			return await scores!.GetScoresAsync(this, cancellationToken);
+			using (ListPool<GameJoltScore>.Rent(out List<GameJoltScore> buffer))
+			{
+				GameJoltResult result = await scores!.GetScoresAsync(this, buffer, cancellationToken);
+
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltScore[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<GameJoltScore[]>.Success(buffer.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Gets the scores from the specified query and adds them to the provided <paramref name="result" /> list.
+		/// </summary>
+		/// <param name="result">The list to add the results to. This list will be cleared before adding the results.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		public async Task<GameJoltResult> GetAsync(IList<GameJoltScore> result, CancellationToken cancellationToken = default)
+		{
+			return await scores!.GetScoresAsync(this, result, cancellationToken);
 		}
 
 		/// <summary>
