@@ -48,13 +48,15 @@ jobs:
           key: ${{ inputs.cache_key }}
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v4
+        uses: fast-actions/setup-dotnet@v1
         with:
-          dotnet-version: |
-            5
-            6
-            7
-            8
+          sdk-version: |
+            5.0.0
+            6.0.0
+            7.0.0
+            8.0.0
+            9.0.0
+            10.0.0
 
       - name: Install Java
         uses: actions/setup-java@v4
@@ -100,9 +102,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.sonar_token }}
         run: |
           ./dotnet-sonarscanner begin \
-            /o:hertzole \
-            /k:hertzole_gamejolt-net \
-            /d:sonar.host.url="https://sonarcloud.io" \
+            /o:"hertzole" \
+            /k:"hertzole_gamejolt-net" \
             /d:sonar.login="${{ secrets.sonar_token }}" \
             /d:sonar.cs.nunit.reportsPaths="TestResults/unity/**.xml" \
             /d:sonar.cs.vstest.reportsPaths="TestResults/net/TestResults.trx" \
