@@ -3,6 +3,8 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using GameJolt.NET.Tests.Attributes;
 using Hertzole.GameJolt;
@@ -12,7 +14,7 @@ using NUnit.Framework;
 namespace GameJolt.NET.Tests
 {
 	[NeedsAuthentication]
-	public class ScoresTest : BaseTest
+	public partial class ScoresTest : BaseTest
 	{
 		[Test]
 		public async Task SubmitScore_Authenticated_Success([Values(0, (uint) 0)] object value)
@@ -195,6 +197,40 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetTables_Buffer_Success()
+		{
+			// Arrange
+			List<GameJoltTable> buffer = new List<GameJoltTable>();
+			TableInternal table = DummyData.Table();
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.GET_TABLES_ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new GetTablesResponse(true, null, new TableInternal[1]
+					{
+						table
+					})));
+				}
+
+				return FromResult("");
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.Scores.GetTablesAsync(buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer, Has.Count.EqualTo(1));
+			Assert.That(buffer[0].Id, Is.EqualTo(table.id));
+			Assert.That(buffer[0].Name, Is.EqualTo(table.name));
+			Assert.That(buffer[0].Description, Is.EqualTo(table.description));
+			Assert.That(buffer[0].IsPrimary, Is.EqualTo(table.isPrimary));
+		}
+
+		[Test]
 		public async Task GetTables_Error_Fail()
 		{
 			await AssertErrorAsync<GetTablesResponse, GameJoltTable[], GameJoltException>(CreateResponse, GetResult);
@@ -208,6 +244,23 @@ namespace GameJolt.NET.Tests
 			Task<GameJoltResult<GameJoltTable[]>> GetResult()
 			{
 				return GameJoltAPI.Scores.GetTablesAsync();
+			}
+		}
+
+		[Test]
+		public async Task GetTables_Buffer_Error_Fail()
+		{
+			await AssertErrorAsync<GetTablesResponse, GameJoltException>(CreateResponse, GetResult);
+			return;
+
+			GetTablesResponse CreateResponse()
+			{
+				return new GetTablesResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
+			}
+
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.Scores.GetTablesAsync(new List<GameJoltTable>());
 			}
 		}
 
@@ -432,6 +485,145 @@ namespace GameJolt.NET.Tests
 						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT +
 						               $"?table_id=0&limit=0&username={Username}&user_token={Token}&better_than=0&worse_than=0"));
 				});
+		}
+
+		[Test]
+		public async Task Query_Buffer_Success()
+		{
+			// Arrange
+			List<GameJoltScore> buffer = new List<GameJoltScore>();
+			ScoreInternal score = DummyData.Score();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new GetScoresResponse(true, null, new ScoreInternal[1]
+					{
+						score
+					})));
+				}
+
+				return FromResult("");
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser()
+			                                         .BetterThan(0).WorseThan(0).GetAsync(buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer, Has.Count.EqualTo(1));
+			Assert.That(buffer[0].Score, Is.EqualTo(score.score));
+			Assert.That(buffer[0].Sort, Is.EqualTo(score.sort));
+			Assert.That(buffer[0].ExtraData, Is.EqualTo(score.extraData));
+			Assert.That(buffer[0].UserId, Is.EqualTo(score.userId));
+			Assert.That(buffer[0].Username, Is.EqualTo(score.username));
+			Assert.That(buffer[0].GuestName, Is.EqualTo(score.guestName));
+			Assert.That(buffer[0].Stored, Is.EqualTo(DateTimeHelper.FromUnixTimestamp(score.storedTimestamp)));
+
+			// Test with guest
+			buffer.Clear();
+			result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("test").BetterThan(0).WorseThan(0).GetAsync(buffer);
+
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer, Has.Count.EqualTo(1));
+			Assert.That(buffer[0].Score, Is.EqualTo(score.score));
+			Assert.That(buffer[0].Sort, Is.EqualTo(score.sort));
+			Assert.That(buffer[0].ExtraData, Is.EqualTo(score.extraData));
+			Assert.That(buffer[0].UserId, Is.EqualTo(score.userId));
+			Assert.That(buffer[0].Username, Is.EqualTo(score.username));
+			Assert.That(buffer[0].GuestName, Is.EqualTo(score.guestName));
+			Assert.That(buffer[0].Stored, Is.EqualTo(DateTimeHelper.FromUnixTimestamp(score.storedTimestamp)));
+		}
+
+		[Test]
+		public async Task Query_Buffer_NoScores_Success()
+		{
+			// Arrange
+			List<GameJoltScore> buffer = new List<GameJoltScore>();
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new GetScoresResponse(true, null, null)));
+				}
+
+				return FromResult("");
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser()
+			                                         .BetterThan(0).WorseThan(0).GetAsync(buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer, Is.Empty);
+		}
+
+		[Test]
+		public async Task Query_Buffer_Error_Fail()
+		{
+			// Arrange
+			List<GameJoltScore> buffer = new List<GameJoltScore>();
+
+			await AssertErrorAsync<GetScoresResponse, GameJoltException>(CreateResponse, GetResult);
+			return;
+
+			GetScoresResponse CreateResponse()
+			{
+				return new GetScoresResponse(false, GameJoltException.UNKNOWN_FATAL_ERROR, null);
+			}
+
+			Task<GameJoltResult> GetResult()
+			{
+				return GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForCurrentUser().BetterThan(0).WorseThan(0).GetAsync(buffer);
+			}
+		}
+
+		[Test]
+		public async Task Query_Buffer_GuestUser_Success()
+		{
+			// Arrange
+			List<GameJoltScore> buffer = new List<GameJoltScore>();
+			const string json =
+				"{\"response\":{\"success\":\"true\",\"scores\":[{\"score\":\"527 points!\",\"sort\":\"527\",\"extra_data\":\"this is some extra data\",\"user\":\"\",\"user_id\":\"\",\"guest\":\"guest user\",\"stored\":\"2 days ago\",\"stored_timestamp\":1716581984}]}}";
+
+			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.ENDPOINT))
+				{
+					return FromResult(json);
+				}
+
+				return FromResult("");
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.Scores.QueryScores().ForTable(0).Limit(0).ForGuest("guest user").BetterThan(0).WorseThan(0)
+			                                         .GetAsync(buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer, Has.Count.EqualTo(1));
+			Assert.That(buffer[0].Score, Is.EqualTo("527 points!"));
+			Assert.That(buffer[0].Sort, Is.EqualTo(527));
+			Assert.That(buffer[0].ExtraData, Is.EqualTo("this is some extra data"));
+			Assert.That(buffer[0].UserId, Is.Null);
+			Assert.That(buffer[0].Username, Is.EqualTo(string.Empty));
+			Assert.That(buffer[0].GuestName, Is.EqualTo("guest user"));
+			Assert.That(buffer[0].Stored, Is.EqualTo(DateTimeHelper.FromUnixTimestamp(1716581984)));
 		}
 
 		[Test]

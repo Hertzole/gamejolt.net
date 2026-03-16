@@ -8,5 +8,11 @@ namespace GameJolt.NET.Tests.Enums
 		Empty,
 		Null
 	}
+
+	public enum StringInitializationNoNormal
+	{
+		Empty,
+		Null
+	}
 }
 #endif // DISABLE_GAMEJOLT
