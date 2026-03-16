@@ -1,6 +1,8 @@
 ﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
@@ -223,7 +225,7 @@ namespace GameJolt.NET.Tests
 				return GameJoltAPI.DataStore.GetValueAsBoolAsync("key");
 			}
 		}
-		
+
 		[Test]
 		public async Task GetValueAsync_String_ValidUrl()
 		{
@@ -250,6 +252,95 @@ namespace GameJolt.NET.Tests
 		{
 			await TestUrlAsync(() => GameJoltAPI.DataStore.GetValueAsBoolAsync("Key"),
 				url => { Assert.That(url, Does.StartWith($"{GameJoltUrlBuilder.BASE_URL}{GameJoltDataStore.FETCH_ENDPOINT}?key=Key")); });
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Buffer_Bytes_Success()
+		{
+			// Arrange
+			byte[] bytes = DummyData.Bytes();
+			List<byte> buffer = new List<byte>();
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
+
+				return FromResult(json);
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key", buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer.Count, Is.EqualTo(bytes.Length));
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				Assert.That(buffer[i], Is.EqualTo(bytes[i]));
+			}
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Buffer_Bytes_InvalidValue_Fail()
+		{
+			// Arrange
+			List<byte> buffer = new List<byte>();
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, "VeryInvalidValue12345"));
+
+				return FromResult(json);
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key", buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<FormatException>());
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Buffer_Bytes_EmptyValue_Success()
+		{
+			// Arrange
+			List<byte> buffer = new List<byte>();
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(true, null, string.Empty));
+
+				return FromResult(json);
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key", buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(buffer, Is.Empty);
+		}
+
+		[Test]
+		public async Task GetValueGlobal_Buffer_Bytes_Error_Fail()
+		{
+			// Arrange
+			List<byte> buffer = new List<byte>();
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string json = serializer.SerializeResponse(new GetDataResponse(false, GameJoltInvalidDataStoreKeyException.NO_KEY_MESSAGE, null));
+
+				return FromResult(json);
+			});
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.DataStore.GetValueAsBytesAsync("key", buffer);
+
+			// Assert
+			Assert.That(result.HasError, Is.True);
+			Assert.That(result.Exception, Is.Not.Null);
+			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidDataStoreKeyException>());
 		}
 	}
 }
