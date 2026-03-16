@@ -19,14 +19,15 @@ namespace Hertzole.GameJolt
 		/// </returns>
 		internal static bool TryConvertBase64ToBytes(string data, out MemoryOwner<byte> result)
 		{
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
-			// Estimate the buffer size from the Base64 result string.
-			int estimatedBufferSize = data.Length * 3 / 4;
-			if (estimatedBufferSize <= 0)
+			if (string.IsNullOrEmpty(data))
 			{
 				result = MemoryOwner<byte>.Empty;
 				return false;
 			}
+
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
+			// Estimate the buffer size from the Base64 result string.
+			int estimatedBufferSize = data.Length * 3 / 4;
 
 			byte[] buffer = ArrayPool<byte>.Shared.Rent(estimatedBufferSize);
 

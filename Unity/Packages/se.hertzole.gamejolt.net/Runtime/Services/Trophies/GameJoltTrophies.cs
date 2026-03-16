@@ -10,10 +10,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltTrophyArrayTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+using GameJoltTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
 
 #else
-using GameJoltTrophyArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<Hertzole.GameJolt.GameJoltTrophy[]>>;
+using GameJoltTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
 #endif
 
 namespace Hertzole.GameJolt
@@ -51,7 +51,29 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(CancellationToken cancellationToken = default)
 		{
-			return await GetTrophiesInternalAsync(null, 0, null, cancellationToken);
+			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
+			{
+				GameJoltResult result = await GetTrophiesInternalAsync(null, 0, null, results, cancellationToken).ConfigureAwait(false);
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<GameJoltTrophy[]>.Success(results.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Gets all trophies for the current user and adds them to the provided <paramref name="results" /> list. This method
+		///     will get both locked and unlocked trophies. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="results">The results buffer where the trophies will be added to.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		public async Task<GameJoltResult> GetTrophiesAsync(IList<GameJoltTrophy> results, CancellationToken cancellationToken = default)
+		{
+			return await GetTrophiesInternalAsync(null, 0, null, results, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -67,7 +89,34 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(bool getAchieved, CancellationToken cancellationToken = default)
 		{
-			return await GetTrophiesInternalAsync(null, 0, getAchieved, cancellationToken);
+			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
+			{
+				GameJoltResult result = await GetTrophiesInternalAsync(null, 0, getAchieved, results, cancellationToken);
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<GameJoltTrophy[]>.Success(results.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Gets all trophies for the current user and adds them to the provided <paramref name="results" /> list. This method
+		///     allows you to pick whether to get locked or unlocked trophies. This method requires the current user to be
+		///     authenticated.
+		/// </summary>
+		/// <param name="getAchieved">
+		///     Pass in <c>true</c> to only get trophies that are unlocked, <c>false</c> to only get trophies
+		///     that are locked.
+		/// </param>
+		/// <param name="results">The results buffer where the trophies will be added to.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		public async Task<GameJoltResult> GetTrophiesAsync(bool getAchieved, IList<GameJoltTrophy> results, CancellationToken cancellationToken = default)
+		{
+			return await GetTrophiesInternalAsync(null, 0, getAchieved, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -81,7 +130,33 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
-			return await GetTrophiesInternalAsync(trophyIds, -1, null, cancellationToken);
+			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
+			{
+				GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<GameJoltTrophy[]>.Success(results.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Get all trophies for the current user with the specified IDs and adds them to the provided
+		///     <paramref name="results" /> list.. This method requires the current user to be authenticated.
+		/// </summary>
+		/// <param name="trophyIds">The IDs of the trophies to get.</param>
+		/// <param name="results">The results buffer where the trophies will be added to.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns>The result of the request.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
+		public async Task<GameJoltResult> GetTrophiesAsync(IEnumerable<int> trophyIds,
+			IList<GameJoltTrophy> results,
+			CancellationToken cancellationToken = default)
+		{
+			return await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -97,7 +172,8 @@ namespace Hertzole.GameJolt
 		{
 			int[] trophyIds = intPool.Rent(1);
 			trophyIds[0] = trophyId;
-			GameJoltResult<GameJoltTrophy[]> result = await GetTrophiesInternalAsync(trophyIds, 1, null, cancellationToken);
+			using PoolHandle<List<GameJoltTrophy>> scope = ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results);
+			GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, 1, null, results, cancellationToken);
 
 			intPool.Return(trophyIds);
 
@@ -106,17 +182,18 @@ namespace Hertzole.GameJolt
 				return GameJoltResult<GameJoltTrophy>.Error(result.Exception!);
 			}
 
-			Debug.Assert(result.Value!.Length == 1, "Result length was not 1.");
+			Debug.Assert(results!.Count == 1, "Result length was not 1.");
 
-			return GameJoltResult<GameJoltTrophy>.Success(result.Value[0]);
+			return GameJoltResult<GameJoltTrophy>.Success(results[0]);
 		}
 
-		internal async GameJoltTrophyArrayTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
+		internal async GameJoltTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
 			int idLength,
 			bool? getAchieved,
+			IList<GameJoltTrophy> results,
 			CancellationToken cancellationToken)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult<GameJoltTrophy[]> result))
+			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
 			{
 				return result;
 			}
@@ -140,17 +217,18 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltTrophy[]>.Error(exception!);
+					return GameJoltResult.Error(exception!);
 				}
 
-				GameJoltTrophy[] trophies = response.trophies.Length > 0 ? new GameJoltTrophy[response.trophies.Length] : Array.Empty<GameJoltTrophy>();
+				results.Clear();
+				results.TryEnsureCapacity(response.trophies.Length);
 
-				for (int i = 0; i < trophies.Length; i++)
+				for (int i = 0; i < response.trophies.Length; i++)
 				{
-					trophies[i] = response.trophies[i].ToPublicTrophy();
+					results.Add(response.trophies[i].ToPublicTrophy());
 				}
 
-				return GameJoltResult<GameJoltTrophy[]>.Success(trophies);
+				return GameJoltResult.Success();
 			}
 		}
 
@@ -274,7 +352,7 @@ namespace Hertzole.GameJolt
 				return GameJoltResult.Success();
 			}
 		}
-		
+
 		private static bool ShouldTrophyReturnError(in Exception exception, in bool errorIfNotUnlocked)
 		{
 			// If the trophy is not unlocked, we don't want to throw an exception, unless the user wants an error.
@@ -283,7 +361,7 @@ namespace Hertzole.GameJolt
 			{
 				return true;
 			}
-				
+
 			// If the exception is not a GameJoltTrophyException, we want to return it.
 			return exception is not GameJoltTrophyException;
 		}

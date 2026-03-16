@@ -12,19 +12,13 @@ namespace Hertzole.GameJolt
 	///     A result that can either be a value or an exception.
 	/// </summary>
 	/// <typeparam name="T">The type of the value</typeparam>
-	public readonly struct GameJoltResult<T> : IEquatable<GameJoltResult<T>>
+	public readonly struct GameJoltResult<T> : IEquatable<GameJoltResult<T>>, IGameJoltResult<T>
 	{
-		/// <summary>
-		///     Returns true if the result has an error.
-		/// </summary>
+		/// <inheritdoc />
 		public bool HasError { get; }
-		/// <summary>
-		///     Returns the exception if the result has an error. Otherwise, returns null.
-		/// </summary>
+		/// <inheritdoc />
 		public Exception? Exception { get; }
-		/// <summary>
-		///     Returns the value if the result has no error. Otherwise, returns the default value of {T}.
-		/// </summary>
+		/// <inheritdoc />
 		public T? Value { get; }
 
 		/// <summary>
@@ -153,15 +147,11 @@ namespace Hertzole.GameJolt
 	/// <summary>
 	///     A result that can contain an exception.
 	/// </summary>
-	public readonly struct GameJoltResult : IEquatable<GameJoltResult>
+	public readonly struct GameJoltResult : IEquatable<GameJoltResult>, IGameJoltResult
 	{
-		/// <summary>
-		///     Returns true if the result has an error.
-		/// </summary>
+		/// <inheritdoc />
 		public bool HasError { get; }
-		/// <summary>
-		///     Returns the exception if the result has an error. Otherwise, returns null.
-		/// </summary>
+		/// <inheritdoc />
 		public Exception? Exception { get; }
 
 		/// <summary>

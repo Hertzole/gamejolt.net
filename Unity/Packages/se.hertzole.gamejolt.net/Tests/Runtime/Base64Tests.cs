@@ -1,3 +1,4 @@
+#if !DISABLE_GAMEJOLT
 using System;
 using Hertzole.GameJolt;
 using NUnit.Framework;
@@ -66,3 +67,4 @@ namespace GameJolt.NET.Tests
 		}
 	}
 }
+#endif // !DISABLE_GAMEJOLT
