@@ -13,8 +13,16 @@ namespace GameJolt.NET.Tests
 		internal static readonly Randomizer randomizer = new Randomizer();
 		internal static readonly Faker faker = new Faker();
 
-		internal static User User(int? id = null, UserType? type = null, string? username = null, string? avatarUrl = null, DateTime? signedUp = null,
-			DateTime? lastLoggedIn = null, UserStatus? status = null, string? displayName = null, string? userWebsite = null, string? userDescription = null)
+		internal static User User(int? id = null,
+			UserType? type = null,
+			string? username = null,
+			string? avatarUrl = null,
+			DateTime? signedUp = null,
+			DateTime? lastLoggedIn = null,
+			UserStatus? status = null,
+			string? displayName = null,
+			string? userWebsite = null,
+			string? userDescription = null)
 		{
 			id ??= randomizer.Int(1, (int) (int.MaxValue * 0.5f));
 			type ??= (UserType) randomizer.Int(0, 3);
@@ -33,7 +41,8 @@ namespace GameJolt.NET.Tests
 			int signedUpTimestamp = (int) (signedUp.Value - new DateTime(1970, 1, 1)).TotalSeconds;
 			int lastLoggedInTimestamp = (int) (lastLoggedIn.Value - new DateTime(1970, 1, 1)).TotalSeconds;
 
-			return new User(id.Value, type.Value, username, avatarUrl, signedUpString, signedUpTimestamp, lastLoggedInString, lastLoggedInTimestamp, status.Value,
+			return new User(id.Value, type.Value, username, avatarUrl, signedUpString, signedUpTimestamp, lastLoggedInString, lastLoggedInTimestamp,
+				status.Value,
 				displayName, userWebsite, userDescription);
 		}
 
@@ -73,9 +82,9 @@ namespace GameJolt.NET.Tests
 			return new TrophyInternal(id, title, description, difficulty, imageUrl, achieved);
 		}
 
-		internal static byte[] Bytes()
+		internal static byte[] Bytes(int count = 1024)
 		{
-			return randomizer.Bytes(1024);
+			return randomizer.Bytes(count);
 		}
 	}
 }
