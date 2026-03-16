@@ -104,9 +104,9 @@ jobs:
           ./dotnet-sonarscanner begin \
             /o:"hertzole" \
             /k:"hertzole_gamejolt-net" \
-            /d:sonar.login="${{ secrets.sonar_token }}" \
+            /d:sonar.token="${{ secrets.sonar_token }}" \
             /d:sonar.cs.nunit.reportsPaths="TestResults/unity/**.xml" \
             /d:sonar.cs.vstest.reportsPaths="TestResults/net/TestResults.trx" \
             /d:sonar.cs.opencover.reportsPaths="Coverage/unity/**.xml","TestResults/**opencover.xml"
           dotnet build
-          ./dotnet-sonarscanner end /d:sonar.login="${{ secrets.sonar_token }}"
+          ./dotnet-sonarscanner end /d:sonar.token="${{ secrets.sonar_token }}"
