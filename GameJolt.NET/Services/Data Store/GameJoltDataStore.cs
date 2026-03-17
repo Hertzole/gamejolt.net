@@ -574,21 +574,21 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches data from the data store and puts it into the provided <paramref name="result" />. This will only fetch
+		///     Fetches data from the data store and puts it into the provided <paramref name="results" />. This will only fetch
 		///     data items that are accessible to everyone.
 		/// </summary>
 		/// <param name="key">The key of the data item you'd like to fetch.</param>
-		/// <param name="result">The buffer to put the data into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the data into. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>>The result of the operation.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
-		public Task<GameJoltResult> GetValueAsBytesAsync(string key, IList<byte> result, CancellationToken cancellationToken = default)
+		public Task<GameJoltResult> GetValueAsBytesAsync(string key, IList<byte> results, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
-			Guard.IsNotNull(result, nameof(result));
+			Guard.IsNotNull(results, nameof(results));
 
-			return GetBytesValueInternalAsync(key, null, null, result, cancellationToken);
+			return GetBytesValueInternalAsync(key, null, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -705,29 +705,29 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches data from the data store as <see langword="byte" /> and adds it to the provided <paramref name="result" />
+		///     Fetches data from the data store as <see langword="byte" /> and adds it to the provided <paramref name="results" />
 		///     list. This will only fetch data items that are accessible to the current user.
 		/// </summary>
 		/// <param name="key">The key of the data item you'd like to fetch.</param>
-		/// <param name="result">The buffer to put the data into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the data into. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="key" /> is empty or whitespace.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="result" /> is <see langword="null"/>.</exception>
-		public async Task<GameJoltResult> GetValueAsBytesAsCurrentUserAsync(string key, IList<byte> result, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="results" /> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetValueAsBytesAsCurrentUserAsync(string key, IList<byte> results, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
-			Guard.IsNotNull(result, nameof(result));
+			Guard.IsNotNull(results, nameof(results));
 
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult.Error(authResult.Exception!);
 			}
 
-			GameJoltResult getBytesResult = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, result, cancellationToken);
+			GameJoltResult getBytesResult = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, results, cancellationToken);
 			if (getBytesResult.HasError)
 			{
 				return GameJoltResult.Error(getBytesResult.Exception!);
@@ -860,19 +860,19 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="result" /> list.
+		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="results" /> list.
 		///     This will only fetch data items that are accessible to everyone.
 		/// </summary>
-		/// <param name="result">The buffer to put the keys into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the keys into. This will be cleared before use.</param>
 		/// <param name="pattern">Optional pattern to apply to the key names in the data store.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="result" /> is <see langword="null"/>.</exception>
-		public async Task<GameJoltResult> GetKeysAsync(IList<string> result, string? pattern = null, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetKeysAsync(IList<string> results, string? pattern = null, CancellationToken cancellationToken = default)
 		{
-			Guard.IsNotNull(result, nameof(result));
+			Guard.IsNotNull(results, nameof(results));
 
-			return await GetKeysInternalAsync(pattern, null, null, result, cancellationToken);
+			return await GetKeysInternalAsync(pattern, null, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -903,25 +903,27 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="result" /> list.
+		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="results" /> list.
 		///     This will only fetch data items that are accessible to the current user.
 		/// </summary>
-		/// <param name="result">The buffer to put the keys into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the keys into. This will be cleared before use.</param>
 		/// <param name="pattern">Optional pattern to apply to the key names in the data store.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="result" /> is <see langword="null"/>.</exception>
-		public async Task<GameJoltResult> GetKeysAsCurrentUserAsync(IList<string> result, string? pattern = null, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetKeysAsCurrentUserAsync(IList<string> results,
+			string? pattern = null,
+			CancellationToken cancellationToken = default)
 		{
-			Guard.IsNotNull(result, nameof(result));
+			Guard.IsNotNull(results, nameof(results));
 
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult.Error(authResult.Exception!);
 			}
 
-			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, result, cancellationToken);
+			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, results, cancellationToken);
 		}
 
 		private async Task<GameJoltResult> GetKeysInternalAsync(string? pattern,

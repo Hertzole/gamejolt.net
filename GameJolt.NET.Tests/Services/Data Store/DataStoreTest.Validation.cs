@@ -217,7 +217,7 @@ namespace GameJolt.NET.Tests
 			await AssertThrowsAsync(() => GameJoltAPI.DataStore.GetValueAsBytesAsync(string.Empty, new List<byte>()), keyEmptyPredicate);
 			// Null list
 			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.DataStore.GetValueAsBytesAsync("key", null!),
-				e => MustNotBeNullPredicate<IList<byte>>(e, "result"));
+				e => MustNotBeNullPredicate<IList<byte>>(e, "results"));
 		}
 
 		[Test]
@@ -267,7 +267,7 @@ namespace GameJolt.NET.Tests
 
 			// Null list
 			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.DataStore.GetValueAsBytesAsCurrentUserAsync("key", null!),
-				e => MustNotBeNullPredicate<IList<byte>>(e, "result"));
+				e => MustNotBeNullPredicate<IList<byte>>(e, "results"));
 		}
 
 		[Test]
@@ -284,7 +284,7 @@ namespace GameJolt.NET.Tests
 		{
 			// Null list
 			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.DataStore.GetKeysAsync((List<string>) null!),
-				e => MustNotBeNullPredicate<IList<string>>(e, "result"));
+				e => MustNotBeNullPredicate<IList<string>>(e, "results"));
 		}
 
 		[Test]
@@ -292,12 +292,7 @@ namespace GameJolt.NET.Tests
 		{
 			// Null list
 			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.DataStore.GetKeysAsCurrentUserAsync((List<string>) null!),
-				e => MustNotBeNullPredicate<IList<string>>(e, "result"));
-		}
-
-		private static bool MustNotBeNullPredicate<T>(Exception e, string paramName)
-		{
-			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be null. (Parameter '{paramName}')";
+				e => MustNotBeNullPredicate<IList<string>>(e, "results"));
 		}
 	}
 }

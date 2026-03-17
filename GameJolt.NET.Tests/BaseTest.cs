@@ -291,6 +291,11 @@ namespace GameJolt.NET.Tests
 
 			Assert.That(caught, Is.True, $"Expected exception of type {typeof(T).Name} was not thrown.");
 		}
+
+		protected static bool MustNotBeNullPredicate<T>(Exception e, string paramName)
+		{
+			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be null. (Parameter '{paramName}')";
+		}
 	}
 }
 #endif // DISABLE_GAMEJOLT
