@@ -14,7 +14,7 @@ namespace Hertzole.GameJolt
 			[DoesNotReturn]
 			public static void ThrowArgumentNullExceptionForIsNotNull<T>(string name)
 			{
-				throw new ArgumentNullException(name, $"Parameter {name} ({typeof(T).FullName}) must not be null.");
+				throw new ArgumentNullException(name, $"Parameter {name} ({typeof(T).ToTypeString()}) must not be null.");
 			}
 
 			[DoesNotReturn]
@@ -31,6 +31,23 @@ namespace Hertzole.GameJolt
 					}
 
 					return new ArgumentException($"Parameter {name} (string) must not be empty or whitespace.", name);
+				}
+			}
+
+			[DoesNotReturn]
+			public static void ThrowArgumentExceptionForIsNotNullOrEmptyNullable<T>(T? list, string name)
+			{
+				throw GetException(list, name);
+
+				[MethodImpl(MethodImplOptions.NoInlining)]
+				static Exception GetException(T? list, string name)
+				{
+					if (list is null)
+					{
+						return new ArgumentNullException(name, $"Parameter {name} ({typeof(T).ToTypeString()}) must not be null.");
+					}
+
+					return new ArgumentException($"Parameter {name} ({typeof(T).ToTypeString()}) must not be empty.", name);
 				}
 			}
 		}

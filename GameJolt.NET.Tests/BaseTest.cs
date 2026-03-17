@@ -265,7 +265,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		// Have to use our own method because Assert.ThrowsAsync stalls Unity
-		protected static async Task AssertThrowsAsync<T>(AsyncTestDelegate testDelegate) where T : Exception
+		protected static async Task AssertThrowsAsync<T>(AsyncTestDelegate testDelegate, Predicate<T>? exceptionPredicate = null) where T : Exception
 		{
 			bool caught = false;
 			try
@@ -274,8 +274,13 @@ namespace GameJolt.NET.Tests
 			}
 			catch (Exception e)
 			{
-				if (e is T)
+				if (e is T et)
 				{
+					if (exceptionPredicate != null)
+					{
+						Assert.That(exceptionPredicate.Invoke(et), Is.True, "Exception did not satisfy the provided predicate. | {0}", et);
+					}
+
 					caught = true;
 				}
 				else
