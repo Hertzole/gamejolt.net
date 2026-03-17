@@ -77,10 +77,6 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net48'">
-        <PackageReference Include="System.Buffers" Version="4.5.1"/>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
         <Reference Include="System.Net.Http"/>
     </ItemGroup>
@@ -92,6 +88,15 @@
     <ItemGroup>
         <Reference Include="$(UnityEditorPath)" Private="false"/>
     </ItemGroup>
+
+    <Choose>
+        <!-- .NET Standard 2.0 doesn't have the Span<T> type -->
+        <When Condition="'$(TargetFramework)' == 'netstandard2.0'">
+            <ItemGroup>
+                <PackageReference Include="System.Memory" Version="4.6.3"/>
+            </ItemGroup>
+        </When>
+    </Choose>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
