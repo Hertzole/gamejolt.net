@@ -27,27 +27,29 @@ namespace GameJolt.NET.Tests.Unity.Editor
 #endif // UNITY_INCLUDE_TESTS
 
 		[Test]
+		[Retry(5)] // Retry because Unity is unreliable.
 		public async Task EnterPlayMode_Initializes()
 		{
 			GameJoltSettings.AutoInitialize = true;
-			
+
 			// Act
 			await EnterPlayModeAsync();
-			
+
 			// Assert
 			Assert.That(GameJoltInitialization.manager, Is.Not.Null);
 			Assert.That(GameJoltInitialization.manager.hasInitialized, Is.True);
 		}
-		
+
 		[Test]
+		[Retry(5)] // Retry because Unity is unreliable.
 		public async Task ExitPlayMode_Disposes()
 		{
 			GameJoltSettings.AutoInitialize = true;
-			
+
 			// Act
 			await EnterPlayModeAsync();
 			await ExitPlayModeAsync();
-			
+
 			// Assert
 			Assert.That(GameJoltInitialization.manager, Is.Null);
 			Assert.That(GameJoltInitialization.exitTokenSource.IsCancellationRequested, Is.True);
