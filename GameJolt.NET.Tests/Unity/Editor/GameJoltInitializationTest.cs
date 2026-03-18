@@ -3,6 +3,7 @@
 #if UNITY_EDITOR
 using System.Threading.Tasks;
 using GameJolt.NET.Tests.Attributes;
+using Hertzole.GameJolt;
 using NUnit.Framework;
 
 namespace GameJolt.NET.Tests.Unity.Editor
