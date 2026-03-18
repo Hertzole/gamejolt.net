@@ -265,7 +265,7 @@ namespace GameJolt.NET.Tests
 		}
 
 		// Have to use our own method because Assert.ThrowsAsync stalls Unity
-		protected static async Task AssertThrowsAsync<T>(AsyncTestDelegate testDelegate) where T : Exception
+		protected static async Task AssertThrowsAsync<T>(AsyncTestDelegate testDelegate, Predicate<T>? exceptionPredicate = null) where T : Exception
 		{
 			bool caught = false;
 			try
@@ -274,8 +274,13 @@ namespace GameJolt.NET.Tests
 			}
 			catch (Exception e)
 			{
-				if (e is T)
+				if (e is T et)
 				{
+					if (exceptionPredicate != null)
+					{
+						Assert.That(exceptionPredicate.Invoke(et), Is.True, "Exception did not satisfy the provided predicate. | {0}", et);
+					}
+
 					caught = true;
 				}
 				else
@@ -285,6 +290,27 @@ namespace GameJolt.NET.Tests
 			}
 
 			Assert.That(caught, Is.True, $"Expected exception of type {typeof(T).Name} was not thrown.");
+		}
+
+		protected static bool MustNotBeEmptyOrWhitespacePredicate(Exception e, string paramName)
+		{
+			return e.Message == $"Parameter {paramName} (string) must not be empty or whitespace. (Parameter '{paramName}')";
+		}
+
+		protected static bool MustNotBeNullPredicate<T>(Exception e, string paramName)
+		{
+			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be null. (Parameter '{paramName}')";
+		}
+
+		protected static bool MustNotBeEmptyPredicate<T>(Exception e, string paramName)
+		{
+			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be empty. (Parameter '{paramName}')";
+		}
+
+		protected static bool GreaterThanOrEqualToPredicate<T>(Exception e, string paramName, int size, int actualSize)
+		{
+			return e.Message ==
+			       $"Parameter {paramName} ({typeof(T).ToTypeString()}) must have a size of at least {size}, had a size of {actualSize}. (Parameter '{paramName}')";
 		}
 	}
 }

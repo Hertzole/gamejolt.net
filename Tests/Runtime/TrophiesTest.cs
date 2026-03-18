@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace GameJolt.NET.Tests
 {
 	[NeedsAuthentication]
-	public class TrophiesTest : BaseTest
+	internal partial class TrophiesTest : BaseTest
 	{
 		private static readonly int[] trophyIds = { 0, 1 };
 

@@ -86,17 +86,6 @@ namespace GameJolt.NET.Tests
 
 		[Test]
 		[NeedsAuthentication]
-		public async Task SetUser_Authenticated_Null_Fail([Values] bool emptyString)
-		{
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsCurrentUserAsync("key", emptyString ? string.Empty : null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
-		}
-
-		[Test]
-		[NeedsAuthentication]
 		public async Task SetUser_Authenticated_Error_Fail()
 		{
 			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
