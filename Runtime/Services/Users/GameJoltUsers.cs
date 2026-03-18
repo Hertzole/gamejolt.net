@@ -65,8 +65,12 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="username"/> or <paramref name="token"/> is empty or whitespace.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="username"/> or <paramref name="token"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">
+		///     Thrown if <paramref name="username" /> or <paramref name="token" /> is empty or whitespace.
+		/// </exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="username" /> or <paramref name="token" /> is <see langword="null" />.
+		/// </exception>
 		public async Task<GameJoltResult> AuthenticateAsync(string username, string token, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrWhiteSpace(username, nameof(username));
@@ -106,16 +110,17 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Authenticates the user from a URL. The URL must contain the query parameters <c>qjapi_username</c> and <c>gjapi_token</c>.
+		///     Authenticates the user from a URL. The URL must contain the query parameters <c>qjapi_username</c> and
+		///     <c>gjapi_token</c>.
 		///     This method will also fetch the user's data and set the <see cref="CurrentUser" /> property if successful.
 		/// </summary>
 		/// <param name="url">The URL to authenticate from.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="url"/> is empty or whitespace.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
-		/// <exception cref="FormatException">Thrown if <paramref name="url"/> is not a valid URL.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="url" /> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url" /> is <see langword="null" />.</exception>
+		/// <exception cref="FormatException">Thrown if <paramref name="url" /> is not a valid URL.</exception>
 		public Task<GameJoltResult> AuthenticateFromUrlAsync(string url, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrWhiteSpace(url, nameof(url));
@@ -124,15 +129,16 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Authenticates the user from a URL. The URL must contain the query parameters <c>qjapi_username</c> and <c>gjapi_token</c>.
+		///     Authenticates the user from a URL. The URL must contain the query parameters <c>qjapi_username</c> and
+		///     <c>gjapi_token</c>.
 		///     This method will also fetch the user's data and set the <see cref="CurrentUser" /> property if successful.
 		/// </summary>
 		/// <param name="url">The URL to authenticate from.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentException">Returned if <paramref name="url"/> is invalid.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Returned if <paramref name="url" /> is invalid.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="url" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult> AuthenticateFromUrlAsync(Uri url, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNull(url, nameof(url));
@@ -156,8 +162,8 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="gjCredentialsContent"/> is empty or whitespace.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="gjCredentialsContent"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="gjCredentialsContent" /> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="gjCredentialsContent" /> is <see langword="null" />.</exception>
 		public Task<GameJoltResult> AuthenticateFromCredentialsFileAsync(string gjCredentialsContent, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrWhiteSpace(gjCredentialsContent, nameof(gjCredentialsContent));
@@ -186,8 +192,8 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="lines"/> is empty or has less than 3 lines.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="lines"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="lines" /> is empty or has less than 3 lines.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="lines" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult> AuthenticateFromCredentialsFileAsync(string[] lines, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrEmpty(lines, nameof(lines));
@@ -206,8 +212,8 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request and the user's data.</returns>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="username"/> is empty or whitespace.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="username"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="username" /> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="username" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult<GameJoltUser>> GetUserAsync(string username, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNullOrWhiteSpace(username, nameof(username));
@@ -268,14 +274,45 @@ namespace Hertzole.GameJolt
 		/// <param name="usernames">The usernames of the users whose data you'd like to fetch.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns> The result of the request and the users' data.</returns>
-		/// <exception cref="ArgumentNullException">Returned if <paramref name="usernames" /> is null.</exception>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="usernames"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="usernames" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult<GameJoltUser[]>> GetUsersAsync(IEnumerable<string> usernames, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNull(usernames, nameof(usernames));
 
-			return await GetUsersInternalAsync(usernames, null, cancellationToken);
+			using (ListPool<GameJoltUser>.Rent(out List<GameJoltUser> results))
+			{
+				GameJoltResult result = await GetUsersInternalAsync(usernames, null, results, cancellationToken);
+
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltUser[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<GameJoltUser[]>.Success(results.ToArray());
+			}
+		}
+
+		/// <summary>
+		///     Fetches the users with the given usernames and adds them to the provided <paramref name="results" /> list. This
+		///     method does not require the user to be authenticated.
+		/// </summary>
+		/// <param name="usernames">The usernames of the users whose data you'd like to fetch.</param>
+		/// <param name="results">The results buffer where the users will be added to.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns> The result of the request and the users' data.</returns>
+		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="usernames" /> or <paramref name="results" /> is <see langword="null" />.
+		/// </exception>
+		public async Task<GameJoltResult> GetUsersAsync(IEnumerable<string> usernames,
+			IList<GameJoltUser> results,
+			CancellationToken cancellationToken = default)
+		{
+			Guard.IsNotNull(usernames, nameof(usernames));
+			Guard.IsNotNull(results, nameof(results));
+
+			return await GetUsersInternalAsync(usernames, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -284,18 +321,48 @@ namespace Hertzole.GameJolt
 		/// <param name="userIds">The user IDs of the users whose data you'd like to fetch.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns> The result of the request and the users' data.</returns>
-		/// <exception cref="ArgumentNullException">Returned if <paramref name="userIds" /> is null.</exception>
 		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="userIds"/> is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="userIds" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult<GameJoltUser[]>> GetUsersAsync(IEnumerable<int> userIds, CancellationToken cancellationToken = default)
 		{
 			Guard.IsNotNull(userIds, nameof(userIds));
 
-			return await GetUsersInternalAsync(null, userIds, cancellationToken);
+			using (ListPool<GameJoltUser>.Rent(out List<GameJoltUser> results))
+			{
+				GameJoltResult result = await GetUsersInternalAsync(null, userIds, results, cancellationToken);
+
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltUser[]>.Error(result.Exception!);
+				}
+
+				return GameJoltResult<GameJoltUser[]>.Success(results.ToArray());
+			}
 		}
 
-		private async Task<GameJoltResult<GameJoltUser[]>> GetUsersInternalAsync(IEnumerable<string>? usernames,
+		/// <summary>
+		///     Fetches the users with the given user IDs and adds them to the provided <paramref name="results" /> list. This
+		///     method does not require the user to be authenticated.
+		/// </summary>
+		/// <param name="userIds">The user IDs of the users whose data you'd like to fetch.</param>
+		/// <param name="results">The results buffer where the users will be added to.</param>
+		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
+		/// <returns> The result of the request and the users' data.</returns>
+		/// <exception cref="GameJoltInvalidUserException">Returned if the user does not exist.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="userIds" /> or <paramref name="results" /> is <see langword="null" />.
+		/// </exception>
+		public async Task<GameJoltResult> GetUsersAsync(IEnumerable<int> userIds, IList<GameJoltUser> results, CancellationToken cancellationToken = default)
+		{
+			Guard.IsNotNull(userIds, nameof(userIds));
+			Guard.IsNotNull(results, nameof(results));
+
+			return await GetUsersInternalAsync(null, userIds, results, cancellationToken);
+		}
+
+		private async Task<GameJoltResult> GetUsersInternalAsync(IEnumerable<string>? usernames,
 			IEnumerable<int>? userIds,
+			IList<GameJoltUser> buffer,
 			CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder builder))
@@ -319,22 +386,22 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(exception!);
+					return GameJoltResult.Error(exception!);
 				}
 
 				if (response.Users.Length == 0)
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(new GameJoltInvalidUserException());
+					return GameJoltResult.Error(new GameJoltInvalidUserException());
 				}
 
-				// No need to use Array.Empty here since we know the array is not empty.
-				GameJoltUser[] users = new GameJoltUser[response.Users.Length];
+				buffer.ClearAndEnsureCapacity(response.Users.Length);
+
 				for (int i = 0; i < response.Users.Length; i++)
 				{
-					users[i] = response.Users[i].ToPublicUser();
+					buffer.Add(response.Users[i].ToPublicUser());
 				}
 
-				return GameJoltResult<GameJoltUser[]>.Success(users);
+				return GameJoltResult.Success();
 			}
 		}
 

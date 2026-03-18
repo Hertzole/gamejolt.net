@@ -99,11 +99,35 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
+		public async Task GetUsers_Usernames_WithList_Guards()
+		{
+			// Null usernames
+			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.Users.GetUsersAsync(((string[]) null)!, new List<GameJoltUser>()),
+				e => MustNotBeNullPredicate<IEnumerable<string>>(e, "usernames"));
+
+			// Null results
+			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.Users.GetUsersAsync(new[] { "username" }, null!),
+				e => MustNotBeNullPredicate<IList<GameJoltUser>>(e, "results"));
+		}
+
+		[Test]
 		public async Task GetUsers_Ids_Guards()
 		{
 			// Null IDs
 			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.Users.GetUsersAsync(((int[]) null)!),
 				e => MustNotBeNullPredicate<IEnumerable<int>>(e, "userIds"));
+		}
+
+		[Test]
+		public async Task GetUsers_Ids_WithList_Guards()
+		{
+			// Null IDs
+			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.Users.GetUsersAsync(((int[]) null)!, new List<GameJoltUser>()),
+				e => MustNotBeNullPredicate<IEnumerable<int>>(e, "userIds"));
+
+			// Null results
+			await AssertThrowsAsync<ArgumentNullException>(() => GameJoltAPI.Users.GetUsersAsync(new[] { 1 }, null!),
+				e => MustNotBeNullPredicate<IList<GameJoltUser>>(e, "results"));
 		}
 	}
 }

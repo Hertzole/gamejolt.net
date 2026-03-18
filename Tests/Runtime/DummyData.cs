@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using Bogus;
 using Hertzole.GameJolt;
 
@@ -85,6 +86,14 @@ namespace GameJolt.NET.Tests
 		internal static byte[] Bytes(int count = 1024)
 		{
 			return randomizer.Bytes(count);
+		}
+
+		internal static IEnumerable<T> Many<T>(int count, Func<T> get)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				yield return get();
+			}
 		}
 	}
 }
