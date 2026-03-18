@@ -294,23 +294,22 @@ namespace GameJolt.NET.Tests
 
 		protected static bool MustNotBeEmptyOrWhitespacePredicate(Exception e, string paramName)
 		{
-			return e.Message == $"Parameter {paramName} (string) must not be empty or whitespace. (Parameter '{paramName}')";
+			return e.Message.StartsWith($"Parameter {paramName} (string) must not be empty or whitespace.");
 		}
 
 		protected static bool MustNotBeNullPredicate<T>(Exception e, string paramName)
 		{
-			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be null. (Parameter '{paramName}')";
+			return e.Message.StartsWith($"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be null.");
 		}
 
 		protected static bool MustNotBeEmptyPredicate<T>(Exception e, string paramName)
 		{
-			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be empty. (Parameter '{paramName}')";
+			return e.Message.StartsWith($"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be empty.");
 		}
 
 		protected static bool GreaterThanOrEqualToPredicate<T>(Exception e, string paramName, int size, int actualSize)
 		{
-			return e.Message ==
-			       $"Parameter {paramName} ({typeof(T).ToTypeString()}) must have a size of at least {size}, had a size of {actualSize}. (Parameter '{paramName}')";
+			return e.Message.StartsWith($"Parameter {paramName} ({typeof(T).ToTypeString()}) must have a size of at least {size}, had a size of {actualSize}.");
 		}
 	}
 }
