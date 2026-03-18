@@ -3,7 +3,9 @@
 #nullable enable
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
@@ -26,8 +28,30 @@ filler
 strings
 ";
 
+		private static readonly string[] lines = { "0.1.2", "username", "token" };
 		private static readonly string[] usernames = { "Username", "Username2" };
 		private static readonly int[] ids = { 0, 1 };
+
+		private static IEnumerable AuthenticateLinesTestCases()
+		{
+			yield return new TestCaseData(lines.ToList()).SetName("List");
+			yield return new TestCaseData(lines.AsMemory()).SetName("Memory");
+			yield return new TestCaseData(lines.AsEnumerable()).SetName("Enumerable");
+		}
+
+		private static IEnumerable GetUserUsernamesTestCases()
+		{
+			yield return new TestCaseData(usernames.ToList()).SetName("List");
+			yield return new TestCaseData(usernames.AsMemory()).SetName("Memory");
+			yield return new TestCaseData(usernames.AsEnumerable()).SetName("Enumerable");
+		}
+
+		private static IEnumerable GetUserIdsTestCases()
+		{
+			yield return new TestCaseData(ids.ToList()).SetName("List");
+			yield return new TestCaseData(ids.AsMemory()).SetName("Memory");
+			yield return new TestCaseData(ids.AsEnumerable()).SetName("Enumerable");
+		}
 
 		[Test]
 		public async Task Authenticate_ValidToken_Success()
@@ -211,6 +235,53 @@ strings
 		}
 
 		[Test]
+		[TestCaseSource(nameof(AuthenticateLinesTestCases))]
+		public async Task Authenticate_Lines<T>(T value)
+		{
+			// Arrange
+			string authJson = serializer.SerializeResponse(new Response(true, null));
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, DummyData.User()));
+			GameJoltResult result;
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("users/?"))
+				{
+					return FromResult(userJson);
+				}
+
+				if (arg.Contains("users/auth"))
+				{
+					return FromResult(authJson);
+				}
+
+				return FromResult("");
+			});
+
+			// Act
+			switch (value)
+			{
+				case Memory<string> memory:
+					result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(memory);
+					break;
+				case List<string> list:
+					result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(list);
+					break;
+				case IEnumerable<string> enumerable:
+					result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(enumerable);
+					break;
+				default:
+					throw new ArgumentException("Invalid test case value.");
+			}
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(GameJoltAPI.Users.IsAuthenticated, Is.True, "User did not get authenticated");
+		}
+
+		[Test]
 		public async Task Fetch_ValidUsername_Success()
 		{
 			User user = DummyData.User();
@@ -311,13 +382,28 @@ strings
 		}
 
 		[Test]
-		public async Task GetUsers_Usernames_Success()
+		[TestCaseSource(nameof(GetUserUsernamesTestCases))]
+		public async Task GetUsers_Usernames_Success<T>(T value)
 		{
 			// Arrange
 			ArrangeGetUsers("username", out User user1, out User user2);
+			GameJoltResult<GameJoltUser[]> result;
 
 			// Act
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(usernames);
+			switch (value)
+			{
+				case Memory<string> memory:
+					result = await GameJoltAPI.Users.GetUsersAsync(memory);
+					break;
+				case List<string> list:
+					result = await GameJoltAPI.Users.GetUsersAsync(list);
+					break;
+				case IEnumerable<string> enumerable:
+					result = await GameJoltAPI.Users.GetUsersAsync(enumerable);
+					break;
+				default:
+					throw new ArgumentException("Invalid test case value.");
+			}
 
 			// Assert
 			Assert.That(result.HasError, Is.False);
@@ -329,15 +415,30 @@ strings
 		}
 
 		[Test]
-		public async Task GetUsers_Usernames_WithList_Success()
+		[TestCaseSource(nameof(GetUserUsernamesTestCases))]
+		public async Task GetUsers_Usernames_WithList_Success<T>(T value)
 		{
 			// Arrange
 			ArrangeGetUsers("username", out User user1, out User user2);
 			// Fill with dummy data to make sure the buffer gets cleared
 			List<GameJoltUser> results = new List<GameJoltUser>(DummyData.Many(100, DummyData.User().ToPublicUser));
+			GameJoltResult result;
 
 			// Act
-			GameJoltResult result = await GameJoltAPI.Users.GetUsersAsync(usernames, results);
+			switch (value)
+			{
+				case Memory<string> memory:
+					result = await GameJoltAPI.Users.GetUsersAsync(memory, results);
+					break;
+				case List<string> list:
+					result = await GameJoltAPI.Users.GetUsersAsync(list, results);
+					break;
+				case IEnumerable<string> enumerable:
+					result = await GameJoltAPI.Users.GetUsersAsync(enumerable, results);
+					break;
+				default:
+					throw new ArgumentException("Invalid test case value.");
+			}
 
 			// Assert
 			Assert.That(result.HasError, Is.False);
@@ -348,13 +449,28 @@ strings
 		}
 
 		[Test]
-		public async Task GetUsers_Ids_Success()
+		[TestCaseSource(nameof(GetUserIdsTestCases))]
+		public async Task GetUsers_Ids_Success<T>(T value)
 		{
 			// Arrange
 			ArrangeGetUsers("user_id", out User user1, out User user2);
+			GameJoltResult<GameJoltUser[]> result;
 
 			// Act
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(ids);
+			switch (value)
+			{
+				case Memory<int> memory:
+					result = await GameJoltAPI.Users.GetUsersAsync(memory);
+					break;
+				case List<int> list:
+					result = await GameJoltAPI.Users.GetUsersAsync(list);
+					break;
+				case IEnumerable<int> enumerable:
+					result = await GameJoltAPI.Users.GetUsersAsync(enumerable);
+					break;
+				default:
+					throw new ArgumentException("Invalid test case value.");
+			}
 
 			// Assert
 			Assert.That(result.HasError, Is.False);
@@ -366,15 +482,30 @@ strings
 		}
 
 		[Test]
-		public async Task GetUsers_Ids_WithList_Success()
+		[TestCaseSource(nameof(GetUserIdsTestCases))]
+		public async Task GetUsers_Ids_WithList_Success<T>(T value)
 		{
 			// Arrange
 			ArrangeGetUsers("user_id", out User user1, out User user2);
 			// Fill with dummy data to make sure the buffer gets cleared
 			List<GameJoltUser> results = new List<GameJoltUser>(DummyData.Many(100, DummyData.User().ToPublicUser));
+			GameJoltResult result;
 
 			// Act
-			GameJoltResult result = await GameJoltAPI.Users.GetUsersAsync(ids, results);
+			switch (value)
+			{
+				case Memory<int> memory:
+					result = await GameJoltAPI.Users.GetUsersAsync(memory, results);
+					break;
+				case List<int> list:
+					result = await GameJoltAPI.Users.GetUsersAsync(list, results);
+					break;
+				case IEnumerable<int> enumerable:
+					result = await GameJoltAPI.Users.GetUsersAsync(enumerable, results);
+					break;
+				default:
+					throw new ArgumentException("Invalid test case value.");
+			}
 
 			// Assert
 			Assert.That(result.HasError, Is.False);
