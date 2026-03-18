@@ -3,6 +3,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Threading.Tasks;
+using UnityEditor;
 
 namespace GameJolt.NET.Tests.Unity.Editor
 {
