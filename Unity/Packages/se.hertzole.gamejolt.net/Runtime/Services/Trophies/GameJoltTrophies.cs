@@ -71,8 +71,11 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult> GetTrophiesAsync(IList<GameJoltTrophy> results, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNull(results, nameof(results));
+
 			return await GetTrophiesInternalAsync(null, 0, null, results, cancellationToken).ConfigureAwait(false);
 		}
 
@@ -114,8 +117,11 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult> GetTrophiesAsync(bool getAchieved, IList<GameJoltTrophy> results, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNull(results, nameof(results));
+
 			return await GetTrophiesInternalAsync(null, 0, getAchieved, results, cancellationToken);
 		}
 
@@ -128,8 +134,11 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and the trophies.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="trophyIds" /> is <see langword="null" />.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNull(trophyIds, nameof(trophyIds));
+
 			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
 			{
 				GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
@@ -152,10 +161,17 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
+		/// <exception cref="ArgumentNullException">
+		///     Thrown if <paramref name="trophyIds" /> or <paramref name="results" /> is
+		///     <see langword="null" />.
+		/// </exception>
 		public async Task<GameJoltResult> GetTrophiesAsync(IEnumerable<int> trophyIds,
 			IList<GameJoltTrophy> results,
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNull(trophyIds, nameof(trophyIds));
+			Guard.IsNotNull(results, nameof(results));
+
 			return await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
 		}
 
@@ -279,7 +295,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
 		/// <exception cref="GameJoltTrophyException">
 		///     Returned if the user has already unlocked this trophy and
-		///     <c>errorIfUnlocked</c> is <c>true</c>.
+		///     <paramref name="errorIfUnlocked" /> is <see langword="true" />.
 		/// </exception>
 		public async Task<GameJoltResult> UnlockTrophyAsync(int trophyId, bool errorIfUnlocked = false, CancellationToken cancellationToken = default)
 		{
@@ -323,7 +339,7 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
 		/// <exception cref="GameJoltTrophyException">
 		///     Returned if the user hasn't unlocked this trophy and
-		///     <c>errorIfNotUnlocked</c> is <c>true</c>.
+		///     <paramref name="errorIfNotUnlocked" /> is <see langword="true" />.
 		/// </exception>
 		public async Task<GameJoltResult> RemoveUnlockedTrophyAsync(int trophyId, bool errorIfNotUnlocked = true, CancellationToken cancellationToken = default)
 		{

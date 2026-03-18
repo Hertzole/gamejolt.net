@@ -77,16 +77,6 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		public async Task SetGlobal_Null_Fail([Values] bool emptyString)
-		{
-			GameJoltResult result = await GameJoltAPI.DataStore.SetAsync("key", emptyString ? string.Empty : null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
-		}
-
-		[Test]
 		public async Task SetGlobal_Error_Fail()
 		{
 			await AssertErrorAsync<Response, GameJoltInvalidDataStoreKeyException>(CreateResponse, GetResult,
@@ -104,7 +94,7 @@ namespace GameJolt.NET.Tests
 				return GameJoltAPI.DataStore.SetAsync("key", "value");
 			}
 		}
-		
+
 		[Test]
 		public async Task Set_String_ValidUrl()
 		{

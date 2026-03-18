@@ -3,7 +3,6 @@
 #nullable enable
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
@@ -11,7 +10,7 @@ using NUnit.Framework;
 
 namespace GameJolt.NET.Tests
 {
-	public class UsersTest : BaseTest
+	public partial class UsersTest : BaseTest
 	{
 		private const string CREDENTIALS_NORMAL = @"0.2.1
 test
@@ -24,7 +23,7 @@ test
 filler
 strings
 ";
-		
+
 		private static readonly string[] usernames = { "Username", "Username2" };
 		private static readonly int[] ids = { 0, 1 };
 
@@ -179,26 +178,6 @@ strings
 		}
 
 		[Test]
-		public async Task Authenticate_NullUrl_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync((Uri) null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
-		}
-		
-		[Test]
-		public async Task Authenticate_NullUrlString_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromUrlAsync((string) null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
-		}
-
-		[Test]
 		[TestCase(CREDENTIALS_NORMAL)]
 		[TestCase(CREDENTIALS_LONG)]
 		public async Task Authenticate_CredentialsFile_Success(string credentials)
@@ -227,56 +206,6 @@ strings
 
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
-		}
-
-		[Test]
-		public async Task Authenticate_CredentialsFile_InvalidFile_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync("invalid");
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
-		}
-		
-		[Test]
-		public async Task Authenticate_CredentialsFile_Null_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync((string) null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
-		}
-		
-		[Test]
-		public async Task Authenticate_CredentialsFile_Empty_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(string.Empty);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
-		}
-		
-		[Test]
-		public async Task Authenticate_CredentialsFile_Whitespace_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync(" ");
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
-		}
-		
-		[Test]
-		public async Task Authenticate_CredentialsFile_NullLines_Failure()
-		{
-			GameJoltResult result = await GameJoltAPI.Users.AuthenticateFromCredentialsFileAsync((string[]) null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentException>());
 		}
 
 		[Test]
@@ -485,26 +414,6 @@ strings
 			Assert.That(result.HasError, Is.True);
 			Assert.That(result.Exception, Is.Not.Null);
 			Assert.That(result.Exception, Is.TypeOf<GameJoltInvalidUserException>());
-		}
-
-		[Test]
-		public async Task Fetch_Usernames_NullArgument()
-		{
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync((IEnumerable<string>) null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
-		}
-
-		[Test]
-		public async Task Fetch_Ids_NullArgument()
-		{
-			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync((IEnumerable<int>) null!);
-
-			Assert.That(result.HasError, Is.True);
-			Assert.That(result.Exception, Is.Not.Null);
-			Assert.That(result.Exception, Is.TypeOf<ArgumentNullException>());
 		}
 
 		[Test]

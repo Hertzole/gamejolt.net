@@ -53,9 +53,13 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> or <paramref name="data"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="data"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, string data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNullOrWhiteSpace(data, nameof(data));
+
 			return await SetInternalAsync(key, data, null, null, cancellationToken);
 		}
 
@@ -66,9 +70,12 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, int data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken);
 		}
 
@@ -79,9 +86,13 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace, or if <paramref name="data"/> is empty.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="data"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNullOrEmpty(data, nameof(data));
+
 			return await SetInternalAsync(key, Convert.ToBase64String(data), null, null, cancellationToken);
 		}
 
@@ -92,9 +103,12 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Returned if <paramref name="data" /> is null, empty, or whitespace.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsync(string key, bool data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			return await SetInternalAsync(key, data ? "true" : "false", null, null, cancellationToken);
 		}
 
@@ -106,10 +120,14 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> or <paramref name="data"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="data"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsCurrentUserAsync(string key, string data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNullOrWhiteSpace(data, nameof(data));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return authResult;
@@ -126,10 +144,13 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsCurrentUserAsync(string key, int data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return authResult;
@@ -146,10 +167,14 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key" /> is empty or whitespace, or if <paramref name="data"/> is empty.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="data" /> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsCurrentUserAsync(string key, byte[] data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNullOrEmpty(data, nameof(data));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return authResult;
@@ -166,10 +191,13 @@ namespace Hertzole.GameJolt
 		/// <param name="data">The data you'd like to set.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		/// <exception cref="ArgumentException">Thrown if <paramref name="data" /> is null, empty, or whitespace.</exception>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> SetAsCurrentUserAsync(string key, bool data, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return authResult;
@@ -234,8 +262,12 @@ namespace Hertzole.GameJolt
 		/// <param name="key">The key of the data item you'd like to remove.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> RemoveAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			return await RemoveInternalAsync(key, null, null, cancellationToken);
 		}
 
@@ -244,10 +276,14 @@ namespace Hertzole.GameJolt
 		/// </summary>
 		/// <param name="key">The key of the data item you'd like to remove.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
-		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <returns>The result of the operation.</returns>
+		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult> RemoveAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return authResult;
@@ -299,8 +335,13 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation and the new value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> or <paramref name="data"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="data"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<string>> UpdateAsync(string key, string data, StringOperation operation, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNullOrWhiteSpace(data, nameof(data));
+
 			GameJoltResult<(string stringValue, int intValue)> result =
 				await UpdateInternalAsync(key, GetStringOperation(operation), data, null, null, cancellationToken);
 
@@ -322,8 +363,12 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation and the new value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<int>> UpdateAsync(string key, int data, NumericOperation operation, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			GameJoltResult<(string stringValue, int intValue)> result =
 				await UpdateInternalAsync(key, GetNumberOperation(operation), data.ToString(CultureInfo.InvariantCulture), null, null, cancellationToken);
 
@@ -345,11 +390,16 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation and the new value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> or <paramref name="data"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="data"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<string>> UpdateAsCurrentUserAsync(string key,
 			string data,
 			StringOperation operation,
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNullOrWhiteSpace(data, nameof(data));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult<string>.Error(authResult.Exception!);
@@ -376,11 +426,15 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation and the new value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<int>> UpdateAsCurrentUserAsync(string key,
 			int data,
 			NumericOperation operation,
 			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult<int>.Error(authResult.Exception!);
@@ -454,8 +508,12 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation and the value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<string>> GetValueAsStringAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			return await GetValueInternalAsync(key, null, null, cancellationToken);
 		}
 
@@ -467,8 +525,12 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the operation and the value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="GameJoltInvalidDataStoreValueException">Returned if the value is not an integer.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<int>> GetValueAsIntAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken);
 
 			if (result.HasError)
@@ -493,8 +555,12 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the operation and the value.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key"/> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is <see langword="null"/>.</exception>
 		public async Task<GameJoltResult<byte[]>> GetValueAsBytesAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			using (ListPool<byte>.Rent(out List<byte> buffer))
 			{
 				GameJoltResult result = await GetBytesValueInternalAsync(key, null, null, buffer, cancellationToken);
@@ -508,18 +574,21 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches data from the data store and puts it into the provided <paramref name="result" />. This will only fetch
+		///     Fetches data from the data store and puts it into the provided <paramref name="results" />. This will only fetch
 		///     data items that are accessible to everyone.
 		/// </summary>
 		/// <param name="key">The key of the data item you'd like to fetch.</param>
-		/// <param name="result">The buffer to put the data into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the data into. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>>The result of the operation.</returns>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
-		public Task<GameJoltResult> GetValueAsBytesAsync(string key, IList<byte> result, CancellationToken cancellationToken = default)
+		public Task<GameJoltResult> GetValueAsBytesAsync(string key, IList<byte> results, CancellationToken cancellationToken = default)
 		{
-			return GetBytesValueInternalAsync(key, null, null, result, cancellationToken);
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNull(results, nameof(results));
+
+			return GetBytesValueInternalAsync(key, null, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -532,6 +601,8 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidDataStoreValueException">Returned if the value is not a bool.</exception>
 		public async Task<GameJoltResult<bool>> GetValueAsBoolAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			GameJoltResult<string> result = await GetValueInternalAsync(key, null, null, cancellationToken);
 
 			if (result.HasError)
@@ -558,6 +629,8 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		public async Task<GameJoltResult<string>> GetValueAsStringAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult<string>.Error(authResult.Exception!);
@@ -578,6 +651,8 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidDataStoreValueException">Returned if the value is not an integer.</exception>
 		public async Task<GameJoltResult<int>> GetValueAsIntAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult<int>.Error(authResult.Exception!);
@@ -610,6 +685,8 @@ namespace Hertzole.GameJolt
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
 		public async Task<GameJoltResult<byte[]>> GetValueAsBytesAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult<byte[]>.Error(authResult.Exception!);
@@ -628,24 +705,29 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches data from the data store as <see langword="byte" /> and adds it to the provided <paramref name="result" />
+		///     Fetches data from the data store as <see langword="byte" /> and adds it to the provided <paramref name="results" />
 		///     list. This will only fetch data items that are accessible to the current user.
 		/// </summary>
 		/// <param name="key">The key of the data item you'd like to fetch.</param>
-		/// <param name="result">The buffer to put the data into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the data into. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="FormatException">Returned if the value can't be decoded from a Base64 string.</exception>
-		public async Task<GameJoltResult> GetValueAsBytesAsCurrentUserAsync(string key, IList<byte> result, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key" /> is empty or whitespace.</exception>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> or <paramref name="results" /> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetValueAsBytesAsCurrentUserAsync(string key, IList<byte> results, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+			Guard.IsNotNull(results, nameof(results));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult.Error(authResult.Exception!);
 			}
 
-			GameJoltResult getBytesResult = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, result, cancellationToken);
+			GameJoltResult getBytesResult = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, results, cancellationToken);
 			if (getBytesResult.HasError)
 			{
 				return GameJoltResult.Error(getBytesResult.Exception!);
@@ -664,8 +746,11 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidDataStoreKeyException">Returned if the key doesn't exist on the cloud.</exception>
 		/// <exception cref="GameJoltInvalidDataStoreValueException">Returned if the value is not a bool.</exception>
+		/// <exception cref="ArgumentException">Thrown if <paramref name="key" /> is empty or whitespace.</exception>
 		public async Task<GameJoltResult<bool>> GetValueAsBoolAsCurrentUserAsync(string key, CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult<bool>.Error(authResult.Exception!);
@@ -775,16 +860,19 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="result" /> list.
+		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="results" /> list.
 		///     This will only fetch data items that are accessible to everyone.
 		/// </summary>
-		/// <param name="result">The buffer to put the keys into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the keys into. This will be cleared before use.</param>
 		/// <param name="pattern">Optional pattern to apply to the key names in the data store.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
-		public async Task<GameJoltResult> GetKeysAsync(IList<string> result, string? pattern = null, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetKeysAsync(IList<string> results, string? pattern = null, CancellationToken cancellationToken = default)
 		{
-			return await GetKeysInternalAsync(pattern, null, null, result, cancellationToken);
+			Guard.IsNotNull(results, nameof(results));
+
+			return await GetKeysInternalAsync(pattern, null, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -815,22 +903,27 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="result" /> list.
+		///     Fetches keys of data items from the data store and puts them into the provided <paramref name="results" /> list.
 		///     This will only fetch data items that are accessible to the current user.
 		/// </summary>
-		/// <param name="result">The buffer to put the keys into. This will be cleared before use.</param>
+		/// <param name="results">The buffer to put the keys into. This will be cleared before use.</param>
 		/// <param name="pattern">Optional pattern to apply to the key names in the data store.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
-		public async Task<GameJoltResult> GetKeysAsCurrentUserAsync(IList<string> result, string? pattern = null, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetKeysAsCurrentUserAsync(IList<string> results,
+			string? pattern = null,
+			CancellationToken cancellationToken = default)
 		{
+			Guard.IsNotNull(results, nameof(results));
+
 			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
 			{
 				return GameJoltResult.Error(authResult.Exception!);
 			}
 
-			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, result, cancellationToken);
+			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, results, cancellationToken);
 		}
 
 		private async Task<GameJoltResult> GetKeysInternalAsync(string? pattern,

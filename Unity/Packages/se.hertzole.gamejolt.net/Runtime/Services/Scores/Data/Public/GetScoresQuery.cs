@@ -195,17 +195,17 @@ namespace Hertzole.GameJolt
 		}
 
 		/// <summary>
-		///     Gets the scores from the specified query and adds them to the provided <paramref name="result" /> list.
+		///     Gets the scores from the specified query and adds them to the provided <paramref name="results" /> list.
 		/// </summary>
-		/// <param name="result">The list to add the results to. This list will be cleared before adding the results.</param>
+		/// <param name="results">The list to add the results to. This list will be cleared before adding the results.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="result"/> is <see langword="null"/>.</exception>
-		public async Task<GameJoltResult> GetAsync(IList<GameJoltScore> result, CancellationToken cancellationToken = default)
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results"/> is <see langword="null"/>.</exception>
+		public async Task<GameJoltResult> GetAsync(IList<GameJoltScore> results, CancellationToken cancellationToken = default)
 		{
-			Guard.IsNotNull(result, nameof(result));
+			Guard.IsNotNull(results, nameof(results));
 
-			return await scores!.GetScoresAsync(this, result, cancellationToken);
+			return await scores!.GetScoresAsync(this, results, cancellationToken);
 		}
 
 		/// <summary>

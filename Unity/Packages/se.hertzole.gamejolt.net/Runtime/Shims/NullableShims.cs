@@ -1,5 +1,5 @@
 #if !DISABLE_GAMEJOLT
-#if !NETSTANDARD2_1_OR_GREATER && !NET5_0_OR_GREATER
+#if !NETSTANDARD2_1_OR_GREATER && !NET5_0_OR_GREATER && !UNITY_2021_3_OR_NEWER
 namespace System.Diagnostics.CodeAnalysis
 {
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue)]
