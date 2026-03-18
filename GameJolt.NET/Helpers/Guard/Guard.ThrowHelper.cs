@@ -2,6 +2,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -49,6 +50,14 @@ namespace Hertzole.GameJolt
 
 					return new ArgumentException($"Parameter {name} ({typeof(T).ToTypeString()}) must not be empty.", name);
 				}
+			}
+
+			[DoesNotReturn]
+			public static void ThrowArgumentExceptionForHasSizeGreaterThanOrEqualTo<T>(IReadOnlyCollection<T> list, int size, string name)
+			{
+				throw new ArgumentException(
+					$"Parameter {name} ({typeof(IReadOnlyCollection<T>).ToTypeString()}) must have a size of at least {size}, had a size of {list.Count}.",
+					name);
 			}
 		}
 	}

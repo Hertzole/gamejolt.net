@@ -12,13 +12,10 @@ namespace GameJolt.NET.Tests
 {
 	partial class DataStoreTest
 	{
-		private static readonly Predicate<ArgumentNullException> keyNullPredicate = exception =>
-			exception.Message == "Parameter key (string) must not be null. (Parameter 'key')";
-		private static readonly Predicate<ArgumentException> keyEmptyPredicate = exception =>
-			exception.Message == "Parameter key (string) must not be empty or whitespace. (Parameter 'key')";
+		private static readonly Predicate<ArgumentNullException> keyNullPredicate = e => MustNotBeNullPredicate<string>(e, "key");
+		private static readonly Predicate<ArgumentException> keyEmptyPredicate = e => MustNotBeEmptyOrWhitespacePredicate(e, "key");
 		private static readonly Predicate<ArgumentNullException> stringValueNullPredicate = e => MustNotBeNullPredicate<string>(e, "data");
-		private static readonly Predicate<ArgumentException> stringValueEmptyPredicate =
-			exception => exception.Message == "Parameter data (string) must not be empty or whitespace. (Parameter 'data')";
+		private static readonly Predicate<ArgumentException> stringValueEmptyPredicate = e => MustNotBeEmptyOrWhitespacePredicate(e, "data");
 		private static readonly Predicate<ArgumentNullException> bytesValueNullPredicate = e => MustNotBeNullPredicate<IReadOnlyCollection<byte>>(e, "data");
 		private static readonly Predicate<ArgumentException> bytesValueEmptyPredicate =
 			exception => exception.Message == $"Parameter data ({typeof(IReadOnlyCollection<byte>).ToTypeString()}) must not be empty. (Parameter 'data')";

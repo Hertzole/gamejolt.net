@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace Hertzole.GameJolt
 {
@@ -12,7 +13,7 @@ namespace Hertzole.GameJolt
 	{
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="value" /> is <see langword="null" />.</exception>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void IsNotNull<T>([NotNull] T? value, string paramName) where T : class
+		public static void IsNotNull<T>([NotNull][NoEnumeration] T? value, string paramName) where T : class
 		{
 			if (value is not null)
 			{
@@ -46,6 +47,18 @@ namespace Hertzole.GameJolt
 			}
 
 			ThrowHelper.ThrowArgumentExceptionForIsNotNullOrEmptyNullable(value, paramName);
+		}
+
+		/// <exception cref="ArgumentException">Thrown if the size of <paramref name="value" /> &lt; <paramref name="size" />.</exception>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void HasSizeGreaterThanOrEqualTo<T>(IReadOnlyCollection<T> value, int size, string paramName)
+		{
+			if (value.Count >= size)
+			{
+				return;
+			}
+
+			ThrowHelper.ThrowArgumentExceptionForHasSizeGreaterThanOrEqualTo(value, size, paramName);
 		}
 	}
 }

@@ -292,9 +292,25 @@ namespace GameJolt.NET.Tests
 			Assert.That(caught, Is.True, $"Expected exception of type {typeof(T).Name} was not thrown.");
 		}
 
+		protected static bool MustNotBeEmptyOrWhitespacePredicate(Exception e, string paramName)
+		{
+			return e.Message == $"Parameter {paramName} (string) must not be empty or whitespace. (Parameter '{paramName}')";
+		}
+
 		protected static bool MustNotBeNullPredicate<T>(Exception e, string paramName)
 		{
 			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be null. (Parameter '{paramName}')";
+		}
+
+		protected static bool MustNotBeEmptyPredicate<T>(Exception e, string paramName)
+		{
+			return e.Message == $"Parameter {paramName} ({typeof(T).ToTypeString()}) must not be empty. (Parameter '{paramName}')";
+		}
+
+		protected static bool GreaterThanOrEqualToPredicate<T>(Exception e, string paramName, int size, int actualSize)
+		{
+			return e.Message ==
+			       $"Parameter {paramName} ({typeof(T).ToTypeString()}) must have a size of at least {size}, had a size of {actualSize}. (Parameter '{paramName}')";
 		}
 	}
 }
