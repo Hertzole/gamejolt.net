@@ -3,7 +3,6 @@
 #if UNITY_EDITOR
 using System;
 using System.Threading.Tasks;
-using UnityEditor;
 
 namespace GameJolt.NET.Tests.Unity.Editor
 {
@@ -19,41 +18,77 @@ namespace GameJolt.NET.Tests.Unity.Editor
 
 		protected static async Task EnterPlayModeAsync()
 		{
-			if (EditorApplication.isPlaying)
+			bool hasEnteredPlayMode = false;
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+			try
 			{
-				throw new Exception("Editor is already in PlayMode");
+				if (EditorApplication.isPlaying)
+				{
+					throw new Exception("Editor is already in PlayMode");
+				}
+
+				if (EditorUtility.scriptCompilationFailed)
+				{
+					throw new Exception("Script compilation failed");
+				}
+
+				await Task.Delay(50);
+
+				EditorApplication.UnlockReloadAssemblies();
+				EditorApplication.isPlaying = true;
+
+				do
+				{
+					await Task.Delay(100);
+				} while (!hasEnteredPlayMode);
 			}
-			
-			if (EditorUtility.scriptCompilationFailed)
+			finally
 			{
-				throw new Exception("Script compilation failed");
+				EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 			}
 
-			await Task.Delay(50);
-			
-			EditorApplication.UnlockReloadAssemblies();
-			EditorApplication.isPlaying = true; 
-			
-			while (!EditorApplication.isPlaying)
+			void OnPlayModeStateChanged(PlayModeStateChange obj)
 			{
-				await Task.Delay(50);
+				if (obj == PlayModeStateChange.EnteredPlayMode)
+				{
+					hasEnteredPlayMode = true;
+				}
 			}
 		}
-		
+
 		protected static async Task ExitPlayModeAsync()
 		{
-			if (!EditorApplication.isPlaying)
+			bool hasEnteredEditMode = false;
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+			try
 			{
-				throw new Exception("Editor is not in PlayMode");
-			}
-			
-			await Task.Delay(50);
-			
-			EditorApplication.isPlaying = false;
-			
-			while (EditorApplication.isPlaying)
-			{
+				if (!EditorApplication.isPlaying)
+				{
+					throw new Exception("Editor is not in PlayMode");
+				}
+
 				await Task.Delay(50);
+
+				EditorApplication.isPlaying = false;
+
+				do
+				{
+					await Task.Delay(100);
+				} while (!hasEnteredEditMode);
+			}
+			finally
+			{
+				EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+			}
+
+			void OnPlayModeStateChanged(PlayModeStateChange obj)
+			{
+				if (obj == PlayModeStateChange.EnteredEditMode)
+				{
+					hasEnteredEditMode = true;
+				}
 			}
 		}
 	}
