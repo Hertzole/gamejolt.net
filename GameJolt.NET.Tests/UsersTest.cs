@@ -3,6 +3,8 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Hertzole.GameJolt;
 using NSubstitute;
@@ -309,27 +311,15 @@ strings
 		}
 
 		[Test]
-		public async Task Fetch_Usernames_Success()
+		public async Task GetUsers_Usernames_Success()
 		{
-			User user1 = DummyData.User();
-			User user2 = DummyData.User();
+			// Arrange
+			ArrangeGetUsers("username", out User user1, out User user2);
 
-			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, new[] { user1, user2 }));
-
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
-			{
-				string? arg = info.Arg<string>();
-
-				if (arg.Contains("username="))
-				{
-					return FromResult(userJson);
-				}
-
-				return FromResult("");
-			});
-
+			// Act
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(usernames);
 
+			// Assert
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
@@ -339,33 +329,59 @@ strings
 		}
 
 		[Test]
-		public async Task Fetch_Ids_Success()
+		public async Task GetUsers_Usernames_WithList_Success()
 		{
-			User user1 = DummyData.User();
-			User user2 = DummyData.User();
+			// Arrange
+			ArrangeGetUsers("username", out User user1, out User user2);
+			// Fill with dummy data to make sure the buffer gets cleared
+			List<GameJoltUser> results = new List<GameJoltUser>(DummyData.Many(100, DummyData.User().ToPublicUser));
 
-			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, new[] { user1, user2 }));
+			// Act
+			GameJoltResult result = await GameJoltAPI.Users.GetUsersAsync(usernames, results);
 
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
-			{
-				string? arg = info.Arg<string>();
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(results, Has.Count.EqualTo(2));
+			Assert.That(results[0], Is.EqualTo(user1.ToPublicUser()));
+			Assert.That(results[1], Is.EqualTo(user2.ToPublicUser()));
+		}
 
-				if (arg.Contains("user_id="))
-				{
-					return FromResult(userJson);
-				}
+		[Test]
+		public async Task GetUsers_Ids_Success()
+		{
+			// Arrange
+			ArrangeGetUsers("user_id", out User user1, out User user2);
 
-				return FromResult("");
-			});
-
+			// Act
 			GameJoltResult<GameJoltUser[]> result = await GameJoltAPI.Users.GetUsersAsync(ids);
 
+			// Assert
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
 			Assert.That(result.Value, Has.Length.EqualTo(2));
 			Assert.That(result.Value![0], Is.EqualTo(user1.ToPublicUser()));
 			Assert.That(result.Value![1], Is.EqualTo(user2.ToPublicUser()));
+		}
+
+		[Test]
+		public async Task GetUsers_Ids_WithList_Success()
+		{
+			// Arrange
+			ArrangeGetUsers("user_id", out User user1, out User user2);
+			// Fill with dummy data to make sure the buffer gets cleared
+			List<GameJoltUser> results = new List<GameJoltUser>(DummyData.Many(100, DummyData.User().ToPublicUser));
+
+			// Act
+			GameJoltResult result = await GameJoltAPI.Users.GetUsersAsync(ids, results);
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(result.Exception, Is.Null);
+			Assert.That(results, Has.Count.EqualTo(2));
+			Assert.That(results[0], Is.EqualTo(user1.ToPublicUser()));
+			Assert.That(results[1], Is.EqualTo(user2.ToPublicUser()));
 		}
 
 		[Test]
@@ -537,6 +553,25 @@ strings
 		{
 			await TestUrlAsync(() => GameJoltAPI.Users.GetUsersAsync(ids),
 				url => { Assert.That(url, Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltUsers.ENDPOINT + "?user_id=0,1")); });
+		}
+
+		private static void ArrangeGetUsers(string containArg, out User user1, out User user2)
+		{
+			user1 = DummyData.User();
+			user2 = DummyData.User();
+			string userJson = serializer.SerializeResponse(new UsersFetchResponse(true, null, new[] { user1, user2 }));
+
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(containArg + "="))
+				{
+					return FromResult(userJson);
+				}
+
+				return FromResult("");
+			});
 		}
 	}
 }

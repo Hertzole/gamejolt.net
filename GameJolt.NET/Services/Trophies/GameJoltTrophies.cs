@@ -153,7 +153,7 @@ namespace Hertzole.GameJolt
 
 		/// <summary>
 		///     Get all trophies for the current user with the specified IDs and adds them to the provided
-		///     <paramref name="results" /> list.. This method requires the current user to be authenticated.
+		///     <paramref name="results" /> list. This method requires the current user to be authenticated.
 		/// </summary>
 		/// <param name="trophyIds">The IDs of the trophies to get.</param>
 		/// <param name="results">The results buffer where the trophies will be added to.</param>
