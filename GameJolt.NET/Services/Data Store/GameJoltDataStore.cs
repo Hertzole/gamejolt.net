@@ -808,8 +808,7 @@ namespace Hertzole.GameJolt
 
 			if (Base64.TryConvertBase64ToBytes(result.Value, out MemoryOwner<byte> resultData))
 			{
-				buffer.Clear();
-				buffer.TryEnsureCapacity(resultData.Length);
+				buffer.ClearAndEnsureCapacity(resultData.Length);
 
 				for (int i = 0; i < resultData.Length; i++)
 				{
@@ -949,8 +948,7 @@ namespace Hertzole.GameJolt
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
 
-				buffer.Clear();
-				buffer.TryEnsureCapacity(result.keys.Length);
+				buffer.ClearAndEnsureCapacity(result.keys.Length);
 
 				for (int i = 0; i < result.keys.Length; i++)
 				{

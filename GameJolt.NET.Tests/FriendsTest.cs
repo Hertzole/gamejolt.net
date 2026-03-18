@@ -44,7 +44,7 @@ namespace GameJolt.NET.Tests
 			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, friends);
 			string expectedJson = serializer.SerializeResponse(expectedResponse);
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(expectedJson);
-			List<int> results = new List<int>();
+			List<int> results = new List<int>(DummyData.Many(100, () => DummyData.faker.Random.Int())); // Add dummy data to make sure buffer is cleared.
 
 			// Act
 			GameJoltResult result = await GameJoltAPI.Friends.GetFriendsAsync(results);
@@ -80,7 +80,7 @@ namespace GameJolt.NET.Tests
 			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, null);
 			string expectedJson = serializer.SerializeResponse(expectedResponse);
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(expectedJson);
-			List<int> results = new List<int>();
+			List<int> results = new List<int>(DummyData.Many(100, () => DummyData.faker.Random.Int())); // Add dummy data to make sure buffer is cleared.
 
 			// Act
 			GameJoltResult result = await GameJoltAPI.Friends.GetFriendsAsync(results);
@@ -89,26 +89,6 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(results, Is.Empty);
-		}
-
-		[Test]
-		public async Task Fetch_Buffer_ClearsBuffer()
-		{
-			// Arrange
-			FetchFriendsResponse expectedResponse = new FetchFriendsResponse(true, null, friends);
-			string expectedJson = serializer.SerializeResponse(expectedResponse);
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(expectedJson);
-			List<int> results = new List<int> { 5, 6, 7 };
-
-			// Act
-			GameJoltResult result = await GameJoltAPI.Friends.GetFriendsAsync(results);
-
-			// Assert
-			Assert.That(result.HasError, Is.False);
-			Assert.That(result.Exception, Is.Null);
-			Assert.That(results, Has.Count.EqualTo(2));
-			Assert.That(results[0], Is.EqualTo(0));
-			Assert.That(results[1], Is.EqualTo(1));
 		}
 
 		[Test]

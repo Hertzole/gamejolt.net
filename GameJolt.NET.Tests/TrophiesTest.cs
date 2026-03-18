@@ -52,11 +52,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetTrophies_Buffer_Authenticated_ReturnsTrophies()
 		{
 			// Arrange
-			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>
-			{
-				// Add some dummy data to make sure the buffer is cleared before use.
-				DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy()
-			};
+			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>(DummyData.Many(100, () => DummyData.Trophy().ToPublicTrophy()));
 
 			TrophyInternal trophy = DummyData.Trophy();
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
@@ -159,11 +155,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetTrophies_Buffer_Authenticated_Achieved_ReturnsTrophies([Values] bool achieved)
 		{
 			// Arrange
-			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>
-			{
-				// Add some dummy data to make sure the buffer is cleared before use.
-				DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy()
-			};
+			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>(DummyData.Many(100, () => DummyData.Trophy().ToPublicTrophy()));
 
 			TrophyInternal trophy = DummyData.Trophy();
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>

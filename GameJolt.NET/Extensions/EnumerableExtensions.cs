@@ -2,8 +2,8 @@
 
 #nullable enable
 
-using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Hertzole.GameJolt
 {
@@ -23,15 +23,7 @@ namespace Hertzole.GameJolt
 #endif
 		}
 
-		[Obsolete("Use ClearAndEnsureCapacity instead.")]
-		public static void TryEnsureCapacity<T>(this IList<T> list, int capacity)
-		{
-			if (list is List<T> concreteList)
-			{
-				concreteList.EnsureCapacity(capacity);
-			}
-		}
-
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void ClearAndEnsureCapacity<T>(this IList<T> list, int capacity)
 		{
 			list.Clear();

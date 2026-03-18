@@ -66,7 +66,7 @@ namespace Hertzole.GameJolt
 		///     Gets all trophies for the current user and adds them to the provided <paramref name="results" /> list. This method
 		///     will get both locked and unlocked trophies. This method requires the current user to be authenticated.
 		/// </summary>
-		/// <param name="results">The results buffer where the trophies will be added to.</param>
+		/// <param name="results">The results buffer where the trophies will be added to. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
@@ -112,7 +112,7 @@ namespace Hertzole.GameJolt
 		///     Pass in <c>true</c> to only get trophies that are unlocked, <c>false</c> to only get trophies
 		///     that are locked.
 		/// </param>
-		/// <param name="results">The results buffer where the trophies will be added to.</param>
+		/// <param name="results">The results buffer where the trophies will be added to. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
@@ -155,7 +155,7 @@ namespace Hertzole.GameJolt
 		///     <paramref name="results" /> list. This method requires the current user to be authenticated.
 		/// </summary>
 		/// <param name="trophyIds">The IDs of the trophies to get.</param>
-		/// <param name="results">The results buffer where the trophies will be added to.</param>
+		/// <param name="results">The results buffer where the trophies will be added to. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
@@ -235,8 +235,7 @@ namespace Hertzole.GameJolt
 					return GameJoltResult.Error(exception);
 				}
 
-				results.Clear();
-				results.TryEnsureCapacity(response.trophies.Length);
+				results.ClearAndEnsureCapacity(response.trophies.Length);
 
 				for (int i = 0; i < response.trophies.Length; i++)
 				{

@@ -30,7 +30,9 @@ namespace Hertzole.GameJolt
 		{
 			if (!string.IsNullOrWhiteSpace(value))
 			{
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
 				return;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 			}
 
 			ThrowHelper.ThrowArgumentExceptionForIsNotNullOrWhiteSpace(value, paramName);

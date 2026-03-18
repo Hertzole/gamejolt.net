@@ -268,7 +268,7 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Fetches all the available score tables for your game and adds them to the provided <paramref name="results" /> list.
 		/// </summary>
-		/// <param name="results">The list to put the results in. This list will be cleared before adding the results.</param>
+		/// <param name="results">The list to put the results in. This list will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null" />.</exception>
@@ -302,8 +302,7 @@ namespace Hertzole.GameJolt
 					return GameJoltResult.Error(exception);
 				}
 
-				buffer.Clear();
-				buffer.TryEnsureCapacity(response.tables.Length);
+				buffer.ClearAndEnsureCapacity(response.tables.Length);
 
 				for (int i = 0; i < response.tables.Length; i++)
 				{

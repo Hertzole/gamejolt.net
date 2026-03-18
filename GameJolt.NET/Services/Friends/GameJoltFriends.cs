@@ -53,7 +53,7 @@ namespace Hertzole.GameJolt
 		///     Lists all the friends of the authenticated user and adds their IDs to the provided <paramref name="results" />
 		///     list. This method requires the current user to be authenticated.
 		/// </summary>
-		/// <param name="results">The results buffer where the IDs will be added to.</param>
+		/// <param name="results">The results buffer where the IDs will be added to. This will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
@@ -89,8 +89,7 @@ namespace Hertzole.GameJolt
 
 				Debug.Assert(response.Success, "Response was successful, but Success was false.");
 
-				results.Clear();
-				results.TryEnsureCapacity(response.friends.Length);
+				results.ClearAndEnsureCapacity(response.friends.Length);
 				for (int i = 0; i < response.friends.Length; i++)
 				{
 					results.Add(response.friends[i].id);
