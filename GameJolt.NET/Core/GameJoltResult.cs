@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Hertzole.GameJolt
@@ -15,6 +16,8 @@ namespace Hertzole.GameJolt
 	public readonly struct GameJoltResult<T> : IEquatable<GameJoltResult<T>>, IGameJoltResult<T>
 	{
 		/// <inheritdoc />
+		[MemberNotNullWhen(true, nameof(Exception))]
+		[MemberNotNullWhen(false, nameof(Value))]
 		public bool HasError { get; }
 		/// <inheritdoc />
 		public Exception? Exception { get; }
@@ -150,6 +153,7 @@ namespace Hertzole.GameJolt
 	public readonly struct GameJoltResult : IEquatable<GameJoltResult>, IGameJoltResult
 	{
 		/// <inheritdoc />
+		[MemberNotNullWhen(true, nameof(Exception))]
 		public bool HasError { get; }
 		/// <inheritdoc />
 		public Exception? Exception { get; }

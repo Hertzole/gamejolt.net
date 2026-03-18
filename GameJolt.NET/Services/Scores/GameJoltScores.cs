@@ -53,9 +53,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return result;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
@@ -85,9 +85,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(score, nameof(score));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return result;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await SubmitScoreInternalAsync(tableId, users.myUsername, users.myToken, null, sort.ToString(CultureInfo.InvariantCulture), score, extraData,
@@ -206,7 +206,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -236,7 +236,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<int>.Error(exception!);
+					return GameJoltResult<int>.Error(exception);
 				}
 
 				Debug.Assert(response.success, "Response was successful but success was false.");
@@ -258,7 +258,7 @@ namespace Hertzole.GameJolt
 
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltTable[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltTable[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltTable[]>.Success(buffer.ToArray());
@@ -299,7 +299,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				buffer.Clear();
@@ -358,7 +358,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				for (int i = 0; i < response.scores.Length; i++)

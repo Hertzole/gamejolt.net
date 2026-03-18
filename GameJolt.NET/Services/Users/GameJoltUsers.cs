@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,7 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Gets if the user is authenticated.
 		/// </summary>
+		[MemberNotNullWhen(true, nameof(myUsername), nameof(myToken))]
 		public bool IsAuthenticated { get; private set; }
 
 		/// <summary>
@@ -92,7 +94,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				GameJoltResult<GameJoltUser> fetchResponse = await GetUserAsync(myUsername, cancellationToken);
@@ -147,7 +149,7 @@ namespace Hertzole.GameJolt
 			    && QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
 			    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
 			{
-				return await AuthenticateAsync(username!, token!, cancellationToken);
+				return await AuthenticateAsync(username, token, cancellationToken);
 			}
 
 			return GameJoltResult.Error(new ArgumentException("Invalid URL.", nameof(url)));
@@ -256,7 +258,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<GameJoltUser>.Error(exception!);
+					return GameJoltResult<GameJoltUser>.Error(exception);
 				}
 
 				if (response.Users.Length == 0)
@@ -286,7 +288,7 @@ namespace Hertzole.GameJolt
 
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltUser[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltUser[]>.Success(results.ToArray());
@@ -333,7 +335,7 @@ namespace Hertzole.GameJolt
 
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltUser[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltUser[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltUser[]>.Success(results.ToArray());
@@ -386,7 +388,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				if (response.Users.Length == 0)
@@ -405,28 +407,17 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		internal bool IsAuthenticatedInternal(out GameJoltResult result)
+		[MemberNotNullWhen(false, nameof(myUsername), nameof(myToken))]
+		internal bool IsNotAuthenticated([NotNullWhen(true)] out Exception? exception)
 		{
 			if (!IsAuthenticated)
 			{
-				result = GameJoltResult.Error(new GameJoltAuthorizedException());
-				return false;
+				exception = new GameJoltAuthorizedException();
+				return true;
 			}
 
-			result = default;
-			return true;
-		}
-
-		internal bool IsAuthenticatedInternal<T>(out GameJoltResult<T> result)
-		{
-			if (!IsAuthenticated)
-			{
-				result = GameJoltResult<T>.Error(new GameJoltAuthorizedException());
-				return false;
-			}
-
-			result = default;
-			return true;
+			exception = null;
+			return false;
 		}
 
 		internal void Shutdown()

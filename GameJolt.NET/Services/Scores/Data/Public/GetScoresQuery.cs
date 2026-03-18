@@ -187,7 +187,7 @@ namespace Hertzole.GameJolt
 
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltScore[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltScore[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltScore[]>.Success(buffer.ToArray());

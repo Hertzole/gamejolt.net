@@ -42,7 +42,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetFriendsInternalAsync(results, cancellationToken).ConfigureAwait(false);
 				if (result.HasError)
 				{
-					return GameJoltResult<int[]>.Error(result.Exception!);
+					return GameJoltResult<int[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<int[]>.Success(results.ToArray());
@@ -67,9 +67,9 @@ namespace Hertzole.GameJolt
 
 		private async Task<GameJoltResult> GetFriendsInternalAsync(IList<int> results, CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			using (StringBuilderPool.Rent(out StringBuilder sb))
@@ -84,7 +84,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(response.Success, "Response was successful, but Success was false.");

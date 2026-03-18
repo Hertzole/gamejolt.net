@@ -2,6 +2,11 @@
 
 #nullable enable
 
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
+#else
+using GameJoltTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
+#endif
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -9,12 +14,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
-
-#else
-using GameJoltTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
-#endif
 
 namespace Hertzole.GameJolt
 {
@@ -56,7 +55,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetTrophiesInternalAsync(null, 0, null, results, cancellationToken).ConfigureAwait(false);
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltTrophy[]>.Success(results.ToArray());
@@ -97,7 +96,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetTrophiesInternalAsync(null, 0, getAchieved, results, cancellationToken);
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltTrophy[]>.Success(results.ToArray());
@@ -144,7 +143,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltTrophy[]>.Success(results.ToArray());
@@ -195,10 +194,10 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<GameJoltTrophy>.Error(result.Exception!);
+				return GameJoltResult<GameJoltTrophy>.Error(result.Exception);
 			}
 
-			Debug.Assert(results!.Count == 1, "Result length was not 1.");
+			Debug.Assert(results.Count == 1, "Result length was not 1.");
 
 			return GameJoltResult<GameJoltTrophy>.Success(results[0]);
 		}
@@ -209,9 +208,9 @@ namespace Hertzole.GameJolt
 			IList<GameJoltTrophy> results,
 			CancellationToken cancellationToken)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
@@ -233,7 +232,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				results.Clear();
@@ -299,9 +298,9 @@ namespace Hertzole.GameJolt
 		/// </exception>
 		public async Task<GameJoltResult> UnlockTrophyAsync(int trophyId, bool errorIfUnlocked = false, CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
@@ -316,9 +315,9 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception!, errorIfUnlocked))
+				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception, errorIfUnlocked))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				return GameJoltResult.Success();
@@ -343,9 +342,9 @@ namespace Hertzole.GameJolt
 		/// </exception>
 		public async Task<GameJoltResult> RemoveUnlockedTrophyAsync(int trophyId, bool errorIfNotUnlocked = true, CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
@@ -360,9 +359,9 @@ namespace Hertzole.GameJolt
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
-				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception!, errorIfNotUnlocked))
+				if (response.TryGetException(out Exception? exception) && ShouldTrophyReturnError(exception, errorIfNotUnlocked))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				return GameJoltResult.Success();
