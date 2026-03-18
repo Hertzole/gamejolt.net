@@ -1,3 +1,5 @@
+#if !DISABLE_GAMEJOLT
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -213,3 +215,4 @@ namespace Hertzole.GameJolt
 		}
 	}
 }
+#endif
