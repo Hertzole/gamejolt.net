@@ -17,8 +17,7 @@ namespace GameJolt.NET.Tests
 		private static readonly Predicate<ArgumentNullException> stringValueNullPredicate = e => MustNotBeNullPredicate<string>(e, "data");
 		private static readonly Predicate<ArgumentException> stringValueEmptyPredicate = e => MustNotBeEmptyOrWhitespacePredicate(e, "data");
 		private static readonly Predicate<ArgumentNullException> bytesValueNullPredicate = e => MustNotBeNullPredicate<IReadOnlyCollection<byte>>(e, "data");
-		private static readonly Predicate<ArgumentException> bytesValueEmptyPredicate =
-			exception => exception.Message == $"Parameter data ({typeof(IReadOnlyCollection<byte>).ToTypeString()}) must not be empty. (Parameter 'data')";
+		private static readonly Predicate<ArgumentException> bytesValueEmptyPredicate = e => MustNotBeEmptyPredicate<IReadOnlyCollection<byte>>(e, "data");
 
 		[Test]
 		public async Task SetAsync_String_Guards()
