@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hertzole.GameJolt
 {
@@ -35,7 +36,7 @@ namespace Hertzole.GameJolt
 			{
 				ThrowIfNotInitialized();
 
-				return users!;
+				return users;
 			}
 		}
 
@@ -126,6 +127,7 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Has the API been initialized?
 		/// </summary>
+		[MemberNotNullWhen(true, nameof(users))]
 		public static bool IsInitialized { get; private set; }
 
 		/// <summary>
@@ -174,7 +176,7 @@ namespace Hertzole.GameJolt
 			// Call the event before cleaning up so that the event can still access the API.
 			OnShutdown?.Invoke();
 
-			users!.Shutdown();
+			users.Shutdown();
 
 			webClient.Dispose();
 
@@ -194,6 +196,7 @@ namespace Hertzole.GameJolt
 		///     Throws an exception if the API has not been initialized.
 		/// </summary>
 		/// <exception cref="GameJoltInitializationException">Thrown if the API has not been initialized.</exception>
+		[MemberNotNull(nameof(users))]
 		private static void ThrowIfNotInitialized()
 		{
 			if (!IsInitialized)
@@ -210,7 +213,7 @@ namespace Hertzole.GameJolt
 			return new NewtonsoftJsonSerializer();
 #endif
 		}
-		
+
 		internal static IGameJoltWebClient GetWebClient()
 		{
 #if UNITY_2021_1_OR_NEWER

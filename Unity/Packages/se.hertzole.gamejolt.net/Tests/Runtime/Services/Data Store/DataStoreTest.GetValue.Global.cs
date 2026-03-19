@@ -258,8 +258,8 @@ namespace GameJolt.NET.Tests
 		public async Task GetValueGlobal_Buffer_Bytes_Success()
 		{
 			// Arrange
-			byte[] bytes = DummyData.Bytes();
-			List<byte> buffer = new List<byte>();
+			byte[] bytes = DummyData.Bytes(10);
+			List<byte> buffer = new List<byte>(DummyData.Bytes()); // Add dummy data to make sure buffer is cleared.
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
 			{
 				string json = serializer.SerializeResponse(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
@@ -305,7 +305,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetValueGlobal_Buffer_Bytes_EmptyValue_Success()
 		{
 			// Arrange
-			List<byte> buffer = new List<byte>();
+			List<byte> buffer = new List<byte>(DummyData.Bytes()); // Add dummy data to make sure buffer is cleared.
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
 			{
 				string json = serializer.SerializeResponse(new GetDataResponse(true, null, string.Empty));

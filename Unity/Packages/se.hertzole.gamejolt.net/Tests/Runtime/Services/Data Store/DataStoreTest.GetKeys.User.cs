@@ -59,7 +59,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetKeysUser_Buffer_Authenticated_Success(string pattern)
 		{
 			// Arrange
-			List<string> buffer = new List<string>();
+			List<string> buffer = new List<string>(DummyData.Many(100, () => DummyData.faker.Lorem.Sentence()));
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();
@@ -120,7 +120,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetKeysUser_Buffer_Authenticated_Success_NoKeys()
 		{
 			// Arrange
-			List<string> buffer = new List<string>();
+			List<string> buffer = new List<string>(DummyData.Many(100, () => DummyData.faker.Lorem.Sentence()));
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
 			{
 				string? arg = info.Arg<string>();

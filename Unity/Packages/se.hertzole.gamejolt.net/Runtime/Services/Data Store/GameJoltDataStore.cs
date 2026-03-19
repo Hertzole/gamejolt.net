@@ -9,17 +9,6 @@ using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltResultTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
-using StringIntTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
-using GameJoltStringTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult<string>>;
-
-#else
-using GameJoltResultTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
-using StringIntTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<(string stringValue, int intValue)>>;
-using GameJoltStringTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string>>;
-using GameJoltStringArrayTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult<string[]>>;
-#endif
 
 namespace Hertzole.GameJolt
 {
@@ -128,9 +117,9 @@ namespace Hertzole.GameJolt
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 			Guard.IsNotNullOrWhiteSpace(data, nameof(data));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return authResult;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await SetInternalAsync(key, data, users.myUsername, users.myToken, cancellationToken);
@@ -151,9 +140,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return authResult;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await SetInternalAsync(key, data.ToString(CultureInfo.InvariantCulture), users.myUsername, users.myToken, cancellationToken);
@@ -175,9 +164,9 @@ namespace Hertzole.GameJolt
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 			Guard.IsNotNullOrEmpty(data, nameof(data));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return authResult;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await SetInternalAsync(key, Convert.ToBase64String(data), users.myUsername, users.myToken, cancellationToken);
@@ -198,9 +187,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return authResult;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await SetInternalAsync(key, data ? "true" : "false", users.myUsername, users.myToken, cancellationToken);
@@ -216,13 +205,8 @@ namespace Hertzole.GameJolt
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the operation.</returns>
 		/// <exception cref="ArgumentException">Thrown if <paramref name="data" /> is null, empty, or whitespace.</exception>
-		private async GameJoltResultTask SetInternalAsync(string key, string data, string? username, string? token, CancellationToken cancellationToken)
+		private async Task<GameJoltResult> SetInternalAsync(string key, string data, string? username, string? token, CancellationToken cancellationToken)
 		{
-			if (string.IsNullOrWhiteSpace(data))
-			{
-				return GameJoltResult.Error(new ArgumentException("Data cannot be null, empty, or whitespace.", nameof(data)));
-			}
-
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
 				sb.Append(SET_ENDPOINT + "?key=");
@@ -247,7 +231,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
@@ -284,15 +268,15 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return authResult;
+				return GameJoltResult.Error(exception);
 			}
 
 			return await RemoveInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 		}
 
-		private async GameJoltResultTask RemoveInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
+		private async Task<GameJoltResult> RemoveInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -316,7 +300,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
@@ -347,7 +331,7 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<string>.Error(result.Exception!);
+				return GameJoltResult<string>.Error(result.Exception);
 			}
 
 			return GameJoltResult<string>.Success(result.Value.stringValue);
@@ -374,7 +358,7 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<int>.Error(result.Exception!);
+				return GameJoltResult<int>.Error(result.Exception);
 			}
 
 			return GameJoltResult<int>.Success(result.Value.intValue);
@@ -400,9 +384,9 @@ namespace Hertzole.GameJolt
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 			Guard.IsNotNullOrWhiteSpace(data, nameof(data));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<string>.Error(authResult.Exception!);
+				return GameJoltResult<string>.Error(exception);
 			}
 
 			GameJoltResult<(string stringValue, int intValue)> result =
@@ -410,7 +394,7 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<string>.Error(result.Exception!);
+				return GameJoltResult<string>.Error(result.Exception);
 			}
 
 			return GameJoltResult<string>.Success(result.Value.stringValue);
@@ -435,9 +419,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<int>.Error(authResult.Exception!);
+				return GameJoltResult<int>.Error(exception);
 			}
 
 			GameJoltResult<(string stringValue, int intValue)> result =
@@ -446,13 +430,13 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<int>.Error(result.Exception!);
+				return GameJoltResult<int>.Error(result.Exception);
 			}
 
 			return GameJoltResult<int>.Success(result.Value.intValue);
 		}
 
-		private async StringIntTask UpdateInternalAsync(string key,
+		private async Task<GameJoltResult<(string, int)>> UpdateInternalAsync(string key,
 			string operation,
 			string value,
 			string? username,
@@ -486,7 +470,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<(string, int)>.Error(exception!);
+					return GameJoltResult<(string, int)>.Error(exception);
 				}
 
 				Debug.Assert(response.Success, "Result was successful, but the success flag was false.");
@@ -535,7 +519,7 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<int>.Error(result.Exception!);
+				return GameJoltResult<int>.Error(result.Exception);
 			}
 
 			if (!int.TryParse(result.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
@@ -566,7 +550,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetBytesValueInternalAsync(key, null, null, buffer, cancellationToken);
 				if (result.HasError)
 				{
-					return GameJoltResult<byte[]>.Error(result.Exception!);
+					return GameJoltResult<byte[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<byte[]>.Success(buffer.ToArray());
@@ -607,7 +591,7 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult<bool>.Error(result.Exception!);
+				return GameJoltResult<bool>.Error(result.Exception);
 			}
 
 			if (!bool.TryParse(result.Value, out bool boolValue))
@@ -631,9 +615,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<string>.Error(authResult.Exception!);
+				return GameJoltResult<string>.Error(exception);
 			}
 
 			return await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
@@ -653,16 +637,16 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<int>.Error(authResult.Exception!);
+				return GameJoltResult<int>.Error(exception);
 			}
 
 			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 
 			if (result.HasError)
 			{
-				return GameJoltResult<int>.Error(result.Exception!);
+				return GameJoltResult<int>.Error(result.Exception);
 			}
 
 			if (!int.TryParse(result.Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
@@ -687,9 +671,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<byte[]>.Error(authResult.Exception!);
+				return GameJoltResult<byte[]>.Error(exception);
 			}
 
 			using (ListPool<byte>.Rent(out List<byte> buffer))
@@ -697,7 +681,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, buffer, cancellationToken);
 				if (result.HasError)
 				{
-					return GameJoltResult<byte[]>.Error(result.Exception!);
+					return GameJoltResult<byte[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<byte[]>.Success(buffer.ToArray());
@@ -722,15 +706,15 @@ namespace Hertzole.GameJolt
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 			Guard.IsNotNull(results, nameof(results));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult.Error(authResult.Exception!);
+				return GameJoltResult.Error(exception);
 			}
 
 			GameJoltResult getBytesResult = await GetBytesValueInternalAsync(key, users.myUsername, users.myToken, results, cancellationToken);
 			if (getBytesResult.HasError)
 			{
-				return GameJoltResult.Error(getBytesResult.Exception!);
+				return GameJoltResult.Error(getBytesResult.Exception);
 			}
 
 			return GameJoltResult.Success();
@@ -751,16 +735,16 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNullOrWhiteSpace(key, nameof(key));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<bool>.Error(authResult.Exception!);
+				return GameJoltResult<bool>.Error(exception);
 			}
 
 			GameJoltResult<string> result = await GetValueInternalAsync(key, users.myUsername, users.myToken, cancellationToken);
 
 			if (result.HasError)
 			{
-				return GameJoltResult<bool>.Error(result.Exception!);
+				return GameJoltResult<bool>.Error(result.Exception);
 			}
 
 			if (!bool.TryParse(result.Value, out bool boolValue))
@@ -771,7 +755,7 @@ namespace Hertzole.GameJolt
 			return GameJoltResult<bool>.Success(boolValue);
 		}
 
-		private async GameJoltStringTask GetValueInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
+		private async Task<GameJoltResult<string>> GetValueInternalAsync(string key, string? username, string? token, CancellationToken cancellationToken)
 		{
 			using (StringBuilderPool.Rent(out StringBuilder sb))
 			{
@@ -795,7 +779,7 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<string>.Error(exception!);
+					return GameJoltResult<string>.Error(exception);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
@@ -814,7 +798,7 @@ namespace Hertzole.GameJolt
 
 			if (result.HasError)
 			{
-				return GameJoltResult.Error(result.Exception!);
+				return GameJoltResult.Error(result.Exception);
 			}
 
 			if (string.IsNullOrEmpty(result.Value))
@@ -824,8 +808,7 @@ namespace Hertzole.GameJolt
 
 			if (Base64.TryConvertBase64ToBytes(result.Value, out MemoryOwner<byte> resultData))
 			{
-				buffer.Clear();
-				buffer.TryEnsureCapacity(resultData.Length);
+				buffer.ClearAndEnsureCapacity(resultData.Length);
 
 				for (int i = 0; i < resultData.Length; i++)
 				{
@@ -852,7 +835,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetKeysInternalAsync(pattern, null, null, buffer, cancellationToken);
 				if (result.HasError)
 				{
-					return GameJoltResult<string[]>.Error(result.Exception!);
+					return GameJoltResult<string[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<string[]>.Success(buffer.ToArray());
@@ -885,9 +868,9 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		public async Task<GameJoltResult<string[]>> GetKeysAsCurrentUserAsync(string? pattern = null, CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult<string[]>.Error(authResult.Exception!);
+				return GameJoltResult<string[]>.Error(exception);
 			}
 
 			using (ListPool<string>.Rent(out List<string> buffer))
@@ -895,7 +878,7 @@ namespace Hertzole.GameJolt
 				GameJoltResult result = await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, buffer, cancellationToken);
 				if (result.HasError)
 				{
-					return GameJoltResult<string[]>.Error(result.Exception!);
+					return GameJoltResult<string[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<string[]>.Success(buffer.ToArray());
@@ -918,9 +901,9 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNull(results, nameof(results));
 
-			if (!users.IsAuthenticatedInternal(out GameJoltResult authResult))
+			if (users.IsNotAuthenticated(out Exception? exception))
 			{
-				return GameJoltResult.Error(authResult.Exception!);
+				return GameJoltResult.Error(exception);
 			}
 
 			return await GetKeysInternalAsync(pattern, users.myUsername, users.myToken, results, cancellationToken);
@@ -960,13 +943,12 @@ namespace Hertzole.GameJolt
 
 				if (result.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(result.Success, "Result was successful, but the success flag was false.");
 
-				buffer.Clear();
-				buffer.TryEnsureCapacity(result.keys.Length);
+				buffer.ClearAndEnsureCapacity(result.keys.Length);
 
 				for (int i = 0; i < result.keys.Length; i++)
 				{
