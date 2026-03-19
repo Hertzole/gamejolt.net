@@ -803,6 +803,7 @@ namespace Hertzole.GameJolt
 
 			if (string.IsNullOrEmpty(result.Value))
 			{
+				buffer.Clear();
 				return GameJoltResult.Success();
 			}
 
