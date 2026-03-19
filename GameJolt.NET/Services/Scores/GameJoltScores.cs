@@ -360,6 +360,8 @@ namespace Hertzole.GameJolt
 					return GameJoltResult.Error(exception);
 				}
 
+				buffer.ClearAndEnsureCapacity(response.scores.Length);
+
 				for (int i = 0; i < response.scores.Length; i++)
 				{
 					buffer.Add(response.scores[i].ToPublicScore());
