@@ -21,7 +21,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<string> memory = lines.GetMemory())
 			{
-				return await users.AuthenticateFromCredentialsFileAsync(memory.AsMemory(), cancellationToken);
+				return await users.AuthenticateFromCredentialsFileAsync(memory, cancellationToken);
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<string> memory = lines.GetMemory())
 			{
-				return await users.AuthenticateFromCredentialsFileAsync(memory.AsMemory(), cancellationToken);
+				return await users.AuthenticateFromCredentialsFileAsync(memory, cancellationToken);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<string> memory = usernames.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), cancellationToken);
+				return await users.GetUsersAsync(memory, cancellationToken);
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<string> memory = usernames.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), results, cancellationToken);
+				return await users.GetUsersAsync(memory, results, cancellationToken);
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<string> memory = usernames.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), cancellationToken);
+				return await users.GetUsersAsync(memory, cancellationToken);
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<string> memory = usernames.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), results, cancellationToken);
+				return await users.GetUsersAsync(memory, results, cancellationToken);
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<int> memory = userIds.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), cancellationToken);
+				return await users.GetUsersAsync(memory, cancellationToken);
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<int> memory = userIds.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), results, cancellationToken);
+				return await users.GetUsersAsync(memory, results, cancellationToken);
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<int> memory = userIds.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), cancellationToken);
+				return await users.GetUsersAsync(memory, cancellationToken);
 			}
 		}
 
@@ -151,7 +151,7 @@ namespace Hertzole.GameJolt
 
 			using (MemoryOwner<int> memory = userIds.GetMemory())
 			{
-				return await users.GetUsersAsync(memory.AsMemory(), results, cancellationToken);
+				return await users.GetUsersAsync(memory, results, cancellationToken);
 			}
 		}
 	}

@@ -2,18 +2,18 @@
 
 #nullable enable
 
-#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
-using GameJoltTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
-#else
-using GameJoltTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
-#endif
 using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+#if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER || UNITY_2021_3_OR_NEWER
+using GameJoltTask = System.Threading.Tasks.ValueTask<Hertzole.GameJolt.GameJoltResult>;
+
+#else
+using GameJoltTask = System.Threading.Tasks.Task<Hertzole.GameJolt.GameJoltResult>;
+#endif
 
 namespace Hertzole.GameJolt
 {
@@ -26,15 +26,11 @@ namespace Hertzole.GameJolt
 		private readonly IGameJoltSerializer serializer;
 		private readonly GameJoltUsers users;
 
-		private readonly ArrayPool<int> intPool;
-
 		internal GameJoltTrophies(IGameJoltWebClient webClient, IGameJoltSerializer serializer, GameJoltUsers users)
 		{
 			this.webClient = webClient;
 			this.serializer = serializer;
 			this.users = users;
-
-			intPool = ArrayPool<int>.Create();
 		}
 
 		internal const string ENDPOINT = "trophies/";
@@ -52,7 +48,7 @@ namespace Hertzole.GameJolt
 		{
 			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
 			{
-				GameJoltResult result = await GetTrophiesInternalAsync(null, 0, null, results, cancellationToken).ConfigureAwait(false);
+				GameJoltResult result = await GetTrophiesInternalAsync(null, null, results, cancellationToken).ConfigureAwait(false);
 				if (result.HasError)
 				{
 					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception);
@@ -75,7 +71,7 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNull(results, nameof(results));
 
-			return await GetTrophiesInternalAsync(null, 0, null, results, cancellationToken).ConfigureAwait(false);
+			return await GetTrophiesInternalAsync(null, null, results, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -93,7 +89,7 @@ namespace Hertzole.GameJolt
 		{
 			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
 			{
-				GameJoltResult result = await GetTrophiesInternalAsync(null, 0, getAchieved, results, cancellationToken);
+				GameJoltResult result = await GetTrophiesInternalAsync(null, getAchieved, results, cancellationToken);
 				if (result.HasError)
 				{
 					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception);
@@ -121,7 +117,7 @@ namespace Hertzole.GameJolt
 		{
 			Guard.IsNotNull(results, nameof(results));
 
-			return await GetTrophiesInternalAsync(null, 0, getAchieved, results, cancellationToken);
+			return await GetTrophiesInternalAsync(null, getAchieved, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -133,14 +129,11 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and the trophies.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="trophyIds" /> is <see langword="null" />.</exception>
-		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(IEnumerable<int> trophyIds, CancellationToken cancellationToken = default)
+		public async Task<GameJoltResult<GameJoltTrophy[]>> GetTrophiesAsync(ReadOnlyMemory<int> trophyIds, CancellationToken cancellationToken = default)
 		{
-			Guard.IsNotNull(trophyIds, nameof(trophyIds));
-
 			using (ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results))
 			{
-				GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
+				GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, null, results, cancellationToken);
 				if (result.HasError)
 				{
 					return GameJoltResult<GameJoltTrophy[]>.Error(result.Exception);
@@ -160,18 +153,14 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="GameJoltAuthorizedException">Returned if the user is not authenticated.</exception>
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if any of the trophy IDs can't be found on the server.</exception>
-		/// <exception cref="ArgumentNullException">
-		///     Thrown if <paramref name="trophyIds" /> or <paramref name="results" /> is
-		///     <see langword="null" />.
-		/// </exception>
-		public async Task<GameJoltResult> GetTrophiesAsync(IEnumerable<int> trophyIds,
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results" /> is <see langword="null" />.</exception>
+		public async Task<GameJoltResult> GetTrophiesAsync(ReadOnlyMemory<int> trophyIds,
 			IList<GameJoltTrophy> results,
 			CancellationToken cancellationToken = default)
 		{
-			Guard.IsNotNull(trophyIds, nameof(trophyIds));
 			Guard.IsNotNull(results, nameof(results));
 
-			return await GetTrophiesInternalAsync(trophyIds, -1, null, results, cancellationToken);
+			return await GetTrophiesInternalAsync(trophyIds, null, results, cancellationToken);
 		}
 
 		/// <summary>
@@ -185,25 +174,29 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltInvalidTrophyException">Returned if the trophy can't be found on the server.</exception>
 		public async Task<GameJoltResult<GameJoltTrophy>> GetTrophyAsync(int trophyId, CancellationToken cancellationToken = default)
 		{
-			int[] trophyIds = intPool.Rent(1);
+			int[] trophyIds = ArrayPool<int>.Shared.Rent(1);
 			trophyIds[0] = trophyId;
-			using PoolHandle<List<GameJoltTrophy>> scope = ListPool<GameJoltTrophy>.Rent(out List<GameJoltTrophy> results);
-			GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, 1, null, results, cancellationToken);
+			List<GameJoltTrophy> results = ListPool<GameJoltTrophy>.Rent();
 
-			intPool.Return(trophyIds);
-
-			if (result.HasError)
+			try
 			{
-				return GameJoltResult<GameJoltTrophy>.Error(result.Exception);
+				GameJoltResult result = await GetTrophiesInternalAsync(trophyIds, null, results, cancellationToken);
+
+				if (result.HasError)
+				{
+					return GameJoltResult<GameJoltTrophy>.Error(result.Exception);
+				}
+
+				return GameJoltResult<GameJoltTrophy>.Success(results[0]);
 			}
-
-			Debug.Assert(results.Count == 1, "Result length was not 1.");
-
-			return GameJoltResult<GameJoltTrophy>.Success(results[0]);
+			finally
+			{
+				ListPool<GameJoltTrophy>.Return(results);
+				ArrayPool<int>.Shared.Return(trophyIds);
+			}
 		}
 
-		internal async GameJoltTask GetTrophiesInternalAsync(IEnumerable<int>? trophyIds,
-			int idLength,
+		private async GameJoltTask GetTrophiesInternalAsync(ReadOnlyMemory<int>? trophyIds,
 			bool? getAchieved,
 			IList<GameJoltTrophy> results,
 			CancellationToken cancellationToken)
@@ -225,7 +218,7 @@ namespace Hertzole.GameJolt
 					builder.Append(getAchieved.Value ? "true" : "false");
 				}
 
-				WriteTrophyIds(trophyIds, idLength, builder);
+				WriteTrophyIds(trophyIds, builder);
 
 				string json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				FetchTrophiesResponse response = serializer.DeserializeResponse<FetchTrophiesResponse>(json);
@@ -246,35 +239,24 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		private static void WriteTrophyIds(IEnumerable<int>? trophyIds, int idLength, StringBuilder builder)
+		private static void WriteTrophyIds(ReadOnlyMemory<int>? trophyIds, StringBuilder builder)
 		{
 			if (trophyIds == null)
 			{
 				return;
 			}
 
-			bool addComma = false;
-
 			builder.Append("&trophy_id=");
-			int i = 0;
 
-			foreach (int trophyId in trophyIds)
+			ReadOnlySpan<int> span = trophyIds.Value.Span;
+			int lastIndex = span.Length - 1;
+
+			for (int i = 0; i < span.Length; i++)
 			{
-				if (addComma)
+				builder.Append(span[i]);
+				if (i < lastIndex)
 				{
 					builder.Append(',');
-				}
-				else
-				{
-					addComma = true;
-				}
-
-				builder.Append(trophyId);
-				i++;
-
-				if (i >= idLength && idLength >= 0)
-				{
-					break;
 				}
 			}
 		}

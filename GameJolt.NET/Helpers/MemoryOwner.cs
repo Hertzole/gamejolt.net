@@ -46,9 +46,9 @@ namespace Hertzole.GameJolt
 			}
 		}
 
-		public Memory<T> AsMemory()
+		public static implicit operator ReadOnlyMemory<T>(MemoryOwner<T> owner)
 		{
-			return new Memory<T>(array, 0, Length);
+			return new ReadOnlyMemory<T>(owner.array, 0, owner.Length);
 		}
 
 		/// <inheritdoc />
