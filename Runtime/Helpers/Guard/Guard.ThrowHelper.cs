@@ -53,10 +53,24 @@ namespace Hertzole.GameJolt
 			}
 
 			[DoesNotReturn]
+			public static void ThrowArgumentExceptionForIsEmpty<T>(ReadOnlyMemory<T> list, string name)
+			{
+				throw new ArgumentException($"Parameter {name} ({typeof(ReadOnlyMemory<T>).ToTypeString()}) must not be empty.", name);
+			}
+
+			[DoesNotReturn]
 			public static void ThrowArgumentExceptionForHasSizeGreaterThanOrEqualTo<T>(IReadOnlyCollection<T> list, int size, string name)
 			{
 				throw new ArgumentException(
 					$"Parameter {name} ({typeof(IReadOnlyCollection<T>).ToTypeString()}) must have a size of at least {size}, had a size of {list.Count}.",
+					name);
+			}
+
+			[DoesNotReturn]
+			public static void ThrowArgumentExceptionForHasSizeGreaterThanOrEqualTo<T>(ReadOnlyMemory<T> list, int size, string name)
+			{
+				throw new ArgumentException(
+					$"Parameter {name} ({typeof(ReadOnlyMemory<T>).ToTypeString()}) must have a size of at least {size}, had a size of {list.Length}.",
 					name);
 			}
 		}

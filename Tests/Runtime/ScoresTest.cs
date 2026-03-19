@@ -165,57 +165,42 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		public async Task GetTables_Success()
+		[TestCase(1)]
+		[TestCase(5)]
+		[TestCase(25)]
+		public async Task GetTables_Success(int tableCount)
 		{
-			TableInternal table = DummyData.Table();
+			// Arrange
+			ArrangeTables(tableCount, out TableInternal[] tables);
 
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
-			{
-				string? arg = info.Arg<string>();
-
-				if (arg.Contains(GameJoltScores.GET_TABLES_ENDPOINT))
-				{
-					return FromResult(serializer.SerializeResponse(new GetTablesResponse(true, null, new TableInternal[1]
-					{
-						table
-					})));
-				}
-
-				return FromResult("");
-			});
-
+			// Act
 			GameJoltResult<GameJoltTable[]> result = await GameJoltAPI.Scores.GetTablesAsync();
 
+			// Assert
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value, Has.Length.EqualTo(1));
-			Assert.That(result.Value![0].Id, Is.EqualTo(table.id));
-			Assert.That(result.Value[0].Name, Is.EqualTo(table.name));
-			Assert.That(result.Value[0].Description, Is.EqualTo(table.description));
-			Assert.That(result.Value[0].IsPrimary, Is.EqualTo(table.isPrimary));
+			Assert.That(result.Value, Has.Length.EqualTo(tableCount));
+			for (int i = 0; i < tableCount; i++)
+			{
+				Assert.That(result.Value[i], Is.EqualTo(tables[i].ToPublicTable()));
+			}
 		}
 
 		[Test]
-		public async Task GetTables_Buffer_Success()
+		[TestCase(1)]
+		[TestCase(5)]
+		[TestCase(25)]
+		public async Task GetTables_Buffer_Success(int tableCount)
 		{
 			// Arrange
-			List<GameJoltTable> buffer = new List<GameJoltTable>();
-			TableInternal table = DummyData.Table();
-			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
-			{
-				string? arg = info.Arg<string>();
+			List<GameJoltTable> buffer = new List<GameJoltTable>
+			(
+				// Add dummy data to make sure buffer is cleared.
+				DummyData.Many(100, () => DummyData.Table().ToPublicTable())
+			);
 
-				if (arg.Contains(GameJoltScores.GET_TABLES_ENDPOINT))
-				{
-					return FromResult(serializer.SerializeResponse(new GetTablesResponse(true, null, new TableInternal[1]
-					{
-						table
-					})));
-				}
-
-				return FromResult("");
-			});
+			ArrangeTables(tableCount, out TableInternal[] tables);
 
 			// Act
 			GameJoltResult result = await GameJoltAPI.Scores.GetTablesAsync(buffer);
@@ -223,11 +208,12 @@ namespace GameJolt.NET.Tests
 			// Assert
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
-			Assert.That(buffer, Has.Count.EqualTo(1));
-			Assert.That(buffer[0].Id, Is.EqualTo(table.id));
-			Assert.That(buffer[0].Name, Is.EqualTo(table.name));
-			Assert.That(buffer[0].Description, Is.EqualTo(table.description));
-			Assert.That(buffer[0].IsPrimary, Is.EqualTo(table.isPrimary));
+			Assert.That(buffer, Has.Count.EqualTo(tableCount));
+
+			for (int i = 0; i < tableCount; i++)
+			{
+				Assert.That(buffer[i], Is.EqualTo(tables[i].ToPublicTable()));
+			}
 		}
 
 		[Test]
@@ -491,7 +477,7 @@ namespace GameJolt.NET.Tests
 		public async Task Query_Buffer_Success()
 		{
 			// Arrange
-			List<GameJoltScore> buffer = new List<GameJoltScore>();
+			List<GameJoltScore> buffer = new List<GameJoltScore>(DummyData.Many(100, () => DummyData.Score().ToPublicScore()));
 			ScoreInternal score = DummyData.Score();
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
@@ -545,7 +531,7 @@ namespace GameJolt.NET.Tests
 		public async Task Query_Buffer_NoScores_Success()
 		{
 			// Arrange
-			List<GameJoltScore> buffer = new List<GameJoltScore>();
+			List<GameJoltScore> buffer = new List<GameJoltScore>(DummyData.Many(100, () => DummyData.Score().ToPublicScore()));
 
 			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
 			{
@@ -593,7 +579,7 @@ namespace GameJolt.NET.Tests
 		public async Task Query_Buffer_GuestUser_Success()
 		{
 			// Arrange
-			List<GameJoltScore> buffer = new List<GameJoltScore>();
+			List<GameJoltScore> buffer = new List<GameJoltScore>(DummyData.Many(100, () => DummyData.Score().ToPublicScore()));
 			const string json =
 				"{\"response\":{\"success\":\"true\",\"scores\":[{\"score\":\"527 points!\",\"sort\":\"527\",\"extra_data\":\"this is some extra data\",\"user\":\"\",\"user_id\":\"\",\"guest\":\"guest user\",\"stored\":\"2 days ago\",\"stored_timestamp\":1716581984}]}}";
 
@@ -635,6 +621,29 @@ namespace GameJolt.NET.Tests
 					Assert.That(url,
 						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltScores.ENDPOINT + "?table_id=0&limit=0&guest=test&better_than=0&worse_than=0"));
 				});
+		}
+
+		private static void ArrangeTables(int tableCount, out TableInternal[] tables)
+		{
+			TableInternal[] newTables = new TableInternal[tableCount];
+			for (int i = 0; i < tableCount; i++)
+			{
+				newTables[i] = DummyData.Table();
+			}
+
+			tables = newTables;
+
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains(GameJoltScores.GET_TABLES_ENDPOINT))
+				{
+					return FromResult(serializer.SerializeResponse(new GetTablesResponse(true, null, newTables)));
+				}
+
+				return FromResult("");
+			});
 		}
 	}
 }

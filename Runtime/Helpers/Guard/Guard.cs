@@ -30,7 +30,9 @@ namespace Hertzole.GameJolt
 		{
 			if (!string.IsNullOrWhiteSpace(value))
 			{
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
 				return;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 			}
 
 			ThrowHelper.ThrowArgumentExceptionForIsNotNullOrWhiteSpace(value, paramName);
@@ -49,11 +51,35 @@ namespace Hertzole.GameJolt
 			ThrowHelper.ThrowArgumentExceptionForIsNotNullOrEmptyNullable(value, paramName);
 		}
 
+		/// <exception cref="ArgumentException">Thrown if <paramref name="value" /> is empty.</exception>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void IsNotEmpty<T>(ReadOnlyMemory<T> value, string paramName)
+		{
+			if (value.Length > 0)
+			{
+				return;
+			}
+
+			ThrowHelper.ThrowArgumentExceptionForIsEmpty(value, paramName);
+		}
+
 		/// <exception cref="ArgumentException">Thrown if the size of <paramref name="value" /> &lt; <paramref name="size" />.</exception>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void HasSizeGreaterThanOrEqualTo<T>(IReadOnlyCollection<T> value, int size, string paramName)
 		{
 			if (value.Count >= size)
+			{
+				return;
+			}
+
+			ThrowHelper.ThrowArgumentExceptionForHasSizeGreaterThanOrEqualTo(value, size, paramName);
+		}
+
+		/// <exception cref="ArgumentException">Thrown if the size of <paramref name="value" /> &lt; <paramref name="size" />.</exception>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void HasSizeGreaterThanOrEqualTo<T>(ReadOnlyMemory<T> value, int size, string paramName)
+		{
+			if (value.Length >= size)
 			{
 				return;
 			}

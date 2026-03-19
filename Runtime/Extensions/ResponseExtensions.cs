@@ -1,24 +1,15 @@
 ﻿#if !DISABLE_GAMEJOLT // Disables all GameJolt-related code
 
-#if NETSTANDARD2_1_OR_GREATER || UNITY_2021_3_OR_NEWER || NET5_0_OR_GREATER
-#define NULLABLE_ATTRIBUTES
-#endif
 #nullable enable
 
 using System;
-#if NULLABLE_ATTRIBUTES
 using System.Diagnostics.CodeAnalysis;
-#endif
 
 namespace Hertzole.GameJolt
 {
 	internal static class ResponseExtensions
 	{
-		public static bool TryGetException<T>(this T response,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception) where T : struct, IResponse
+		public static bool TryGetException<T>(this T response, [NotNullWhen(true)] out Exception? exception) where T : struct, IResponse
 		{
 			exception = null;
 
@@ -53,7 +44,7 @@ namespace Hertzole.GameJolt
 			{
 				return true;
 			}
-			
+
 			if (TryGetGlobalException(message, out exception))
 			{
 				return true;
@@ -63,11 +54,7 @@ namespace Hertzole.GameJolt
 			return true;
 		}
 
-		private static bool TryGetDataStoreException(string message,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception)
+		private static bool TryGetDataStoreException(string message, [NotNullWhen(true)] out Exception? exception)
 		{
 			if (message.Equals("You must enter the key for the item you would like to retrieve data for.", StringComparison.OrdinalIgnoreCase) ||
 			    message.Equals("No item with that key could be found.", StringComparison.OrdinalIgnoreCase))
@@ -97,11 +84,7 @@ namespace Hertzole.GameJolt
 			return false;
 		}
 
-		private static bool TryGetScoresException(string message,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception)
+		private static bool TryGetScoresException(string message, [NotNullWhen(true)] out Exception? exception)
 		{
 			if (message.Equals(GameJoltInvalidTableException.MESSAGE, StringComparison.OrdinalIgnoreCase))
 			{
@@ -119,11 +102,7 @@ namespace Hertzole.GameJolt
 			return false;
 		}
 
-		private static bool TryGetSessionsException(string message,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception)
+		private static bool TryGetSessionsException(string message, [NotNullWhen(true)] out Exception? exception)
 		{
 			if (message.Equals(GameJoltSessionException.MESSAGE, StringComparison.OrdinalIgnoreCase))
 			{
@@ -135,11 +114,7 @@ namespace Hertzole.GameJolt
 			return false;
 		}
 
-		private static bool TryGetTrophiesException(string message,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception)
+		private static bool TryGetTrophiesException(string message, [NotNullWhen(true)] out Exception? exception)
 		{
 			if (message.Equals(GameJoltInvalidTrophyException.DOES_NOT_BELONG_MESSAGE, StringComparison.OrdinalIgnoreCase) ||
 			    message.Equals(GameJoltInvalidTrophyException.INCORRECT_ID_MESSAGE, StringComparison.OrdinalIgnoreCase))
@@ -159,11 +134,7 @@ namespace Hertzole.GameJolt
 			return false;
 		}
 
-		private static bool TryGetUsersException(string message,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception)
+		private static bool TryGetUsersException(string message, [NotNullWhen(true)] out Exception? exception)
 		{
 			if (message.Equals(GameJoltInvalidUserException.MESSAGE, StringComparison.OrdinalIgnoreCase))
 			{
@@ -180,12 +151,8 @@ namespace Hertzole.GameJolt
 			exception = null;
 			return false;
 		}
-		
-		private static bool TryGetGlobalException(string message,
-#if NULLABLE_ATTRIBUTES
-			[NotNullWhen(true)]
-#endif
-			out Exception? exception)
+
+		private static bool TryGetGlobalException(string message, [NotNullWhen(true)] out Exception? exception)
 		{
 			if (message.Equals(GameJoltInvalidGameException.MESSAGE, StringComparison.OrdinalIgnoreCase))
 			{

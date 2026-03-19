@@ -187,7 +187,7 @@ namespace Hertzole.GameJolt
 
 				if (result.HasError)
 				{
-					return GameJoltResult<GameJoltScore[]>.Error(result.Exception!);
+					return GameJoltResult<GameJoltScore[]>.Error(result.Exception);
 				}
 
 				return GameJoltResult<GameJoltScore[]>.Success(buffer.ToArray());
@@ -197,7 +197,7 @@ namespace Hertzole.GameJolt
 		/// <summary>
 		///     Gets the scores from the specified query and adds them to the provided <paramref name="results" /> list.
 		/// </summary>
-		/// <param name="results">The list to add the results to. This list will be cleared before adding the results.</param>
+		/// <param name="results">The list to add the results to. This list will be cleared before use.</param>
 		/// <param name="cancellationToken">Optional cancellation token for stopping this task.</param>
 		/// <returns>The result of the request.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if <paramref name="results"/> is <see langword="null"/>.</exception>

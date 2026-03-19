@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System;
 #if NET6_0_OR_GREATER || FORCE_SYSTEM_JSON
 using JsonProperty = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
@@ -11,6 +10,8 @@ using Hertzole.GameJolt.Serialization.System;
 using Newtonsoft.Json;
 using Hertzole.GameJolt.Serialization.Newtonsoft;
 #endif
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hertzole.GameJolt
 {
@@ -21,6 +22,7 @@ namespace Hertzole.GameJolt
 		/// </summary>
 		[JsonProperty("success")]
 		[JsonConverter(typeof(GameJoltBooleanConverter))]
+		[MemberNotNullWhen(true, nameof(Message))]
 		public bool Success { get; }
 		/// <summary>
 		///     If the request was not successful, this will contain the error message.

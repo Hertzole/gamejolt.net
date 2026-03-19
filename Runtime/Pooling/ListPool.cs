@@ -17,6 +17,16 @@ namespace Hertzole.GameJolt
 		{
 			return pool.Rent(out list);
 		}
+
+		public static List<T> Rent()
+		{
+			return pool.Rent();
+		}
+
+		public static void Return(List<T> list)
+		{
+			pool.Return(list);
+		}
 	}
 }
 #endif

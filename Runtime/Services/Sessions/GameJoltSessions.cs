@@ -65,9 +65,9 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltSessionException">Returned if there is already a session open.</exception>
 		public async Task<GameJoltResult> OpenAsync(CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			if (IsSessionOpen)
@@ -85,7 +85,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -106,9 +106,9 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltSessionException">Returned if there is no session open.</exception>
 		public async Task<GameJoltResult> CloseAsync(CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			if (!IsSessionOpen)
@@ -126,7 +126,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -147,9 +147,9 @@ namespace Hertzole.GameJolt
 		/// <exception cref="GameJoltSessionException">Returned if there is no session open.</exception>
 		public async Task<GameJoltResult> PingAsync(SessionStatus status, CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult.Error(authException);
 			}
 
 			if (!IsSessionOpen)
@@ -160,7 +160,7 @@ namespace Hertzole.GameJolt
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(PING_ENDPOINT);
-				AppendUser(builder, users.myUsername!, users.myToken!);
+				AppendUser(builder, users.myUsername, users.myToken);
 				builder.Append("&status=");
 				builder.Append(GetStatusString(status));
 
@@ -170,7 +170,7 @@ namespace Hertzole.GameJolt
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult.Error(exception!);
+					return GameJoltResult.Error(exception);
 				}
 
 				Debug.Assert(response.Success, "Response was successful but success was false.");
@@ -187,22 +187,22 @@ namespace Hertzole.GameJolt
 		/// <returns>The result of the request and if the session is active.</returns>
 		public async Task<GameJoltResult<bool>> CheckAsync(CancellationToken cancellationToken = default)
 		{
-			if (!users.IsAuthenticatedInternal(out GameJoltResult<bool> result))
+			if (users.IsNotAuthenticated(out Exception? authException))
 			{
-				return result;
+				return GameJoltResult<bool>.Error(authException);
 			}
 
 			using (StringBuilderPool.Rent(out StringBuilder builder))
 			{
 				builder.Append(CHECK_ENDPOINT);
-				AppendUser(builder, users.myUsername!, users.myToken!);
+				AppendUser(builder, users.myUsername, users.myToken);
 
 				string? json = await webClient.GetStringAsync(GameJoltUrlBuilder.BuildUrl(builder), cancellationToken);
 				Response response = serializer.DeserializeResponse<Response>(json);
 
 				if (response.TryGetException(out Exception? exception))
 				{
-					return GameJoltResult<bool>.Error(exception!);
+					return GameJoltResult<bool>.Error(exception);
 				}
 
 				// No assert here since the response 'Success' field is tied to the session status.

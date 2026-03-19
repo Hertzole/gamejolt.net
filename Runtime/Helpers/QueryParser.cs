@@ -5,18 +5,20 @@
 #endif
 #nullable enable
 
-using System;
 #if USE_SPANS
 using StringType = System.ReadOnlySpan<char>;
 #else
 using StringType = System.String;
 #endif
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hertzole.GameJolt
 {
+	// ReSharper disable UseSymbolAlias
 	internal static class QueryParser
 	{
-		public static bool TryGetToken(StringType url, StringType tokenName, out string? token)
+		public static bool TryGetToken(StringType url, StringType tokenName, [NotNullWhen(true)] out string? token)
 		{
 #if USE_SPANS
 			return TryGetTokenSpans(url, tokenName, out token);
@@ -26,13 +28,13 @@ namespace Hertzole.GameJolt
 		}
 
 #if USE_SPANS
-		private static bool TryGetTokenSpans(ReadOnlySpan<char> url, ReadOnlySpan<char> tokenName, out string? token)
+		private static bool TryGetTokenSpans(ReadOnlySpan<char> url, ReadOnlySpan<char> tokenName, [NotNullWhen(true)] out string? token)
 		{
 			// First check if the url even has a query.
 			int queryIndex = url.IndexOfAny('?', '&');
 			if (queryIndex == -1) // No query.
 			{
-				token = default;
+				token = null;
 				return false;
 			}
 
@@ -52,7 +54,7 @@ namespace Hertzole.GameJolt
 			int tokenIndex = queryUrl.IndexOf(name, StringComparison.OrdinalIgnoreCase);
 			if (tokenIndex == -1) // Token not found.
 			{
-				token = default;
+				token = null;
 				return false;
 			}
 
@@ -76,13 +78,13 @@ namespace Hertzole.GameJolt
 #else
 		private static readonly char[] querySeparators = { '?', '&' };
 
-		private static bool TryGetTokenStrings(string url, string tokenName, out string? token)
+		private static bool TryGetTokenStrings(string url, string tokenName, [NotNullWhen(true)] out string? token)
 		{
 			// First check if the url even has a query.
 			int queryIndex = url.IndexOfAny(querySeparators);
 			if (queryIndex == -1) // No query.
 			{
-				token = default;
+				token = null;
 				return false;
 			}
 
@@ -100,7 +102,7 @@ namespace Hertzole.GameJolt
 			int tokenIndex = queryUrl.IndexOf(tokenName, StringComparison.OrdinalIgnoreCase);
 			if (tokenIndex == -1) // Token not found.
 			{
-				token = default;
+				token = null;
 				return false;
 			}
 

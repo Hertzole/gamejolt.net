@@ -3,7 +3,9 @@
 #nullable enable
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GameJolt.NET.Tests.Attributes;
@@ -16,7 +18,15 @@ namespace GameJolt.NET.Tests
 	[NeedsAuthentication]
 	internal partial class TrophiesTest : BaseTest
 	{
-		private static readonly int[] trophyIds = { 0, 1 };
+		private static readonly TrophyInternal[] testTrophies = DummyData.Many(10, DummyData.Trophy).ToArray();
+		private static readonly int[] trophyIds = testTrophies.Select(x => x.id).ToArray();
+
+		private static IEnumerable GetTrophyIdTestCases()
+		{
+			yield return new TestCaseData(trophyIds.ToList()).SetName("List");
+			yield return new TestCaseData(trophyIds.AsMemory()).SetName("Memory");
+			yield return new TestCaseData(trophyIds.AsEnumerable()).SetName("Enumerable");
+		}
 
 		[Test]
 		public async Task GetTrophies_Authenticated_ReturnsTrophies()
@@ -52,11 +62,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetTrophies_Buffer_Authenticated_ReturnsTrophies()
 		{
 			// Arrange
-			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>
-			{
-				// Add some dummy data to make sure the buffer is cleared before use.
-				DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy()
-			};
+			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>(DummyData.Many(100, () => DummyData.Trophy().ToPublicTrophy()));
 
 			TrophyInternal trophy = DummyData.Trophy();
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
@@ -159,11 +165,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetTrophies_Buffer_Authenticated_Achieved_ReturnsTrophies([Values] bool achieved)
 		{
 			// Arrange
-			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>
-			{
-				// Add some dummy data to make sure the buffer is cleared before use.
-				DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy(), DummyData.Trophy().ToPublicTrophy()
-			};
+			List<GameJoltTrophy> buffer = new List<GameJoltTrophy>(DummyData.Many(100, () => DummyData.Trophy().ToPublicTrophy()));
 
 			TrophyInternal trophy = DummyData.Trophy();
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
@@ -238,41 +240,73 @@ namespace GameJolt.NET.Tests
 		}
 
 		[Test]
-		public async Task GetTrophies_Authenticated_Ids_ReturnsTrophies()
+		[TestCaseSource(nameof(GetTrophyIdTestCases))]
+		public async Task GetTrophies_Authenticated_Ids_ReturnsTrophies<T>(T value)
 		{
-			TrophyInternal trophy1 = DummyData.Trophy();
-			TrophyInternal trophy2 = DummyData.Trophy();
+			// Arrange
+			GameJoltResult<GameJoltTrophy[]> result;
+			ArrangeReturnTestTrophies();
 
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
+			// Act
+			switch (value)
 			{
-				string? arg = info.Arg<string>();
+				case Memory<int> memory:
+					result = await GameJoltAPI.Trophies.GetTrophiesAsync(memory);
+					break;
+				case List<int> list:
+					result = await GameJoltAPI.Trophies.GetTrophiesAsync(list);
+					break;
+				case IEnumerable<int> enumerable:
+					result = await GameJoltAPI.Trophies.GetTrophiesAsync(enumerable);
+					break;
+				default:
+					throw new ArgumentException("Invalid type for test case. Expected Memory<int>, List<int> or IEnumerable<int>.", nameof(value));
+			}
 
-				if (arg.Contains("trophies/?"))
-				{
-					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, new[] { trophy1, trophy2 })));
-				}
-
-				return FromResult("");
-			});
-
-			GameJoltResult<GameJoltTrophy[]> result = await GameJoltAPI.Trophies.GetTrophiesAsync(new[] { trophy1.id, trophy2.id });
-
+			// Assert
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Value, Is.Not.Null);
-			Assert.That(result.Value, Has.Length.GreaterThan(0));
-			Assert.That(result.Value![0].Id, Is.EqualTo(trophy1.id));
-			Assert.That(result.Value[0].Title, Is.EqualTo(trophy1.title));
-			Assert.That(result.Value[0].Description, Is.EqualTo(trophy1.description));
-			Assert.That(result.Value[0].Difficulty, Is.EqualTo(trophy1.difficulty));
-			Assert.That(result.Value[0].ImageUrl, Is.EqualTo(trophy1.imageUrl));
-			Assert.That(result.Value[0].HasAchieved, Is.EqualTo(trophy1.achieved));
+			Assert.That(result.Value, Has.Length.EqualTo(testTrophies.Length));
 
-			Assert.That(result.Value[1].Id, Is.EqualTo(trophy2.id));
-			Assert.That(result.Value[1].Title, Is.EqualTo(trophy2.title));
-			Assert.That(result.Value[1].Description, Is.EqualTo(trophy2.description));
-			Assert.That(result.Value[1].Difficulty, Is.EqualTo(trophy2.difficulty));
-			Assert.That(result.Value[1].ImageUrl, Is.EqualTo(trophy2.imageUrl));
-			Assert.That(result.Value[1].HasAchieved, Is.EqualTo(trophy2.achieved));
+			for (int i = 0; i < testTrophies.Length; i++)
+			{
+				Assert.That(result.Value[i], Is.EqualTo(testTrophies[i].ToPublicTrophy()));
+			}
+		}
+
+		[Test]
+		[TestCaseSource(nameof(GetTrophyIdTestCases))]
+		public async Task GetTrophies_Authenticated_Ids_Buffer_ReturnsTrophies<T>(T value)
+		{
+			// Arrange
+			List<GameJoltTrophy> results = new List<GameJoltTrophy>(DummyData.Many(100, () => DummyData.Trophy().ToPublicTrophy()));
+			GameJoltResult result;
+			ArrangeReturnTestTrophies();
+
+			// Act
+			switch (value)
+			{
+				case Memory<int> memory:
+					result = await GameJoltAPI.Trophies.GetTrophiesAsync(memory, results);
+					break;
+				case List<int> list:
+					result = await GameJoltAPI.Trophies.GetTrophiesAsync(list, results);
+					break;
+				case IEnumerable<int> enumerable:
+					result = await GameJoltAPI.Trophies.GetTrophiesAsync(enumerable, results);
+					break;
+				default:
+					throw new ArgumentException("Invalid type for test case. Expected Memory<int>, List<int> or IEnumerable<int>.", nameof(value));
+			}
+
+			// Assert
+			Assert.That(result.HasError, Is.False);
+			Assert.That(results, Has.Count.EqualTo(testTrophies.Length));
+
+			for (int i = 0; i < testTrophies.Length; i++)
+			{
+				Assert.That(results[i], Is.EqualTo(testTrophies[i].ToPublicTrophy()));
+			}
 		}
 
 		[Test]
@@ -376,47 +410,6 @@ namespace GameJolt.NET.Tests
 			{
 				return GameJoltAPI.Trophies.GetTrophiesAsync(trophyIds);
 			}
-		}
-
-		// This method is mainly just to allow the foreach loop end by itself instead of having to manually break it.
-		[Test]
-		public async Task GetTrophies_TooManyIds_Success()
-		{
-			TrophyInternal[] trophies =
-			{
-				DummyData.Trophy(),
-				DummyData.Trophy(),
-				DummyData.Trophy()
-			};
-
-			List<GameJoltTrophy> results = new List<GameJoltTrophy>();
-
-			GameJoltAPI.webClient.GetStringAsync("", default).ReturnsForAnyArgs(info =>
-			{
-				string? arg = info.Arg<string>();
-
-				if (arg.Contains("trophies/?"))
-				{
-					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, trophies)));
-				}
-
-				return FromResult("");
-			});
-
-			int[] ids =
-			{
-				trophies[0].id,
-				trophies[1].id,
-				trophies[2].id
-			};
-
-			GameJoltResult result = await GameJoltAPI.Trophies.GetTrophiesInternalAsync(ids, 5, true, results, default);
-
-			Assert.That(result.HasError, Is.False);
-			Assert.That(results, Has.Count.EqualTo(3));
-			Assert.That(results![0].Id, Is.EqualTo(trophies[0].id));
-			Assert.That(results[1].Id, Is.EqualTo(trophies[1].id));
-			Assert.That(results[2].Id, Is.EqualTo(trophies[2].id));
 		}
 
 		[Test]
@@ -707,7 +700,8 @@ namespace GameJolt.NET.Tests
 				url =>
 				{
 					Assert.That(url,
-						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT + $"?username={Username}&user_token={Token}&trophy_id=0,1"));
+						Does.StartWith(GameJoltUrlBuilder.BASE_URL + GameJoltTrophies.ENDPOINT +
+						               $"?username={Username}&user_token={Token}&trophy_id={trophyIds.ToCommaSeparatedString()}"));
 				});
 		}
 
@@ -775,6 +769,21 @@ namespace GameJolt.NET.Tests
 			Assert.That(result.Exception, Is.Not.Null, "Exception should not be null when there is an error.");
 			Assert.That(result.Exception, Is.TypeOf<GameJoltAuthorizedException>(),
 				"Exception should be of type GameJoltAuthorizedException when not authenticated.");
+		}
+
+		private static void ArrangeReturnTestTrophies()
+		{
+			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
+			{
+				string? arg = info.Arg<string>();
+
+				if (arg.Contains("trophies/?"))
+				{
+					return FromResult(serializer.SerializeResponse(new FetchTrophiesResponse(true, null, testTrophies)));
+				}
+
+				return FromResult("");
+			});
 		}
 	}
 }

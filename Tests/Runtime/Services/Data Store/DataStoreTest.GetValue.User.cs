@@ -332,8 +332,8 @@ namespace GameJolt.NET.Tests
 		public async Task GetValueAsCurrentUserAsync_Buffer_Bytes_Success()
 		{
 			// Arrange
-			byte[] bytes = DummyData.Bytes();
-			List<byte> buffer = new List<byte>();
+			byte[] bytes = DummyData.Bytes(10);
+			List<byte> buffer = new List<byte>(DummyData.Bytes()); // Add dummy data to make sure buffer is cleared.
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
 			{
 				string json = serializer.SerializeResponse(new GetDataResponse(true, null, Convert.ToBase64String(bytes)));
@@ -347,7 +347,7 @@ namespace GameJolt.NET.Tests
 			// Assert
 			Assert.That(result.HasError, Is.False);
 			Assert.That(result.Exception, Is.Null);
-			Assert.That(buffer.Count, Is.EqualTo(bytes.Length));
+			Assert.That(buffer, Has.Count.EqualTo(bytes.Length));
 			for (int i = 0; i < bytes.Length; i++)
 			{
 				Assert.That(buffer[i], Is.EqualTo(bytes[i]));
@@ -381,7 +381,7 @@ namespace GameJolt.NET.Tests
 		public async Task GetValueAsCurrentUserAsync_Buffer_Bytes_EmptyValue_Success()
 		{
 			// Arrange
-			List<byte> buffer = new List<byte>();
+			List<byte> buffer = new List<byte>(DummyData.Bytes()); // Add dummy data to make sure buffer is cleared.
 			GameJoltAPI.webClient.GetStringAsync("", CancellationToken.None).ReturnsForAnyArgs(info =>
 			{
 				string json = serializer.SerializeResponse(new GetDataResponse(true, null, string.Empty));
