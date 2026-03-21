@@ -146,8 +146,8 @@ namespace Hertzole.GameJolt
 			Guard.IsNotNull(url, nameof(url));
 
 			if ((url.Host.EndsWith("gamejolt.com", StringComparison.OrdinalIgnoreCase) || url.Host.EndsWith("gamejolt.net", StringComparison.OrdinalIgnoreCase))
-			    && QueryParser.TryGetToken(url.Query, "gjapi_username", out string? username) &&
-			    QueryParser.TryGetToken(url.Query, "gjapi_token", out string? token))
+			    && QueryParser.TryGetToken(url.Query.AsSpan(), "gjapi_username".AsSpan(), out string? username) &&
+			    QueryParser.TryGetToken(url.Query.AsSpan(), "gjapi_token".AsSpan(), out string? token))
 			{
 				return await AuthenticateAsync(username, token, cancellationToken);
 			}
