@@ -14,6 +14,12 @@
 
 ## 🔨 Getting Started
 
+### Import the namespace
+
+```csharp
+using Hertzole.GameJolt;
+```
+
 ### Result Pattern
 
 The API uses the result pattern for calls. This means that all calls return a `GameJoltResult` object. This object contains a `HasError` property that tells you if the call was successful or not. If it was successful, you can access the result through the `Value` property. If it was not successful, you can access the error through the `Exception` property.
