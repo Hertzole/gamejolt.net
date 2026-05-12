@@ -8,6 +8,11 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    env:
+      UPM_SERVICE_ACCOUNT_KEY_ID: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_ID }}
+      UPM_SERVICE_ACCOUNT_KEY_SECRET: ${{ secrets.UPM_SERVICE_ACCOUNT_KEY_SECRET }}
+      UPM_ORG_ID: ${{ secrets.UPM_ORG_ID }}
+      DIST_DIR: /tmp/signed-upm-dist
 
     steps:
       - name: Checkout repository
@@ -100,6 +105,26 @@ jobs:
           git push origin --tags
         env:
           TAG: package/v${{ steps.semantic.outputs.new_release_version }}
+
+      - name: Install Unity UPM CLI
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          curl -fsSL https://cdn.packages.unity.com/upm-cli/install.sh -o /tmp/upm-install.sh
+          bash /tmp/upm-install.sh
+          echo "$HOME/.upm/bin" >> "$GITHUB_PATH"
+
+      - name: Sign package
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          mkdir -p "$DIST_DIR"
+          upm pack ./ --organization-id "$UPM_ORG_ID" --destination "$DIST_DIR"
+
+      - name: Upload package to release
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          gh release upload "v${{ steps.semantic.outputs.new_release_version }}" "$PACKAGE_ARCHIVE"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Go to master
         if: steps.semantic.outputs.new_release_published == 'true'
