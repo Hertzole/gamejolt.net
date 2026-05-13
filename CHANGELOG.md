@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/Hertzole/gamejolt.net/compare/v1.9.0...v1.9.1) (2026-05-13)
+
+
+### Bug Fixes
+
+* not signing upm releases ([eac5fd8](https://github.com/Hertzole/gamejolt.net/commit/eac5fd80a921bb1d8e5b8988ffb4132b03afb674))
+
 # [1.9.0](https://github.com/Hertzole/gamejolt.net/compare/v1.8.0...v1.9.0) (2026-05-13)
 
 
