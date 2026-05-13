@@ -119,6 +119,24 @@ jobs:
           mkdir -p "$DIST_DIR"
           upm pack ./ --organization-id "$UPM_ORG_ID" --destination "$DIST_DIR"
 
+      - name: Print signed package info
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          shopt -s nullglob
+          archives=("$DIST_DIR"/*.tgz "$DIST_DIR"/*.tar.gz)
+          if [ "${#archives[@]}" -ne 1 ]; then
+            printf 'Expected exactly one signed package archive, found %s\n' "${#archives[@]}" >&2
+            exit 1
+          fi
+
+          archive="${archives[0]}"
+          tar -tzf "$archive" | grep -qx 'package/package.json'
+          tar -tzf "$archive" | grep -qx 'package/.attestation.p7m'
+
+          echo "PACKAGE_ARCHIVE=$archive" >> "$GITHUB_ENV"
+          printf 'Archive: %s\n' "$(basename "$archive")"
+          tar -xOzf "$archive" package/package.json | jq '{name, version}'
+
       - name: Upload package to release
         if: steps.semantic.outputs.new_release_published == 'true'
         run: |
