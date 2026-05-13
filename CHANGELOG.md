@@ -1,3 +1,32 @@
+# [1.9.0](https://github.com/Hertzole/gamejolt.net/compare/v1.8.0...v1.9.0) (2026-05-13)
+
+
+### Bug Fixes
+
+* always return false for empty base64 strings ([d95cb51](https://github.com/Hertzole/gamejolt.net/commit/d95cb51603e72e221ca2b7c051f4cd224befb0b7))
+* Base64Tests not being removed if GameJolt is disabled ([06c97b2](https://github.com/Hertzole/gamejolt.net/commit/06c97b2e036c3c3d4abafa0d9b4b8fcc217948c9))
+* buffers not getting cleared ([318a018](https://github.com/Hertzole/gamejolt.net/commit/318a01859c1f77fe17be225ab4120cc946c24cfa))
+* collision with JetBrains NotNull attribute in Unity ([8ce9612](https://github.com/Hertzole/gamejolt.net/commit/8ce961282678b566ddad60e3a3b9e5a6a27abf62))
+* exception predicates not passing on .NET Standard versions ([289a579](https://github.com/Hertzole/gamejolt.net/commit/289a5797866c67067ecd6dd7d3aef42f2667d81b))
+* some types not being removed when DISABLE_GAMEJOLT is applied ([5ba0387](https://github.com/Hertzole/gamejolt.net/commit/5ba03871e42b65282b15e6def3c8edbddb16b98a))
+
+
+### Features
+
+* add parameter validation to data store methods ([fb53937](https://github.com/Hertzole/gamejolt.net/commit/fb53937f30098a7ae44f15ec8a138a2c4d54e616))
+* add parameter validation to friends methods ([099cdc7](https://github.com/Hertzole/gamejolt.net/commit/099cdc7bb977a359b33909114a63f69da316fb2c))
+* add parameter validation to score methods ([59e3c65](https://github.com/Hertzole/gamejolt.net/commit/59e3c6516fea972f3e8eb2bc8d8d6a0fb97e6df4))
+* add parameter validation to trophy methods ([6c48400](https://github.com/Hertzole/gamejolt.net/commit/6c48400b8b7111513459535269d72e0d1dbcd0bd))
+* add parameter validation to user methods ([50be05a](https://github.com/Hertzole/gamejolt.net/commit/50be05aeb7467e451ffedf75de1a875021b79b31))
+* AuthenticateFromCredentialsFileAsync and GetUsers supports ReadOnlyMemory ([d3e2679](https://github.com/Hertzole/gamejolt.net/commit/d3e267990fabf7ba86f5c788b8a481833e1180ae))
+* GameJoltResult now implements IGameJoltResult ([3b360da](https://github.com/Hertzole/gamejolt.net/commit/3b360da8d39e0713d130d51a288fa3a6876defee))
+* GetFriendsAsync with buffer ([82536a0](https://github.com/Hertzole/gamejolt.net/commit/82536a05ccbdc15416d91ccfb046a72a3cf178ef))
+* GetTables and GetScores with buffer ([90ffa06](https://github.com/Hertzole/gamejolt.net/commit/90ffa0639da532b26e2fc3920d801ee85c48e6ab))
+* GetTrophies with buffer ([cd67977](https://github.com/Hertzole/gamejolt.net/commit/cd6797721459f7bbf1968e377e68d801747aaa62))
+* GetTrophiesAsync supports ReadOnlyMemory ([3df9672](https://github.com/Hertzole/gamejolt.net/commit/3df9672473bbaaab603a32fd4e20090d2c723e43))
+* GetUsers with buffer ([525cf18](https://github.com/Hertzole/gamejolt.net/commit/525cf18c764d613924f668390b7c69338b36c14a))
+* GetValueAsBytesAsync and GetKeysAsync with buffer in data store ([ce04107](https://github.com/Hertzole/gamejolt.net/commit/ce041073a61c835af2dff33b0d4e2d1951822ecc))
+
 # [1.8.0](https://github.com/Hertzole/gamejolt.net/compare/v1.7.1...v1.8.0) (2025-12-05)
 
 
