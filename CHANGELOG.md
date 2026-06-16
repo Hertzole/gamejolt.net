@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/Hertzole/gamejolt.net/compare/v1.9.1...v1.9.2) (2026-06-16)
+
+
+### Bug Fixes
+
+* build output files being included in upm package tar ([8e7c4da](https://github.com/Hertzole/gamejolt.net/commit/8e7c4da5bd82751aa40b1200142d208c47fde985))
+
 ## [1.9.1](https://github.com/Hertzole/gamejolt.net/compare/v1.9.0...v1.9.1) (2026-05-13)
 
 
